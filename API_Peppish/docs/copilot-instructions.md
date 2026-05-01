@@ -4,13 +4,26 @@
 
 This file defines strict implementation rules for the backend API.
 
-It MUST be treated as the **highest authority for code generation**, second only to `domain.md`.
+It MUST be treated as the **highest authority for code generation**, second only to `DOMAIN.md`.
 
 If there is any conflict:
 
-1. domain.md (business rules)
-2. copilot-instructions.md (implementation rules)
-3. api-spec.md (endpoint contract)
+1. `domain.md` (business rules)
+2. `copilot-instructions.md` (implementation rules)
+3. `api-spec.md` (endpoint contract)
+
+---
+
+### The AI must ALWAYS:
+
+1. Read `/docs/copilot-learnings.md` before starting any task
+2. Apply relevant learnings when planning and coding
+3. Avoid repeating previously identified mistakes
+
+If a learning is relevant, the AI should explicitly acknowledge it.
+
+**Example:**
+"Based on previous learnings, I will avoid overengineering this solution."
 
 ---
 
@@ -51,7 +64,9 @@ The system MUST follow:
 
 ## 4. Domain Enforcement Rules (Critical)
 
-All code MUST strictly follow `domain.md`.
+All code MUST strictly follow `DOMAIN.md`.
+
+---
 
 ### 4.1 Core Concept Separation (MANDATORY)
 
@@ -77,13 +92,14 @@ Any deviation is considered a design violation.
 ### 4.3 Reward Rules (Strict)
 
 * Rewards are ONLY created from **approved ChoreInstances**
-* NEVER generate rewards from:
 
-  * templates
-  * assignments
-  * completed-but-not-approved tasks
+NEVER generate rewards from:
 
-### Reward Flow:
+* templates
+* assignments
+* completed-but-not-approved tasks
+
+#### Reward Flow:
 
 1. ChoreInstance → Completed
 2. Adult approves → Approved
@@ -94,11 +110,11 @@ Any deviation is considered a design violation.
 
 ### 4.4 Household Isolation (Critical Security Rule)
 
-Every entity MUST be scoped by HouseholdId where applicable.
+Every entity MUST be scoped by `HouseholdId` where applicable.
 
 * Users can ONLY access their own household data
-* Queries MUST always filter by HouseholdId
-* No cross-household joins or leaks allowed
+* Queries MUST always filter by `HouseholdId`
+* No cross-household joins or data leaks allowed
 
 ---
 
@@ -111,21 +127,46 @@ ASP.NET Identity is used.
 * Adult
 * Child
 
-### Rules:
+---
 
-* Adults:
+### Rules
 
-  * full CRUD on tasks, assignments, approvals
-  * can manage household
+#### Adults
 
-* Children:
+* Full CRUD on tasks, assignments, approvals
+* Can manage household
 
-  * can view assigned tasks
-  * can mark tasks as completed
-  * CANNOT approve tasks
-  * CANNOT modify templates or assignments
+#### Children
 
-Authorization must be enforced in the service layer AND via policy attributes where appropriate.
+* Can view assigned tasks
+* Can mark tasks as completed
+* CANNOT approve tasks
+* CANNOT modify templates or assignments
+
+Authorization must be enforced in the service layer **AND** via policy attributes where appropriate.
+
+---
+
+### Current User Context (MANDATORY)
+
+All services MUST retrieve the current user via a centralized mechanism.
+
+#### Implementation Options
+
+* `IHttpContextAccessor`
+* `IUserContextService` (preferred)
+
+#### Required Data
+
+* UserId
+* HouseholdId
+* Role
+
+#### Rules
+
+* DO NOT pass `UserId` manually from controllers unless absolutely required
+* All queries MUST use the current user's `HouseholdId`
+* Authorization decisions MUST use the current user's role
 
 ---
 
@@ -133,7 +174,7 @@ Authorization must be enforced in the service layer AND via policy attributes wh
 
 All business logic MUST live in services.
 
-### Required Services:
+### Required Services
 
 * UserService
 * HouseholdService
@@ -151,8 +192,22 @@ Each service must:
 
 * Validate domain rules
 * Enforce lifecycle constraints
-* Ensure Household isolation
+* Ensure household isolation
 * Never bypass domain constraints
+
+---
+
+### Transaction Handling (MANDATORY)
+
+Operations that modify multiple entities MUST use transactions.
+
+#### Example: Approving a Chore
+
+* Update ChoreInstance
+* Create RewardLedger
+* Update AvatarProgress
+
+These operations MUST succeed or fail together.
 
 ---
 
@@ -162,6 +217,8 @@ Each service must:
 
 * Entities represent pure domain state
 * No business logic inside entities (no “smart entities”)
+
+---
 
 ### Required Fields
 
@@ -175,7 +232,7 @@ All core entities MUST include:
 
 ## 8. Chore Instance Generation Rules
 
-ChoreInstances MUST be created via one of:
+ChoreInstances MUST be created via one of the following:
 
 ### Option A: On-Demand Generation (MVP)
 
@@ -219,14 +276,16 @@ All API responses MUST:
 
 ## 11. Reward System Rules
 
-### RewardLedger is the source of truth
+### RewardLedger is the Source of Truth
 
 * Never compute balances from tasks
 * Always compute balances from RewardLedger
 
-### Balance Calculation:
+#### Balance Calculation
 
+```
 Sum(RewardLedger.Amount where UserId == user)
+```
 
 ---
 
@@ -256,18 +315,45 @@ AvatarProgress is independent from rewards.
 * Prefer explicit over implicit logic
 * Keep methods small and single-purpose
 
+### Naming Conventions
+
+* Controllers end with `Controller`
+* DTOs end with `Dto`
+* Services end with `Service`
+
 ---
 
 ## 15. Testing Expectations
 
-For all services:
+All service tests MUST follow:
 
-* Unit tests required for:
+### Structure
 
-  * reward creation
-  * approval flow
-  * assignment logic
-  * household isolation rules
+* Arrange: create test data
+* Act: call service method
+* Assert:
+
+  * correct state change
+  * correct database changes
+  * correct exceptions/errors
+
+---
+
+### Required Test Cases
+
+* Cannot approve non-completed chore
+* Cannot complete another user's chore
+* Reward is created ONLY once per chore
+* Reward is NOT created before approval
+* Household isolation is enforced
+
+---
+
+### Rules
+
+* Tests must not rely on controllers
+* Tests must target service layer only
+* Use in-memory database or test container
 
 ---
 
@@ -278,5 +364,11 @@ For all services:
 * Household boundaries are NEVER violated
 * Business logic NEVER lives in controllers
 * Domain model MUST NOT be bypassed
+
+If something is not defined:
+
+* Prefer minimal, safe implementation
+* Do NOT invent complex logic
+* Add TODO with explanation if needed
 
 ---

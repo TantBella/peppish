@@ -113,6 +113,26 @@ Represents a specific occurrence of a task at a given time.
 
 ---
 
+### Chore Status Transitions (STRICT)
+
+Allowed transitions:
+
+* Pending → Completed
+* Completed → Approved
+
+Forbidden transitions:
+
+* Pending → Approved
+* Approved → Completed
+* Completed → Pending
+
+#### Rules
+
+* A chore MUST be Completed before it can be Approved
+* Approved chores are final and cannot be modified
+
+---
+
 ## 4. Task Lifecycle
 
 ### Standard Flow
@@ -129,8 +149,10 @@ Represents a specific occurrence of a task at a given time.
 
 1. Child marks task as completed
    → Status = `Completed`
+
 2. Task must be approved by an adult
    → Status = `Approved`
+
 3. After approval:
 
    * Reward is granted
@@ -164,6 +186,7 @@ Tracks all rewards (money or points).
 #### Rules
 
 * A ledger entry is created ONLY when a task is approved
+* Each ChoreInstance can generate at most ONE RewardLedger entry
 * The ledger acts as the source of truth for balances
 * Rewards should never be calculated directly from tasks
 
@@ -173,7 +196,9 @@ Tracks all rewards (money or points).
 
 A user’s balance is calculated as:
 
+```
 Sum of all RewardLedger.Amount for that user
+```
 
 ---
 
@@ -198,6 +223,7 @@ Tracks user progression and visual feedback.
 
 * Progress increases when tasks are approved
 * DailyProgressPercent reflects completion of assigned tasks for the day
+* DailyProgressPercent must be recalculated, not incremented blindly
 * Progress logic must be independent from reward logic
 
 ---
@@ -222,6 +248,22 @@ The system must generate ChoreInstances from assignments.
 
 ---
 
+### Instance Generation Rules
+
+* Instances must NOT be duplicated for the same date
+
+* Each (Assignment, DueDate) combination must be unique
+
+* For Daily recurrence:
+  → create one instance per day
+
+* For Weekly recurrence:
+  → create one instance per week on the same weekday as StartDate
+
+* Instances must not be generated before Assignment.StartDate
+
+---
+
 ## 8. Permissions & Authorization
 
 ### Adults
@@ -239,6 +281,7 @@ The system must generate ChoreInstances from assignments.
 
   * View assigned tasks
   * Mark tasks as completed
+
 * Cannot:
 
   * Approve tasks
@@ -256,6 +299,30 @@ The system must generate ChoreInstances from assignments.
 
 ---
 
+### Household Consistency
+
+All related entities MUST belong to the same Household.
+
+Examples:
+
+* ChoreAssignment.HouseholdId must match:
+
+  * ChoreTemplate.HouseholdId
+  * AssignedToUser.HouseholdId
+
+* ChoreInstance must inherit HouseholdId from ChoreAssignment
+
+Violations must result in errors.
+
+---
+
+### Deletion Rules
+
+* Deleting a ChoreAssignment must NOT delete historical ChoreInstances
+* Deleting a User must be restricted if related data exists
+
+---
+
 ## 10. Design Principles
 
 * Separate definition, assignment, and execution
@@ -263,5 +330,30 @@ The system must generate ChoreInstances from assignments.
 * Store history explicitly (do not derive it dynamically)
 * Prefer explicit state transitions over implicit logic
 * Ensure all business rules are enforced in the service layer (not controllers)
+
+---
+
+## 11. Enums
+
+### UserRole
+
+* Adult
+* Child
+
+---
+
+### ChoreStatus
+
+* Pending
+* Completed
+* Approved
+
+---
+
+### RecurrenceType
+
+* None
+* Daily
+* Weekly
 
 ---
