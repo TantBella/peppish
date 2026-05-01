@@ -1,0 +1,23 @@
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Node / Frontend ---
+node_modules/
+dist/
+build/
+.env
+
+# --- .NET / Backend ---
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# --- Logs ---
+*.log
+
+# --- IDE ---
+.vscode/
+.idea/
