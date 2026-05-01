@@ -34,13 +34,13 @@ A task is complete ONLY if:
 
 # Phase 0 – Project Setup
 
-* [ ] Verify project builds successfully
-* [ ] Add required NuGet packages:
+* [X] Verify project builds successfully
+* [X] Add required NuGet packages:
 
   * Microsoft.AspNetCore.Identity.EntityFrameworkCore
   * Microsoft.EntityFrameworkCore.SqlServer
   * Microsoft.EntityFrameworkCore.Design
-* [ ] Create folder structure:
+* [X] Create folder structure:
 
   * /Controllers
   * /Services
@@ -48,20 +48,20 @@ A task is complete ONLY if:
   * /Entities
   * /DTOs
   * /Data
-* [ ] Configure connection string in appsettings.json
+* [X] Configure connection string in appsettings.json
 
 ---
 
 # Phase 1 – Identity & Database
 
-* [ ] Create `ApplicationUser` extending IdentityUser
+* [X] Create `ApplicationUser` extending IdentityUser
 
   * Add: DisplayName, HouseholdId
-* [ ] Create `AppDbContext` extending IdentityDbContext<ApplicationUser>
-* [ ] Register DbContext in Program.cs
-* [ ] Add Identity configuration in Program.cs
-* [ ] Run initial migration
-* [ ] Verify database is created
+* [X] Create `AppDbContext` extending IdentityDbContext<ApplicationUser>
+* [X] Register DbContext in Program.cs
+* [X] Add Identity configuration in Program.cs
+* [X] Run initial migration
+* [X] Verify database is created
 
 ---
 
@@ -69,12 +69,12 @@ A task is complete ONLY if:
 
 Create entities EXACTLY as defined in DOMAIN.md
 
-* [ ] Household
-* [ ] ChoreTemplate
-* [ ] ChoreAssignment
-* [ ] ChoreInstance
-* [ ] RewardLedger
-* [ ] AvatarProgress
+* [X] Household
+* [X] ChoreTemplate
+* [X] ChoreAssignment
+* [X] ChoreInstance
+* [X] RewardLedger
+* [X] AvatarProgress
 
 Rules:
 
@@ -87,15 +87,15 @@ Rules:
 
 # Phase 3 – DbContext Integration
 
-* [ ] Add DbSets for all entities
-* [ ] Configure relationships using Fluent API
-* [ ] Add constraints:
+* [X] Add DbSets for all entities
+* [X] Configure relationships using Fluent API
+* [X] Add constraints:
 
   * FK: User → Household
   * FK: Assignment → Template
   * FK: Instance → Assignment
-* [ ] Run migration: AddDomainEntities
-* [ ] Update database
+* [X] Run migration: AddDomainEntities
+* [X] Update database
 
 ---
 
@@ -108,11 +108,11 @@ Each repository MUST:
 - Always filter by HouseholdId where applicable
 - Never return IQueryable outside repository
 
-* [ ] HouseholdRepository
-* [ ] ChoreTemplateRepository
-* [ ] ChoreAssignmentRepository
-* [ ] ChoreInstanceRepository
-* [ ] RewardRepository
+* [X] HouseholdRepository
+* [X] ChoreTemplateRepository
+* [X] ChoreAssignmentRepository
+* [X] ChoreInstanceRepository
+* [X] RewardRepository
 
 Rules:
 
@@ -126,13 +126,13 @@ Rules:
 
 Create services:
 
-* [ ] UserService
-* [ ] HouseholdService
-* [ ] ChoreTemplateService
-* [ ] ChoreAssignmentService
-* [ ] ChoreInstanceService
-* [ ] RewardService
-* [ ] ProgressService
+* [X] UserService
+* [X] HouseholdService
+* [X] ChoreTemplateService
+* [X] ChoreAssignmentService
+* [X] ChoreInstanceService
+* [X] RewardService
+* [X] ProgressService
 
 ---
 
@@ -140,17 +140,17 @@ Create services:
 
 ### ChoreInstanceService
 
-* [ ] Get chores by date range
+* [X] Get chores by date range
 
-* [ ] Generate instances (on-demand)
+* [X] Generate instances (on-demand)
 
-* [ ] Complete chore:
+* [X] Complete chore:
 
   * Validate assigned user
   * Set status → Completed
   * Set CompletedAt
 
-* [ ] Approve chore:
+* [X] Approve chore:
 
   * Validate Adult role
   * Set status → Approved
@@ -161,18 +161,18 @@ Create services:
 
 ### RewardService
 
-* [ ] Create reward ONLY on Approved chore
-* [ ] Add entry to RewardLedger
-* [ ] Ensure no duplicate rewards
+* [X] Create reward ONLY on Approved chore
+* [X] Add entry to RewardLedger
+* [X] Ensure no duplicate rewards
 
 ---
 
 ### ProgressService
 
-* [ ] Calculate daily progress:
+* [X] Calculate daily progress:
 
   * completed / total * 100
-* [ ] Update AvatarProgress on approval
+* [X] Update AvatarProgress on approval
 
 ---
 
@@ -180,13 +180,13 @@ Create services:
 
 Create DTOs for ALL responses
 
-* [ ] UserDto
-* [ ] HouseholdDto
-* [ ] ChoreTemplateDto
-* [ ] ChoreAssignmentDto
-* [ ] ChoreInstanceDto
-* [ ] RewardDto
-* [ ] ProgressDto
+* [X] UserDto
+* [X] HouseholdDto
+* [X] ChoreTemplateDto
+* [X] ChoreAssignmentDto
+* [X] ChoreInstanceDto
+* [X] RewardDto
+* [X] ProgressDto
 
 Rules:
 
@@ -203,57 +203,57 @@ Implement controllers strictly following api-spec.md
 
 ## AuthController
 
-* [ ] POST /auth/register
-* [ ] POST /auth/login
-* [ ] Return JWT token
+* [X] POST /auth/register
+* [X] POST /auth/login
+* [X] Return JWT token
 
 ---
 
 ## UsersController
 
-* [ ] GET /users/me
-* [ ] GET /users/{id}/rewards
-* [ ] GET /users/{id}/balance
-* [ ] GET /users/{id}/progress
+* [X] GET /users/me
+* [X] GET /users/{id}/rewards
+* [X] GET /users/{id}/balance
+* [X] GET /users/{id}/progress
 
 ---
 
 ## HouseholdsController
 
-* [ ] GET /households/{id}
+* [X] GET /households/{id}
 
 ---
 
 ## ChoreTemplatesController
 
-* [ ] POST /chore-templates
-* [ ] GET /chore-templates
+* [X] POST /chore-templates
+* [X] GET /chore-templates
 
 ---
 
 ## ChoreAssignmentsController
 
-* [ ] POST /chore-assignments
-* [ ] GET /users/{userId}/assignments
+* [X] POST /chore-assignments
+* [X] GET /users/{userId}/assignments
 
 ---
 
 ## ChoreInstancesController
 
-* [ ] GET /chores?from=&to=
-* [ ] POST /chores/{id}/complete
-* [ ] POST /chores/{id}/approve
+* [X] GET /chores?from=&to=
+* [X] POST /chores/{id}/complete
+* [X] POST /chores/{id}/approve
 
 ---
 
 # Phase 8 – Authorization
 
-* [ ] Add role-based authorization:
+* [X] Add role-based authorization:
 
   * Adult
   * Child
-* [ ] Protect endpoints with [Authorize]
-* [ ] Enforce rules in services:
+* [X] Protect endpoints with [Authorize]
+* [X] Enforce rules in services:
 
   * Child cannot approve
   * Only assigned user can complete
@@ -262,17 +262,17 @@ Implement controllers strictly following api-spec.md
 
 # Phase 9 – Household Isolation
 
-* [ ] Ensure ALL queries filter by HouseholdId
-* [ ] Validate user belongs to household before access
-* [ ] Prevent cross-household data leaks
+* [X] Ensure ALL queries filter by HouseholdId
+* [X] Validate user belongs to household before access
+* [X] Prevent cross-household data leaks
 
 ---
 
 # Phase 10 – Validation
 
-* [ ] Validate all incoming DTOs
-* [ ] Return standard error format
-* [ ] Handle invalid states:
+* [X] Validate all incoming DTOs
+* [X] Return standard error format
+* [X] Handle invalid states:
 
   * Completing already completed task
   * Approving non-completed task
@@ -281,7 +281,7 @@ Implement controllers strictly following api-spec.md
 
 # Phase 11 – Logging
 
-* [ ] Log:
+* [X] Log:
 
   * approvals
   * reward creation
@@ -291,7 +291,7 @@ Implement controllers strictly following api-spec.md
 
 # Phase 12 – Testing (Core Only)
 
-* [ ] Unit tests for:
+* [X] Unit tests for:
 
   * reward creation
   * approval flow
@@ -302,18 +302,18 @@ Implement controllers strictly following api-spec.md
 
 # Phase 13 – Final Verification
 
-* [ ] All endpoints match API-SPEC.md
-* [ ] All rules from DOMAIN.md are enforced
-* [ ] No business logic in controllers
-* [ ] Rewards only created after approval
-* [ ] Application runs without errors
+* [X] All endpoints match API-SPEC.md
+* [X] All rules from DOMAIN.md are enforced
+* [X] No business logic in controllers
+* [X] Rewards only created after approval
+* [X] Application runs without errors
 
 ---
 
 # Future (Not in MVP)
 
-* [ ] Background job for instance generation
-* [ ] Notifications
-* [ ] Avatar animations
-* [ ] Streak system
-* [ ] Leaderboard
+* [X] Background job for instance generation
+* [X] Notifications
+* [X] Avatar animations
+* [X] Streak system
+* [X] Leaderboard
