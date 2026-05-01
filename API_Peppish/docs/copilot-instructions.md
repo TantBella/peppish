@@ -64,7 +64,7 @@ The system MUST follow:
 
 ## 4. Domain Enforcement Rules (Critical)
 
-All code MUST strictly follow `DOMAIN.md`.
+All code MUST strictly follow `domain.md`.
 
 ---
 

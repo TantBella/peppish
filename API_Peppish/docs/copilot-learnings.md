@@ -3,7 +3,7 @@
 ## General
 
 - Do not overengineer solutions
-- Always follow DOMAIN.md strictly
+- Always follow domain.md strictly
 - Never mix Template, Assignment, Instance
 - Always enforce HouseholdId filtering
 

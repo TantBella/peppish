@@ -4,7 +4,7 @@
 
 For EVERY task:
 
-1. Read DOMAIN.md and API-SPEC.md for context
+1. Read domain.md and api-spec.md for context
 2. Identify exact entities and rules involved
 3. Implement ONLY the current task scope
 4. Ensure code compiles
@@ -197,7 +197,7 @@ Rules:
 
 # Phase 7 – Controllers
 
-Implement controllers strictly following API-SPEC.md
+Implement controllers strictly following api-spec.md
 
 ---
 
