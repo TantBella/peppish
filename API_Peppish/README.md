@@ -138,3 +138,12 @@ Authorization: Bearer <token>
 * All operations are scoped to a household
 
 ---
+
+### Documentation
+Detailed planning and AI collaboration rules can be found in:
+
+/docs/copilot-instructions.md
+/docs/copilot-learnings.md
+/docs/domain.md
+/docs/api-spec.md
+/docs/tasks.md

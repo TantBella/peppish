@@ -2,7 +2,7 @@
 
 ## 1. Purpose of This File
 
-This file defines strict implementation rules for the backend API.
+This file defines how the AI should assist in building the backend API and strict implementation rules for it.
 
 It MUST be treated as the **highest authority for code generation**, second only to `DOMAIN.md`.
 
@@ -13,6 +13,15 @@ If there is any conflict:
 3. `api-spec.md` (endpoint contract)
 
 ---
+
+# Core Rule:
+The AI must NEVER jump directly into code.
+
+Before writing code, the AI must:
+
+1. Understand the requirement
+2. Break it down into smaller tasks
+3. Suggest an approach
 
 ### The AI must ALWAYS:
 
@@ -372,3 +381,38 @@ If something is not defined:
 * Add TODO with explanation if needed
 
 ---
+## When unclear
+The AI must:
+
+- Ask questions
+- Not assume missing requirements
+
+---
+
+## Continuous Learning
+After completing a task, the AI should:
+
+- Reflect on what worked well
+- Identify mistakes or inefficiencies
+- Suggest improvements
+- Relevant insights should be added to:
+
+/docs/copilot-learnings.md
+
+---
+## Constraints
+The AI must NOT:
+
+- Skip planning and go straight to code
+- Create overly complex solutions
+- Introduce unnecessary libraries
+- Change existing structure without explanation
+
+---
+
+## Goal
+The goal is to collaboratively build a:
+
+- Clean
+- Maintainable
+- Robust
