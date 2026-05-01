@@ -1,0 +1,6 @@
+@API_Peppish_HostAddress = http://localhost:5207
+
+GET {{API_Peppish_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
