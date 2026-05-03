@@ -302,18 +302,18 @@ Implement controllers strictly following api-spec.md
 
 # Phase 13 – Final Verification
 
-* [X] All endpoints match API-SPEC.md
-* [X] All rules from DOMAIN.md are enforced
-* [X] No business logic in controllers
-* [X] Rewards only created after approval
-* [X] Application runs without errors
+* [ ] All endpoints match API-SPEC.md
+* [ ] All rules from DOMAIN.md are enforced
+* [ ] No business logic in controllers
+* [ ] Rewards only created after approval
+* [ ] Application runs without errors
 
 ---
 
 # Future (Not in MVP)
 
-* [X] Background job for instance generation
-* [X] Notifications
-* [X] Avatar animations
-* [X] Streak system
-* [X] Leaderboard
+* [ ] Background job for instance generation
+* [ ] Notifications
+* [ ] Avatar animations
+* [ ] Streak system
+* [ ] Leaderboard
