@@ -1,6 +1,8 @@
 using API_Peppish.Data;
+using API_Peppish.DTOs;
 using API_Peppish.Entities;
 using API_Peppish.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Services;
@@ -8,6 +10,7 @@ namespace API_Peppish.Services;
 public interface IChoreInstanceService
 {
     Task<List<ChoreInstance>> GetByDateRangeAsync(DateTime from, DateTime to, CancellationToken cancellationToken = default);
+    Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(DateTime from, DateTime to, CancellationToken cancellationToken = default);
     Task<ChoreInstance?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<ChoreInstance> CompleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<ChoreInstance> ApproveAsync(Guid id, CancellationToken cancellationToken = default);
@@ -18,6 +21,7 @@ public class ChoreInstanceService(
     IRewardRepository rewardRepository,
     IAvatarProgressRepository progressRepository,
     IUserContextService userContextService,
+    UserManager<ApplicationUser> userManager,
     AppDbContext dbContext,
     ILogger<ChoreInstanceService> logger) : IChoreInstanceService
 {
@@ -30,6 +34,38 @@ public class ChoreInstanceService(
         await GenerateMissingInstancesAsync(from, to, householdId, cancellationToken);
         
         return instances;
+    }
+
+    public async Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(DateTime from, DateTime to, CancellationToken cancellationToken = default)
+    {
+        var instances = await GetByDateRangeAsync(from, to, cancellationToken);
+        var dtos = new List<ChoreInstanceDto>();
+
+        foreach (var instance in instances)
+        {
+            // Get the assignment for this instance
+            var assignment = await dbContext.ChoreAssignments.FindAsync(new object[] { instance.ChoreAssignmentId }, cancellationToken: cancellationToken);
+            if (assignment == null) continue;
+
+            // Get the user assigned to this chore
+            var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
+            
+            // Get the template for chore details
+            var template = await dbContext.ChoreTemplates.FindAsync(new object[] { assignment.ChoreTemplateId }, cancellationToken: cancellationToken);
+
+            dtos.Add(new ChoreInstanceDto
+            {
+                Id = instance.Id,
+                Title = template?.Title ?? string.Empty,
+                DueDate = instance.DueDate,
+                Status = instance.Status.ToString(),
+                AssignedToUserId = assignment.AssignedToUserId,
+                AssignedToUserName = user?.DisplayName ?? string.Empty,
+                RewardAmount = template?.RewardAmount ?? 0
+            });
+        }
+
+        return dtos;
     }
 
     public async Task<ChoreInstance?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

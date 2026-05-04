@@ -62,6 +62,7 @@ builder.Services.AddScoped<IRewardRepository, RewardRepository>();
 builder.Services.AddScoped<IAvatarProgressRepository, AvatarProgressRepository>();
 
 // Register Services
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IChoreTemplateService, ChoreTemplateService>();
 builder.Services.AddScoped<IChoreAssignmentService, ChoreAssignmentService>();

@@ -27,7 +27,7 @@ public class ChoreAssignmentsController(
         var assignment = await service.AssignAsync(serviceRequest);
         var assignedUser = await userManager.FindByIdAsync(assignment.AssignedToUserId);
 
-        return CreatedAtAction(nameof(GetUserAssignments), new ChoreAssignmentDto
+        return CreatedAtAction(nameof(AssignChore), new ChoreAssignmentDto
         {
             Id = assignment.Id,
             ChoreTemplateId = assignment.ChoreTemplateId,
@@ -35,27 +35,5 @@ public class ChoreAssignmentsController(
             AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
             StartDate = assignment.StartDate
         });
-    }
-
-    [HttpGet("users/{userId}")]
-    public async Task<ActionResult<List<ChoreAssignmentDto>>> GetUserAssignments(string userId)
-    {
-        var assignments = await service.GetUserAssignmentsAsync(userId);
-        var dtos = new List<ChoreAssignmentDto>();
-
-        foreach (var assignment in assignments)
-        {
-            var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
-            dtos.Add(new ChoreAssignmentDto
-            {
-                Id = assignment.Id,
-                ChoreTemplateId = assignment.ChoreTemplateId,
-                AssignedToUserId = assignment.AssignedToUserId,
-                AssignedToUserName = user?.DisplayName ?? string.Empty,
-                StartDate = assignment.StartDate
-            });
-        }
-
-        return Ok(dtos);
     }
 }

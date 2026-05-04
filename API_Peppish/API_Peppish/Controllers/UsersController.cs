@@ -14,7 +14,8 @@ public class UsersController(
     IUserContextService userContextService,
     UserManager<ApplicationUser> userManager,
     IRewardService rewardService,
-    IProgressService progressService) : ControllerBase
+    IProgressService progressService,
+    IChoreAssignmentService choreAssignmentService) : ControllerBase
 {
     [HttpGet("me")]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
@@ -34,6 +35,28 @@ public class UsersController(
             Role = roles.FirstOrDefault() ?? "Child",
             HouseholdId = user.HouseholdId
         });
+    }
+
+    [HttpGet("{userId}/assignments")]
+    public async Task<ActionResult<List<ChoreAssignmentDto>>> GetUserAssignments(string userId)
+    {
+        var assignments = await choreAssignmentService.GetUserAssignmentsAsync(userId);
+        var dtos = new List<ChoreAssignmentDto>();
+
+        foreach (var assignment in assignments)
+        {
+            var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
+            dtos.Add(new ChoreAssignmentDto
+            {
+                Id = assignment.Id,
+                ChoreTemplateId = assignment.ChoreTemplateId,
+                AssignedToUserId = assignment.AssignedToUserId,
+                AssignedToUserName = user?.DisplayName ?? string.Empty,
+                StartDate = assignment.StartDate
+            });
+        }
+
+        return Ok(dtos);
     }
 
     [HttpGet("{userId}/rewards")]

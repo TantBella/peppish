@@ -1,8 +1,6 @@
 using API_Peppish.DTOs;
-using API_Peppish.Entities;
 using API_Peppish.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Peppish.Controllers;
@@ -11,9 +9,7 @@ namespace API_Peppish.Controllers;
 [Route("api/chores")]
 [Authorize]
 public class ChoreInstancesController(
-    IChoreInstanceService service,
-    UserManager<ApplicationUser> userManager,
-    IChoreTemplateService templateService) : ControllerBase
+    IChoreInstanceService service) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<ChoreInstanceDto>>> GetChores([FromQuery] DateTime? from, [FromQuery] DateTime? to)
@@ -21,29 +17,7 @@ public class ChoreInstancesController(
         var fromDate = from?.ToUniversalTime() ?? DateTime.UtcNow.AddDays(-7);
         var toDate = to?.ToUniversalTime() ?? DateTime.UtcNow.AddDays(7);
 
-        var instances = await service.GetByDateRangeAsync(fromDate, toDate);
-        var dtos = new List<ChoreInstanceDto>();
-
-        foreach (var instance in instances)
-        {
-            var assignment = await service.GetByIdAsync(instance.Id);
-            if (assignment == null) continue;
-
-            var user = await userManager.FindByIdAsync(instance.Id.ToString());
-            var template = await templateService.GetByIdAsync(instance.Id);
-
-            dtos.Add(new ChoreInstanceDto
-            {
-                Id = instance.Id,
-                Title = template?.Title ?? string.Empty,
-                DueDate = instance.DueDate,
-                Status = instance.Status.ToString(),
-                AssignedToUserId = string.Empty, // Need to get from assignment
-                AssignedToUserName = user?.DisplayName ?? string.Empty,
-                RewardAmount = template?.RewardAmount ?? 0
-            });
-        }
-
+        var dtos = await service.GetByDateRangeAsDto(fromDate, toDate);
         return Ok(dtos);
     }
 
