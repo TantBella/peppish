@@ -34,6 +34,7 @@ If a learning is relevant, the AI should explicitly acknowledge it.
 
 - React
 - TypeScript
+- Tailwind
 - Vite (or Next.js if explicitly chosen)
 - React Query
 - Fetch or Axios (via service layer)

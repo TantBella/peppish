@@ -73,6 +73,48 @@ Project-specific conventions and mistakes to avoid.
 - All API responses must be typed (reduces runtime errors)
 - Compilation ensures type safety before runtime
 
+## Frontend Learnings (Phase 2 - Authentication)
+
+### Form Validation & Error Handling
+- Real-time error clearing: Clear error when user starts typing in field
+- Separate error states: Field-level errors (email, password, etc.) + submit-level errors (API errors)
+- Only show error message when user has interacted with field OR submitted form
+- Disable form inputs during submission to prevent double-submit
+
+### Form Validation Patterns
+- Extract validation logic into separate function (validateForm) for clarity
+- Validate all fields before any state update
+- Collect all errors, then setErrors once (batch update)
+- Show validation errors inline with focus states
+
+### Email Validation
+- Use regex pattern: `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` for basic validation
+- Backend should always validate too (never trust client)
+
+### JWT Token Management
+- Store both token AND user object together in localStorage
+- Token must be retrieved on app mount (useEffect in AuthProvider)
+- Always clear BOTH on logout to prevent stale auth state
+- Use axios request interceptor to auto-add token to every request: `Authorization: Bearer ${token}`
+
+### Protected Routes & Role-Based Access
+- ProtectedRoute component should check isLoading first (prevents UI flash)
+- Redirect pattern: No auth → /login, Wrong role → /home
+- Role prop is optional: Some routes allow any authenticated user
+- Always validate role on backend (frontend role checks are UX only)
+
+### Axios Interceptors Pitfall
+- Response interceptor catches all errors including network failures
+- 401 error should trigger logout + redirect immediately
+- Other errors should be passed to component for handling
+- Ensure interceptor doesn't interfere with normal error flow
+
+### Form Input States
+- Inputs should disable during submission (disabled={isLoading})
+- Button text should change: "Login" → "Logging in..."
+- Input border/focus states for visual feedback
+- Focus management: Focus first error field or show summary
+
 ## Original Learnings
 - Split large components early
 - Prefer local state
