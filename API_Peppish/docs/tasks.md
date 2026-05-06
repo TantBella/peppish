@@ -302,11 +302,11 @@ Implement controllers strictly following api-spec.md
 
 # Phase 13 – Final Verification
 
-* [ ] All endpoints match API-SPEC.md
-* [ ] All rules from DOMAIN.md are enforced
-* [ ] No business logic in controllers
-* [ ] Rewards only created after approval
-* [ ] Application runs without errors
+* [X] All endpoints match API-SPEC.md
+* [X] All rules from DOMAIN.md are enforced
+* [X] No business logic in controllers
+* [X] Rewards only created after approval
+* [X] Application runs without errors
 
 ---
 
