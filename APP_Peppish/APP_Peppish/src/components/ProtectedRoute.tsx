@@ -1,4 +1,3 @@
-import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,7 +6,7 @@ interface ProtectedRouteProps {
   requiredRole?: 'adult' | 'child'
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth()
 
   if (isLoading) {

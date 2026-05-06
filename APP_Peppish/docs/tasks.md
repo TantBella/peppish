@@ -2,9 +2,10 @@
 
 ## Phase 1 – Setup
 
-- [ ] Create React app
-- [ ] Setup routing
-- [ ] Setup API client
+- [X] Create React app
+- [X] Setup routing
+- [X] Setup API client
+- [X] Update Architecture
 
 ## Phase 2 – Auth
 
