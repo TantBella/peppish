@@ -16,7 +16,6 @@ const getWeekDates = () => {
   for (let i = 0; i < 7; i++) {
     const date = new Date(monday)
     date.setDate(date.getDate() + i)
-    const key = date.toISOString().split('T')[0]
     weekDates[days[i]] = date
   }
 

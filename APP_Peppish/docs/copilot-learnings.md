@@ -115,7 +115,127 @@ Project-specific conventions and mistakes to avoid.
 - Input border/focus states for visual feedback
 - Focus management: Focus first error field or show summary
 
-## Original Learnings
-- Split large components early
-- Prefer local state
-- Define types BEFORE logic
+## Frontend Learnings (Phase 4 - Rewards Display)
+
+### Displaying Aggregated Data
+- Balance endpoint returns totals: totalMoney and totalProgress
+- Use CSS Grid for card layout: `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))`
+- Format currency: `toFixed(2)` for money values
+- Color coding by type: green = money, yellow = progress, blue = default
+
+### List Display Patterns
+- Reward history shows: icon + value + date
+- Date formatting: `new Date(isoString).toLocaleDateString()`
+- Show empty state message when list is empty
+- Use flexbox for list items: align-items center, gap between elements
+
+### Service Layer for Non-Chore Data
+- Rewardservice is separate from choreService
+- Both follow same pattern: simple GET requests through apiClient
+- Hook layer (useRewards) handles caching + error handling
+- Components only use hooks, never call services directly
+
+### CSS Styling for Data Display
+- Card-based layout for dashboard-style pages
+- Border colors: left border indicates type (green, yellow, blue)
+- Icons: Use emoji or text symbols ($, ⭐)
+- Spacing: Consistent margins between sections (gap: 1.5rem, 2rem)
+
+
+
+### Calendar/Week View Patterns
+- Calculate Monday of current week: `const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)`
+- Use CSS Grid for responsive day columns: `grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))`
+- Group data by day using date ISO strings as keys for consistency
+- Display format: Short day name (Mon, Tue) + date (Jan 15)
+
+### React Query Mutations for State Changes
+- Use useMutation for POST/PATCH endpoints (not useQuery)
+- Must provide: mutationFn (the API call) + onSuccess/onError handlers
+- onSuccess should: (1) invalidate related queries, (2) show success state
+- onError should: catch and display error message from API
+- Key pattern: invalidateQueries with queryKey to refresh data
+
+### Action Authorization Patterns
+- Determine which actions to show based on: chore.status + user.role
+- Button visibility: Only show if user CAN perform action
+- Status badges: Show Pending/Completed/Approved with color coding
+- Fallback UI: Show status message if no action available
+
+### CSS Classes for Dynamic Styling
+- Use class names to reflect state: `.status-pending`, `.status-completed`, `.status-approved`
+- Use data attributes or CSS classes for role-based visibility
+- Example: `.btn-complete` for child actions, `.btn-approve` for adult actions
+- Color coding: yellow (pending), blue (completed), green (approved)
+
+### Expandable Card Pattern
+- Track expanded state in parent component: `const [expandedChoreId, setExpandedChoreId]`
+- Show/hide child components conditionally based on expanded state
+- Toggle handler: `setExpandedChoreId(id === expandedId ? null : id)`
+- Keep single card expanded at a time for UX clarity
+
+### Chore Status Rules (Domain Constraint)
+- Pending: Available or assigned (can be completed by assignee)
+- Completed: Waiting for adult approval (cannot complete again)
+- Approved: Final state (no further actions available)
+- No role can skip steps: must go Pending → Completed → Approved
+
+## Frontend Learnings (Phase 3 - Chores List & Actions)
+
+### Calendar/Week View Patterns
+- Calculate Monday of current week: `const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)`
+- Use CSS Grid for responsive day columns: `grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))`
+- Group data by day using date ISO strings as keys for consistency
+- Display format: Short day name (Mon, Tue) + date (Jan 15)
+
+### React Query Mutations for State Changes
+- Use useMutation for POST/PATCH endpoints (not useQuery)
+- Must provide: mutationFn (the API call) + onSuccess/onError handlers
+- onSuccess should: (1) invalidate related queries, (2) show success state
+- onError should: catch and display error message from API
+- Key pattern: invalidateQueries with queryKey to refresh data
+
+### Action Authorization Patterns
+- Determine which actions to show based on: chore.status + user.role
+- Button visibility: Only show if user CAN perform action
+- Status badges: Show Pending/Completed/Approved with color coding
+- Fallback UI: Show status message if no action available
+
+### CSS Classes for Dynamic Styling
+- Use class names to reflect state: `.status-pending`, `.status-completed`, `.status-approved`
+- Use data attributes or CSS classes for role-based visibility
+- Example: `.btn-complete` for child actions, `.btn-approve` for adult actions
+- Color coding: yellow (pending), blue (completed), green (approved)
+
+### Expandable Card Pattern
+- Track expanded state in parent component: `const [expandedChoreId, setExpandedChoreId]`
+- Show/hide child components conditionally based on expanded state
+- Toggle handler: `setExpandedChoreId(id === expandedId ? null : id)`
+- Keep single card expanded at a time for UX clarity
+
+## Frontend Learnings (Phase 5 - Progress Visualization)
+
+### Progress Bars
+- Calculate percentage: `(current / max) * 100`
+- Use inline styles for dynamic width: `style={{ width: ${percentage}% }}`
+- CSS transitions smooth bar fill: `transition: width 0.3s ease`
+- Gradient backgrounds: `linear-gradient(90deg, #007bff, #0056b3)`
+- Different colors for different types: blue for avatar XP, green for daily progress
+
+### Level & Experience Display
+- Show current level with badge styling
+- Display experience text: "X / Y XP"
+- Avatar placeholder uses emoji for visual appeal
+- Calculate progress percentage for bar visualization
+
+### Statistics Layout
+- Use CSS Grid for flexible stat display: `grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))`
+- Center text with `text-align: center`
+- Large value font size (2rem) with bold weight
+- Label font size smaller (0.9rem) in gray color (#666)
+
+### Daily vs Avatar Data
+- Daily progress: completed / total chores ratio
+- Avatar progress: experience / max experience ratio
+- Both show percentage-based progress bars
+- Daily stats include: completed, approved, total counts
