@@ -11,17 +11,29 @@ export const HomePage = () => {
   }
 
   return (
-    <div>
-      <h1>Welcome, {user?.name}!</h1>
-      <p>Role: {user?.role}</p>
-      <nav>
-        <ul>
-          <li>Chores</li>
-          <li>Rewards</li>
-          <li>Progress</li>
-        </ul>
-      </nav>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="home-page">
+      <header className="home-header">
+        <h1>Welcome, {user?.name}!</h1>
+        <button onClick={handleLogout} className="btn-logout">Logout</button>
+      </header>
+
+      <div className="home-content">
+        <div className="user-info">
+          <p>Role: <strong>{user?.role === 'adult' ? 'Adult' : 'Child'}</strong></p>
+        </div>
+
+        <nav className="main-nav">
+          <button onClick={() => navigate('/chores')} className="nav-button">
+            📋 View Chores
+          </button>
+          <button onClick={() => navigate('/rewards')} className="nav-button">
+            🎁 View Rewards
+          </button>
+          <button onClick={() => navigate('/progress')} className="nav-button">
+            📊 View Progress
+          </button>
+        </nav>
+      </div>
     </div>
   )
 }

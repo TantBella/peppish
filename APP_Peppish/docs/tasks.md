@@ -9,22 +9,30 @@
 
 ## Phase 2 – Auth
 
-- [ ] Login page
-- [ ] Store JWT
-- [ ] Protect routes
+- [X] Login page
+- [X] Store JWT
+- [X] Protect routes
 
 ## Phase 3 – Chores
 
-- [ ] Chore list (week view)
-- [ ] Complete chore action
-- [ ] Approve chore (adult)
+- [X] Chore list (week view)
+- [X] Complete chore action
+- [X] Approve chore (adult)
 
 ## Phase 4 – Rewards
 
-- [ ] Show balance
-- [ ] Show reward history
+- [X] Show balance
+- [X] Show reward history
 
 ## Phase 5 – Progress
 
-- [ ] Show avatar progress
-- [ ] Show daily progress bar
+- [X] Show avatar progress
+- [X] Show daily progress bar
+
+## Phase 6 – Testing
+
+- [ ] API client & interceptor tests
+- [ ] Auth context & hooks tests
+- [ ] Component unit tests
+- [ ] Integration tests
+- [ ] Error handling tests

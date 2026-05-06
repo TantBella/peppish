@@ -10,7 +10,11 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
   const { user, isLoading } = useAuth()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="loading-container">
+        <div className="spinner">Loading...</div>
+      </div>
+    )
   }
 
   if (!user) {
