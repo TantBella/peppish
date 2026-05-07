@@ -4,7 +4,8 @@
 
 - [X] Create React app
 - [X] Setup routing
-- [X] Setup API client
+- [X] Setup persistence layer abstraction
+- [X] Setup LocalStorage persistence
 - [X] Update Architecture
 
 ## Phase 2 – Auth
@@ -36,3 +37,6 @@
 - [ ] Component unit tests
 - [ ] Integration tests
 - [ ] Error handling tests
+
+<!-- ## Phase 7 - Future stuff -->
+<!-- - [ ] Setup API integration -->

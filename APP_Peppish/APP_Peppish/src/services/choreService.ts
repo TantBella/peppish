@@ -1,5 +1,5 @@
-import { apiClient } from './apiClient'
 import { Chore, ChoreStatus, ChoreType, RewardType } from '../types'
+import { choreServiceLocal } from './choreService.local'
 
 interface CreateChorePayload {
   title: string
@@ -8,41 +8,43 @@ interface CreateChorePayload {
   rewardType: RewardType
   rewardValue?: number
   assignedTo?: string
+  createdBy: string
 }
 
 export const choreService = {
+  
   getChores: async (params?: { status?: ChoreStatus; assignedTo?: string }): Promise<Chore[]> => {
-    const response = await apiClient.get<Chore[]>('/chore-instances', { params })
-    return response.data
+    return choreServiceLocal.getChores(params)
   },
 
   getChoreById: async (id: string): Promise<Chore> => {
-    const response = await apiClient.get<Chore>(`/chores/${id}`)
-    return response.data
+    return choreServiceLocal.getChoreById(id)
   },
 
   createChore: async (payload: CreateChorePayload): Promise<Chore> => {
-    const response = await apiClient.post<Chore>('/chores', payload)
-    return response.data
+    const chore: Chore = {
+      ...payload,
+      id: '',
+      status: 'available' as ChoreStatus,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    return choreServiceLocal.createChore(chore)
   },
 
   updateChore: async (id: string, payload: Partial<Chore>): Promise<Chore> => {
-    const response = await apiClient.patch<Chore>(`/chores/${id}`, payload)
-    return response.data
+    return choreServiceLocal.updateChore(id, payload)
   },
 
   deleteChore: async (id: string): Promise<{ success: boolean }> => {
-    const response = await apiClient.delete<{ success: boolean }>(`/chores/${id}`)
-    return response.data
+    return choreServiceLocal.deleteChore(id)
   },
 
   completeChore: async (id: string): Promise<Chore> => {
-    const response = await apiClient.post<Chore>(`/chores/${id}/complete`)
-    return response.data
+    return choreServiceLocal.completeChore(id)
   },
 
   approveChore: async (id: string): Promise<Chore> => {
-    const response = await apiClient.post<Chore>(`/chores/${id}/approve`)
-    return response.data
+    return choreServiceLocal.approveChore(id)
   },
 }

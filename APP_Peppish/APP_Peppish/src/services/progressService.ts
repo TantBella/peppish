@@ -1,29 +1,13 @@
-import { apiClient } from './apiClient'
+import { progressServiceLocal, AvatarProgress, DailyProgress } from './progressService.local'
 
-export interface AvatarProgress {
-  userId: string
-  level: number
-  experience: number
-  maxExperience: number
-  avatarUrl?: string
-}
-
-export interface DailyProgress {
-  userId: string
-  date: string
-  completedChores: number
-  totalChores: number
-  approvedChores: number
-}
+export type { AvatarProgress, DailyProgress }
 
 export const progressService = {
   getAvatarProgress: async (): Promise<AvatarProgress> => {
-    const response = await apiClient.get<AvatarProgress>('/progress/avatar')
-    return response.data
+    return progressServiceLocal.getAvatarProgress()
   },
 
   getDailyProgress: async (): Promise<DailyProgress> => {
-    const response = await apiClient.get<DailyProgress>('/progress/daily')
-    return response.data
+    return progressServiceLocal.getDailyProgress()
   },
 }

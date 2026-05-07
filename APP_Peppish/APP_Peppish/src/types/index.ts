@@ -8,7 +8,8 @@ export type RewardType = 'money' | 'progress'
 
 export interface User {
   id: string
-  name: string
+  email: string
+  name?: string
   role: Role
 }
 

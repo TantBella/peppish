@@ -239,3 +239,84 @@ Project-specific conventions and mistakes to avoid.
 - Avatar progress: experience / max experience ratio
 - Both show percentage-based progress bars
 - Daily stats include: completed, approved, total counts
+
+## Frontend Learnings (Phase 6 - Testing)
+
+### React Testing Library Best Practices
+- Use `render()` with providers (QueryClientProvider, BrowserRouter, AuthProvider) for integration testing
+- Query selectors priority: `getByRole` > `getByPlaceholderText` > `getByTestId` (avoid direct DOM queries)
+- `waitFor()` is essential for async operations and data fetching
+- Always clear mocks before each test: `beforeEach(() => jest.clearAllMocks())`
+- `screen` is preferred over destructuring render results (more readable)
+
+### Create React App Testing Setup
+- Jest and React Testing Library pre-configured in CRA
+- Test files use `.test.ts` or `.test.tsx` extension
+- Run tests: `npm test -- --watch=false` for CI/CD
+- Avoid mocking modules that require JSX unless necessary
+- Use realistic imports and component trees (not heavily mocked)
+
+### Component Testing Patterns
+- Test what users see and interact with, not implementation details
+- Mock external services (API calls, authService) not context providers
+- Wrap components with all necessary providers: Query, Router, Auth
+- Test user interactions: `fireEvent.click()`, `fireEvent.change()`
+- Use `data-testid` for elements without semantic roles
+
+### API Client Testing
+- Test that interceptors are present (don't test internals)
+- Test token attachment from localStorage happens correctly
+- Test 401 response handling (logout and redirect)
+- Mock `window.location.href` to avoid navigation during tests
+- Always clear localStorage in beforeEach
+
+### Auth Context Testing
+- Test that context restores session from localStorage
+- Test useAuth hook is available and returns expected properties
+- Test logout clears localStorage
+- Verify token is attached to all requests via interceptor
+- Test protected routes redirect on 401 errors
+
+### Form Validation Testing
+- Test that form elements render correctly
+- Test user input updates field values
+- Test validation errors display on submit or field blur
+- Test submit button is disabled during submission
+- Test that form has link to alternative auth page (register/login)
+
+### Manual Testing vs Automated Tests
+- Automated tests: Component rendering, API calls, state changes
+- Manual testing: Full user workflows, UI responsiveness, error messages
+- Create TESTING_MANUAL.md with step-by-step manual test cases
+- For full integration: test against actual backend
+- Test error scenarios: network down, 401 responses, invalid data
+
+### TypeScript in Tests
+- Import React explicitly for JSX: `import React from 'react'`
+- Type test data: `const testUser: User = {...}`
+- Use `HTMLInputElement` type for form inputs
+- Type mocked functions: `jest.fn((email: string) => Promise.resolve(...))`
+- Type async test utilities: `await waitFor(() => {...})`
+
+### Testing Strategy for This Project
+- **Unit tests**: Individual components, hooks, services (Jest + RTL)
+- **Integration tests**: Full user flows with mocked API (Jest + RTL)
+- **Manual tests**: 31 test cases covering all phases (documented in TESTING_MANUAL.md)
+- **Backend integration**: Run manual tests against real backend
+- **E2E testing**: Consider Cypress/Playwright for end-to-end testing
+
+### Common Testing Mistakes to Avoid
+- Testing implementation details instead of user behavior
+- Over-mocking (mock too much, lose integration value)
+- Not waiting for async operations (missing `waitFor`, `async/await`)
+- Forgetting to clear localStorage/mocks between tests
+- Testing without all necessary providers (causes Provider errors)
+- Assuming API responses match backend (always verify types)
+- Not mocking window.location for navigation tests
+
+### Debugging Tests
+- Use `screen.debug()` to print DOM state
+- Use `screen.logTestingPlaygroundURL()` for selector suggestions
+- Add `console.log()` in components to trace execution
+- Run single test: `npm test -- --testNamePattern="specific test"`
+- Run specific file: `npm test -- ChoreListPage.test.tsx`

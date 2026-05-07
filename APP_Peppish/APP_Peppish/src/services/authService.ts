@@ -1,13 +1,9 @@
-import { apiClient } from './apiClient'
 import { AuthResponse, User } from '../types'
+import { authServiceLocal } from './authService.local'
 
 export const authService = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await apiClient.post<AuthResponse>('/auth/login', {
-      email,
-      password,
-    })
-    return response.data
+    return authServiceLocal.login(email, password)
   },
 
   register: async (
@@ -16,17 +12,10 @@ export const authService = {
     password: string,
     role: 'adult' | 'child'
   ): Promise<AuthResponse> => {
-    const response = await apiClient.post<AuthResponse>('/auth/register', {
-      name,
-      email,
-      password,
-      role,
-    })
-    return response.data
+    return authServiceLocal.register(name, email, password, role)
   },
 
   getCurrentUser: async (): Promise<User> => {
-    const response = await apiClient.get<User>('/users/me')
-    return response.data
+    return authServiceLocal.getCurrentUser()
   },
 }
