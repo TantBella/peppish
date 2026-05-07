@@ -10,6 +10,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
+  letter-spacing: 1.5px;
 }
 
 #root {
@@ -48,7 +49,7 @@ body {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
+  /* font-weight: 500; */
   color: #333;
 }
 
@@ -84,8 +85,7 @@ body {
 }
 
 .error-text {
-  display: block;
-  color: #dc3545;
+ color: #dc3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
@@ -102,18 +102,18 @@ body {
 .btn-primary {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #007bff;
+  background-color: #447c68;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 500;
+  /* font-weight: 500; */
   transition: background-color 0.2s;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #005b38;
 }
 
 .btn-primary:disabled {
@@ -124,12 +124,12 @@ body {
 .login-footer {
   margin-top: 1.5rem;
   text-align: center;
-  color: #666;
+  color: #7f7d7d;
   font-size: 0.9rem;
 }
 
 .login-footer a {
-  color: #007bff;
+  color: #00ff7b;
   text-decoration: none;
 }
 
@@ -147,46 +147,59 @@ body {
 
 .spinner {
   font-size: 1.2rem;
-  color: #666;
+  color: #777;
 }
 
 /* Home Page */
 .home-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
 }
 
 .home-header {
-  background: white;
   padding: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-size: 1.1rem;
+  width: 100vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  text-align: center;
+  background-color: #fff;
 }
 
-.home-header h1 {
+.Peppish-logo {
+  text-align: center;
+  height: 150px;
+  width: auto;
+}
+
+ h1 {
   color: #333;
+  font-weight: 300;
 }
 
-.btn-logout {
-  padding: 0.5rem 1rem;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
+.home-section {
+  padding: 2rem;
+  /* max-width: 1000px; */
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  margin: 1rem auto;
+  background-color: #ffffffc9;
 }
 
-.btn-logout:hover {
-  background-color: #c82333;
+.user-info > p{
+  margin-top: 1rem;
+}
+
+.home-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .home-content {
-  padding: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  background-color: #fff;
+  padding: 1rem;
+  border: #9ac2ec4c solid 2px;
+  border-radius: 15px;
+  margin: 0.5rem;
 }
 
 .user-info {
@@ -197,26 +210,28 @@ body {
 }
 
 .main-nav {
+  position: fixed;
+  bottom: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  width: 100vw;
+  
 }
 
 .nav-button {
-  padding: 1.5rem;
-  background: white;
-  border: 2px solid #007bff;
-  border-radius: 8px;
+  background-color: #fff;
+  padding: 0.4rem;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #007bff;
   transition: all 0.2s;
+  border: none;
+  
 }
 
+.nav-button > img {
+  max-height: 4rem;
+}
 .nav-button:hover {
-  background-color: #007bff;
-  color: white;
+  background-color: #caf5e28e;
 }
 
 /* Chore List Page */
@@ -697,5 +712,4 @@ body {
   text-align: right;
   margin-top: 0.5rem;
 }
-
 

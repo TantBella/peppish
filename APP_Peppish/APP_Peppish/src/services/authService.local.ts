@@ -6,13 +6,13 @@ const DEFAULT_USERS: User[] = [
     id: '1',
     email: 'parent@example.com',
   
-    name: 'Parent',
+    name: 'Mamman',
     role: 'adult'
   },
   {
     id: '2',
     email: 'child@example.com',
-    name: 'Child',
+    name: 'Mattan',
     role: 'child'
   }
 ]
