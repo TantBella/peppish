@@ -1,4 +1,21 @@
-# API Specification (Frontend Contract)
+# API Specification (Future Backend Contract)
+
+IMPORTANT:
+
+The application currently uses LocalStorage as the active persistence layer.
+
+This API specification represents the FUTURE backend contract and must still define:
+- shared types
+- domain behavior
+- future API structure
+
+Frontend architecture MUST still follow:
+
+Component → Hook → Service
+
+However, services currently use LocalStorage internally instead of HTTP requests.
+
+The service layer MUST be designed so LocalStorage can later be replaced with API calls without changing hooks or components.
 
 This document defines how the frontend interacts with the backend API.
 All code must strictly follow this specification. No assumptions allowed.

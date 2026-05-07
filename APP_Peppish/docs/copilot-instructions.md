@@ -67,7 +67,13 @@ If a learning is relevant, the AI should explicitly acknowledge it.
 
 ### Data Flow
 
-Component → Hook → Service → API
+Component → Hook → Service → Persistence Layer
+
+Current persistence layer:
+- LocalStorage
+
+Future persistence layer:
+- REST API
 
 ---
 
@@ -85,13 +91,16 @@ Hooks:
 - Handle ALL mapping
 
 Services:
-- API only
-- Return raw data
+- Persistence only
+- May use LocalStorage or API
+- Return raw domain data
 - No transformations
 
 ---
 
 ## 5. React Query Rules
+React Query may still be used even when LocalStorage is the active persistence layer,
+to preserve future API architecture.
 
 Correct:
 
@@ -109,9 +118,23 @@ Wrong:
 - NEVER call API in components
 - ALWAYS use services
 - ALWAYS type responses
-- NEVER hardcode data
-
+<!-- - NEVER hardcode data -->
+- Do not hardcode UI state inside components.
+Seed/mock data may exist inside dedicated persistence or seed files.
 ---
+
+## Persistence Abstraction (MANDATORY)
+
+The application currently uses LocalStorage.
+
+Components and hooks MUST NOT know whether data comes from:
+- LocalStorage
+- API
+- Mock data
+
+Only services may access persistence directly.
+
+Future migration to API must require changes only inside services.
 
 ## API Client
 
@@ -165,6 +188,11 @@ MUST happen in hooks only
 - Must match API
 
 ## 10. Auth
+
+Authentication is currently mocked locally.
+
+The architecture must still support future JWT authentication.
+
 - Use React Context + useAuth
 - Auto attach token
 - Logout on 401
