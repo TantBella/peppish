@@ -200,6 +200,7 @@ body {
   border: #9ac2ec4c solid 2px;
   border-radius: 15px;
   margin: 0.5rem;
+  min-height: 2.5rem;
 }
 
 .user-info {
@@ -237,26 +238,196 @@ body {
 /* Chore List Page */
 .chore-list-container {
   padding: 2rem;
-  max-width: 1400px;
+  /* max-width: 1400px; */
   margin: 0 auto;
 }
 
 .chore-list-container h1 {
   margin-bottom: 2rem;
   color: #333;
+  font-weight: 300;
 }
 
-.week-view {
+.day-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.day-drawer {
+  width: 100%;
+  max-height: 70vh;
+  background: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-chore {
+  margin-bottom: 8px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 10px;
+}
+
+/* Each day cell */
+.calendar-cell.today {
+  border: 2px solid #3b82f6;
+  background: #eff6ff;
+}
+
+.calendar-cell {
+  background: white;
+  border-radius: 10px;
+  min-height: 90px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* Header */
+.calendar-cell-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.calendar-date {
+  font-weight: 700;
+}
+
+/* Tasks inside cell */
+.calendar-chores {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+/* Individual chore */
+.calendar-chore {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 2px 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.calendar-chore .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+}
+
+/* Empty state */
+.calendar-empty {
+  font-size: 10px;
+  opacity: 0.3;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* overflow indicator */
+.more-indicator {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+/* Mobile tuning */
+@media (max-width: 768px) {
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .calendar-cell {
+    min-height: 80px;
+    padding: 5px;
+  }
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  background: #f3f4f6;
+  padding: 6px;
+  border-radius: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab-button {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  background: transparent;
+  font-weight: 600;
+}
+
+.tab-button.active {
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Week layout mobile scroll */
+/* .week-view {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
+} */
+ .week-view {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 12px;
 }
 
-.day-column {
+/* .day-column {
   background: white;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+.day-column {
+  min-width: 75%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .day-header {
@@ -276,6 +447,21 @@ body {
   color: #666;
 }
 
+/* Single list views */
+.single-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Card improvements for mobile */
+.chore-card {
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
 .chores-list {
   display: flex;
   flex-direction: column;
@@ -288,7 +474,7 @@ body {
   text-align: center;
   padding: 1rem 0;
 }
-
+/* 
 .chore-card {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -296,7 +482,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   background: #fafafa;
-}
+} */
 
 .chore-card:hover {
   background: #f0f0f0;
