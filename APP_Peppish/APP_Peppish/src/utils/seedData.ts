@@ -2,111 +2,66 @@ import { Chore } from '../types'
 
 const SEED_DATA_KEY = 'peppish_seeded'
 
-export const seedInitialData = () => {
-  // Only seed once
-  if (localStorage.getItem(SEED_DATA_KEY)) {
-    return
-  }
+const dayOffset = (daysAgo: number) =>
+  new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString()
 
-  // Seed chores
-  const today = new Date()
-  const mockChores: Chore[] = [
-    {
-      id: 'chore-1',
-      title: 'Städa rummet',
-      description: 'Tidy up and organize your room',
-      type: 'daily',
-      status: 'available',
-      rewardType: 'money',
-      rewardValue: 5,
+export const seedInitialData = () => {
+  // if (localStorage.getItem(SEED_DATA_KEY)) return
+ const mockChores: Chore[] = Array.from({ length: 15 }).map((_, i) => {
+    const daysAgo = Math.floor((i / 15) * 30)
+
+    return {
+      id: `chore-${i + 1}`,
+      title: [
+        'Städa rummet',
+        'Göra läxan',
+        'Diska',
+        'Slänga skräp',
+        'Träna',
+        'Tvätta kläder',
+        'Damma',
+        'Gå ut med sopor',
+        'Vattna blommor',
+        'Sortera tvätt',
+        'Rensa skrivbord',
+        'Städa badrum',
+        'Hjälpa till i köket',
+        'Gå ut med hunden',
+        'Organisera garderob',
+      ][i],
+      description: 'Automatiskt genererad chore för mockdata',
+      type: i % 2 === 0 ? 'daily' : 'weekly',
+      status:
+        i % 4 === 0
+          ? 'completed'
+          : i % 4 === 1
+            ? 'approved'
+            : i % 4 === 2
+              ? 'assigned'
+              : 'available',
+      rewardType: i % 3 === 0 ? 'money' : 'progress',
+      rewardValue: i % 3 === 0 ? 5 + i : 25 + i * 2,
       createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
-    },
-    {
-      id: 'chore-2',
-      title: 'Göra läxan',
-      description: 'Complete math and science assignments',
-      type: 'daily',
-      status: 'assigned',
-      assignedTo: '2',
-      rewardType: 'progress',
-      rewardValue: 50,
-      createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
-    },
-    {
-      id: 'chore-3',
-      title: 'Diska',
-      description: 'Clean and dry all dishes after dinner',
-      type: 'daily',
-      status: 'completed',
-      rewardType: 'money',
-      rewardValue: 3,
-      createdBy: '1',
-      createdAt: new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(today.getTime() - 23 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'chore-4',
-      title: 'Slänga skräp',
-      description: 'Empty the trash bins',
-      type: 'weekly',
-      status: 'approved',
-      rewardType: 'money',
-      rewardValue: 8,
-      createdBy: '1',
-      createdAt: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'chore-5',
-      title: 'Träna trummor',
-      description: 'Play for 30 minutes',
-      type: 'daily',
-      status: 'available',
-      rewardType: 'progress',
-      rewardValue: 100,
-      createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
-    },
-  ]
+      createdAt: dayOffset(daysAgo),
+      updatedAt: dayOffset(daysAgo - 1),
+    }
+  })
 
   localStorage.setItem('peppish_chores', JSON.stringify(mockChores))
 
-  // Seed rewards for user 2 (child)
-  const mockRewards = [
-    {
-      id: 'reward-1',
+  const mockRewards = mockChores
+    .filter((_, i) => i % 2 === 0) 
+    .map((chore, i) => ({
+      id: `reward-${i + 1}`,
       userId: '2',
-      choreId: 'chore-4',
-      type: 'money' as const,
-      value: 8,
-      createdAt: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'reward-2',
-      userId: '2',
-      choreId: 'chore-3',
-      type: 'money' as const,
-      value: 3,
-      createdAt: new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'reward-3',
-      userId: '2',
-      choreId: 'chore-2',
-      type: 'progress' as const,
-      value: 50,
-      createdAt: today.toISOString(),
-    },
-  ]
+      choreId: chore.id,
+      type: chore.rewardType,
+      value: chore.rewardValue,
+      createdAt: chore.createdAt,
+    }))
 
   localStorage.setItem('peppish_rewards', JSON.stringify(mockRewards))
 
-  // Seed progress for user 2
   const mockProgress = {
     '2': {
       level: 3,
@@ -116,6 +71,5 @@ export const seedInitialData = () => {
 
   localStorage.setItem('peppish_progress', JSON.stringify(mockProgress))
 
-  // Mark as seeded
   localStorage.setItem(SEED_DATA_KEY, 'true')
 }

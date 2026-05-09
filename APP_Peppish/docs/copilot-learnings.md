@@ -232,7 +232,7 @@ Project-specific conventions and mistakes to avoid.
 - Use CSS Grid for flexible stat display: `grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))`
 - Center text with `text-align: center`
 - Large value font size (2rem) with bold weight
-- Label font size smaller (0.9rem) in gray color (#666)
+- Label font size smaller (0.9rem) in gray color (#667)
 
 ### Daily vs Avatar Data
 - Daily progress: completed / total chores ratio

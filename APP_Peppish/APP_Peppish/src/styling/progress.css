@@ -2,7 +2,6 @@
 /* Progress Page */
 .progress-container {
   padding: 2rem;
-  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -27,7 +26,7 @@
   background: white;
   border-radius: 8px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
 }
 
 .avatar-display {
@@ -42,11 +41,11 @@
 
 .level-badge {
   display: inline-block;
-  background-color: #007bff;
+  background-color:  var(--accent-3);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-weight: bold;
+  font-weight: 400;
 }
 
 .experience-section {
@@ -55,32 +54,13 @@
 
 .experience-label {
   font-size: 0.95rem;
-  color: #666;
+  color: #667;
   margin-bottom: 0.75rem;
-}
-
-.progress-bar-container {
-  background-color: #e9ecef;
-  border-radius: 10px;
-  height: 24px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-bar-fill {
-  background: linear-gradient(90deg, #007bff, #0056b3);
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: 10px;
-}
-
-.progress-bar-fill.daily {
-  background: linear-gradient(90deg, #28a745, #218838);
 }
 
 .experience-text {
   font-size: 0.9rem;
-  color: #666;
+  color: #667;
   text-align: right;
 }
 
@@ -88,6 +68,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1.5rem;
+  margin: 2rem 0;
 }
 
 .progress-stat {
@@ -96,14 +77,14 @@
 
 .stat-label {
   font-size: 0.9rem;
-  color: #666;
+  color: #667;
   margin-bottom: 0.5rem;
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: bold;
-  color: #007bff;
+  color:  var(--accent-5);
 }
 
 .daily-progress-wrapper {
@@ -114,14 +95,84 @@
 
 .progress-label {
   font-size: 0.95rem;
-  color: #666;
+  color: #667;
   margin-bottom: 0.75rem;
 }
 
 .progress-percentage {
   font-size: 0.9rem;
-  color: #666;
+  color: #667;
   text-align: right;
   margin-top: 0.5rem;
 }
 
+.xp-bottle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.xp-percentage {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.piggybank-card {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: white;
+  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
+}
+
+.piggybank-icon {
+  font-size: 3rem;
+}
+
+.piggybank-money {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.avatar-card.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.avatar-card.clickable:hover {
+  transform: scale(1.03);
+}
+
+.bottle, .xp-bottle  {
+  position: relative;
+  width: 120px;
+  height: 260px;
+  border-radius: 60px 60px 30px 30px;
+  border: 1px solid #98b84a;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(124, 77, 255, 0.445);
+}
+.xp-liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(
+    to top,
+    #594dff,
+    #b786fc, #fc86fa, #f8fc86
+  );
+  transition: height 0.5s ease;
+}
+
+/* .liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #7c4dff, #b388ff);
+  transition: height 0.6s ease-in-out;
+} */
