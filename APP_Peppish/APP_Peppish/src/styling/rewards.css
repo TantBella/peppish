@@ -2,28 +2,24 @@
 /* Rewards Page */
 .rewards-container {
   padding: 2rem;
-  max-width: 1000px;
   margin: 0 auto;
+  color: var(--text);
 }
 
-.rewards-container h1 {
+.rewards-container h1{
   margin-bottom: 2rem;
   color: #333;
-}
-
-.rewards-container h2 {
-  margin-bottom: 1rem;
-  color: #333;
-  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text);
 }
 
 .balance-section {
-  margin-bottom: 3rem;
+  margin: 3rem 0.5rem;
 }
 
 .balance-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 1.5rem;
 }
 
@@ -32,27 +28,27 @@
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #007bff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
+  border-top: 6px solid ;
 }
 
 .balance-card.money {
-  border-top-color: #28a745;
+  border-top-color: var(--accent-3);
 }
 
 .balance-card.progress {
-  border-top-color: #ffc107;
+  border-top-color: var(--accent-4);
 }
 
 .balance-label {
-  color: #666;
-  font-size: 0.95rem;
+  color: #667;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
 }
 
 .balance-value {
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 400;
   color: #333;
 }
 
@@ -60,7 +56,11 @@
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
+}
+
+h2{
+  font-weight: 450;
 }
 
 .no-rewards {
@@ -81,31 +81,31 @@
   gap: 1rem;
   padding: 1rem;
   border-radius: 4px;
-  background-color: #f8f9fa;
-  border-left: 4px solid #007bff;
+  background-color: var(--surface);
+  border-left: 4px solid;
+  margin-top: 1rem;
 }
 
 .reward-item.reward-money {
-  border-left-color: #28a745;
+  border-left-color: var(--accent-3);
 }
 
 .reward-item.reward-progress {
-  border-left-color: #ffc107;
+  border-left-color: var(--accent-4);
 }
 
 .reward-icon {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
   width: 50px;
   text-align: center;
 }
 
 .reward-item.reward-money .reward-icon {
-  color: #28a745;
+  color: var(--accent-3);
 }
 
 .reward-item.reward-progress .reward-icon {
-  color: #ffc107;
+  color: var(--accent-4);
 }
 
 .reward-details {
@@ -114,12 +114,12 @@
 
 .reward-value {
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 500;
   color: #333;
 }
 
 .reward-date {
   font-size: 0.85rem;
-  color: #666;
+  color: #667;
   margin-top: 0.25rem;
 }

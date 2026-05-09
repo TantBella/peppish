@@ -34,28 +34,18 @@ export const DayView = ({
       <>
        <div className="single-list">
       {filtered.length === 0 ? (
-        <p className="no-chores">Inga quests denna dag</p>
-      ) : (
-        filtered.map((chore) => (
-          <ChoreCardWrapper
-            key={chore.id}
-            chore={chore}
-            userId={userId}
-            expandedChoreId={expandedChoreId}
-            setExpandedChoreId={setExpandedChoreId}
-          />
-        ))
-      )}
-    </div>
-    {/* <div className="single-list">
-      {todayChores.length === 0 ? (
-        <p className="no-chores"> Inga quests idag</p>
-      ) : (
-        todayChores.map((chore) => (
-          <ChoreCardWrapper
-            key={chore.id}
-            chore={chore}
+        <div className="no-chores">
+        <p >Inga quests denna dag.
+          </p>
+          <p>
             
+        Du får kika på en annan dag eller kolla listan för frivilliga quests 🌈</p>
+          </div>
+      ) : (
+        filtered.map((chore) => (
+          <ChoreCardWrapper
+            key={chore.id}
+            chore={chore}
             userId={userId}
             expandedChoreId={expandedChoreId}
             setExpandedChoreId={setExpandedChoreId}
@@ -63,20 +53,6 @@ export const DayView = ({
         ))
       )}
     </div>
-      <div className="single-list">
-      {filtered.length === 0 ? (
-        <p className="no-chores">Inga quests denna dag</p>
-      ) : (
-        filtered.map((chore) => (
-          <ChoreCardWrapper
-            key={chore.id}
-            chore={chore}
-            expandedChoreId={expandedChoreId}
-            setExpandedChoreId={setExpandedChoreId}
-          />
-        ))
-      )}
-    </div> */}
     </>
   )
 }

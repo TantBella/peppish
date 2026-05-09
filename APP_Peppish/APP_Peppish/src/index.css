@@ -38,7 +38,7 @@ body {
   --accent-1: #ff6bbf; /* röd/rosa */
   --accent-2: #f4fa84; /* gul */
   --accent-3: #57d2a5; /* grön */
-  --accent-4: #9bc7fc; /* blå (men inte default dominant) */
+  --accent-4: #9bc7fc; /* blå  */
   --accent-5: #9d82ed; /* lila */
 }
 /* Loading States */
@@ -53,13 +53,21 @@ body {
   font-size: 1.2rem;
   color: #777;
 }
-
-.logo-icon{
-  display: flex;
-  align-items: center;
-  /* justify-content: space-around; */
+h1{
+  text-transform: capitalize;
 }
 
+.logo-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+
+}
+
+.logo-icon img {
+     max-height: 3.5rem;
+  margin-right: 1.5rem;
+}
 /* Alerts */
 .alert {
   padding: 1rem;

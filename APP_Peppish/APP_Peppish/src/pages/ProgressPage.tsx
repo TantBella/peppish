@@ -1,4 +1,5 @@
 import { useAvatarProgress, useDailyProgress } from '../hooks/useProgress'
+import logoImg from '../assets/logo_img.png'
 
 export const ProgressPage = () => {
   const {
@@ -25,7 +26,8 @@ export const ProgressPage = () => {
 
   return (
     <div className="progress-container">
-      <h1>Your Progress</h1>
+       <h1 className="logo-icon" >
+        <img src={logoImg} alt="App logo" /> nåt svenkst namn på detta:Your Progress</h1>
 
       {avatar && (
         <div className="avatar-section">

@@ -76,6 +76,14 @@ export const MonthView = ({
 
   return (
     <>
+    <div>
+      <h2 className="month-title">
+  {now.toLocaleDateString("sv-SE", {
+    month: "long",
+    year: "numeric",
+  })}
+</h2>
+    </div>
       <div className="month-weekdays">
         {weekdays.map((d) => (
           <div key={d} className="weekday-cell">

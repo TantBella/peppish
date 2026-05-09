@@ -13,7 +13,7 @@ export const seedInitialData = () => {
   const mockChores: Chore[] = [
     {
       id: 'chore-1',
-      title: 'Clean bedroom',
+      title: 'Städa rummet',
       description: 'Tidy up and organize your room',
       type: 'daily',
       status: 'available',
@@ -25,7 +25,7 @@ export const seedInitialData = () => {
     },
     {
       id: 'chore-2',
-      title: 'Do homework',
+      title: 'Göra läxan',
       description: 'Complete math and science assignments',
       type: 'daily',
       status: 'assigned',
@@ -38,7 +38,7 @@ export const seedInitialData = () => {
     },
     {
       id: 'chore-3',
-      title: 'Wash dishes',
+      title: 'Diska',
       description: 'Clean and dry all dishes after dinner',
       type: 'daily',
       status: 'completed',
@@ -50,7 +50,7 @@ export const seedInitialData = () => {
     },
     {
       id: 'chore-4',
-      title: 'Take out trash',
+      title: 'Slänga skräp',
       description: 'Empty the trash bins',
       type: 'weekly',
       status: 'approved',
@@ -62,7 +62,7 @@ export const seedInitialData = () => {
     },
     {
       id: 'chore-5',
-      title: 'Practice piano',
+      title: 'Träna trummor',
       description: 'Play for 30 minutes',
       type: 'daily',
       status: 'available',

@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import {  useRef } from "react"
 import { WeekCalendarProps } from "../types/WeekCalendarProps"
 
 export const WeekCalendarGrid = ({
@@ -25,13 +25,11 @@ export const WeekCalendarGrid = ({
 
     touchStartX.current = null
   }
-
   const today = new Date().toDateString()
 
   return (
     <div
     className="week-view"
-      // className="calendar-grid"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -50,22 +48,35 @@ export const WeekCalendarGrid = ({
               <div>{date.getDate()}</div>
             </div>
 
-            <div className="week-chore">
-              {dayChores.slice(0, 3).map((chore) => (
-                <div
-                  key={chore.id}
-                  className="calendar-chore"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setExpandedChoreId(
-                      expandedChoreId === chore.id ? null : chore.id
-                    )
-                  }}
-                >
-                  {chore.title}
-                </div>
-              ))}
-            </div>
+          <div className="week-chore">
+  {dayChores.length === 0 ? (
+    <div className="empty-day">
+      <p className="empty-dayp">
+
+      Inga quests denna dag
+      </p>
+      <p className="empty-dayp">
+       Passa på att hämta från frivillig listan
+      </p>
+    </div>
+  ) : (
+    dayChores.slice(0, 3).map((chore) => (
+      <div
+        key={chore.id}
+        className={`chore-card status-${chore.status?.toLowerCase()}`}
+        onClick={(e) => {
+          e.stopPropagation()
+
+          setExpandedChoreId(
+            expandedChoreId === chore.id ? null : chore.id
+          )
+        }}
+      >
+        {chore.title}
+      </div>
+    ))
+  )}
+</div>
           </div>
         )
       })}

@@ -31,14 +31,14 @@ export const ChoreCard = ({
 
       <div className="chore-meta">
         <span className="reward-badge">
-          {chore.rewardType === 'money' ? '$' : '⭐'} {chore.rewardValue || 0}
+          {chore.rewardType === 'money' ? '🤑' : '💎'} {chore.rewardValue || 0}
         </span>
 
         {chore.assignedTo && (
           <span className="assigned-badge">
             {chore.assignedTo === currentUserId
-              ? 'Assigned to you'
-              : 'Assigned'}
+              ? 'Tilldelad'
+              : 'Vald'}
           </span>
         )}
       </div>
