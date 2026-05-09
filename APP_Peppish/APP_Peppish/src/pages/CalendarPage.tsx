@@ -5,7 +5,7 @@ import { useChores } from "../hooks/useChores"
 import logoImg from '../assets/logo_img.png'
 import { WeekCalendarGrid } from "../components/WeekCalenderGrid"
 import { CalendarTabs } from "../components/CalendarTabs"
-import { DayDrawer } from "../components/DayDrawer"
+// import { DayDrawer } from "../components/DayDrawer"
 import { DayView } from "../components/DayView"
 import { MonthView } from "../components/MonthView"
 
@@ -22,11 +22,12 @@ export const CalendarPage = () => {
 
   const {
     weekDates,
-    todayChores,
     monthChores,
     choresByWeekDay,
     choresBySelectedDate,
   } = useChoreCalendar(chores, weekOffset)
+
+    const activeDate = selectedDate ?? new Date()
 
 useEffect(() => {
   if (selectedDate) {
@@ -44,8 +45,10 @@ useEffect(() => {
          <img src={logoImg} alt="App logo" />
         Dina quests</h1>
 
-
-      <CalendarTabs viewMode={viewMode} setViewMode={setViewMode} />
+     <CalendarTabs
+              viewMode={viewMode}
+              selectedDate={selectedDate}
+              setViewMode={setViewMode} weekOffset={0} setSelectedDate={setSelectedDate }/>
 
       {viewMode === "week" && (
         <WeekCalendarGrid
@@ -60,31 +63,36 @@ useEffect(() => {
       )}
 
       {viewMode === "day" && (
-        <DayView
-          chores={todayChores}
+  <DayView
+        //   chores={todayChores}
+ chores={choresBySelectedDate(activeDate)}
           userId={user?.id}
+          selectedDate={activeDate}
           expandedChoreId={expandedChoreId}
           setExpandedChoreId={setExpandedChoreId}
-        />
-      )}
+  />
+)}
 
       {viewMode === "month" && (
-        <MonthView
-          chores={monthChores}
-          userId={user?.id}
+   <MonthView
+  chores={monthChores}
+  setSelectedDate={setSelectedDate}
+  setViewMode={setViewMode}
+  setWeekOffset={setWeekOffset}
+      userId={user?.id}
           expandedChoreId={expandedChoreId}
           setExpandedChoreId={setExpandedChoreId}
-        />
+/>
       )}
 
-      <DayDrawer
+      {/* <DayDrawer
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
-        chores={choresBySelectedDate(selectedDate)}
+        chores={choresBySelectedDate(activeDate)}
         userId={user?.id}
         expandedChoreId={expandedChoreId}
         setExpandedChoreId={setExpandedChoreId}
-      />
-    </div>
+      />*/}
+    </div> 
   )
 }

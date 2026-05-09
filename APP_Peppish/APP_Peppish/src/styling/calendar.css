@@ -126,51 +126,52 @@
 /* =========================
    MONTH VIEW
 ========================= */
-
-/* .calendar-grid {
+.month-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  text-align: center;
+}
 
-  padding-bottom: 6rem;
-} */
-
-/* =========================
-   MONTH DAY (CIRCLE VIEW)
-========================= */
-
+.weekday-cell {
+  padding: 0.25rem 0;
+}
 .month-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
+
   padding-bottom: 6rem;
 }
 
+/* container per day */
 .month-day {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-
   padding: 0.5rem;
-
-  cursor: pointer;
 }
 
+/* clickable circle */
 .day-circle {
-  width: 36px;
-  height: 36px;
-
-  border-radius: 50%;
+  width: 34px;
+  height: 34px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 50%;
 
   background: #f3f4f6;
 
   font-size: 0.85rem;
   font-weight: 600;
+
+  cursor: pointer;
 }
 
 .month-day.today .day-circle {
@@ -178,6 +179,7 @@
   color: white;
 }
 
+/* small indicator if tasks exist */
 .indicator-dot {
   width: 6px;
   height: 6px;

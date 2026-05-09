@@ -7,9 +7,6 @@ export type WeekDates = Record<string, Date>
 
 const DAYS = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"]
 
-/**
- * Builds a Monday-based week with offset
- */
 export const getWeekDates = (offset = 0): WeekDates => {
   const now = new Date()
   now.setDate(now.getDate() + offset * 7)

@@ -1,19 +1,44 @@
 import { useMemo } from "react"
 import { ChoreWithUIStatus } from "../hooks/useChores"
+import { ViewMode } from "../hooks/useChoreCalendar"
 
 type Props = {
   chores: ChoreWithUIStatus[]
+  setSelectedDate: (date: Date | null) => void
   userId?: string
-  expandedChoreId: string | null
+  setViewMode: (mode: ViewMode) => void
+  setWeekOffset: (value: number) => void
+    expandedChoreId: string | null
   setExpandedChoreId: (id: string | null) => void
 }
 
 export const MonthView = ({
   chores,
+  setSelectedDate,
+  setViewMode,
+  // setWeekOffset,
 }: Props) => {
   const now = new Date()
 
-  const monthDays = useMemo(() => {
+  const weekdays = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"]
+
+  const daysInMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).getDate()
+
+  const firstDayOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  )
+
+  const startDay = (firstDayOfMonth.getDay() + 6) % 7
+
+  const totalCells = startDay + daysInMonth
+
+  const monthMap = useMemo(() => {
     const grouped: Record<string, ChoreWithUIStatus[]> = {}
 
     chores.forEach((chore) => {
@@ -31,71 +56,65 @@ export const MonthView = ({
     })
 
     return grouped
-  }, [chores])
-
-  const daysInMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0
-  ).getDate()
+  }, [chores, now])
 
   const today = new Date().toDateString()
 
+  const handleDayClick = (day: Date) => {
+    setSelectedDate(day)
+    setViewMode("day")
+  }
+
+  // const handleWeekSelect = (day: Date) => {
+  //   const diff = Math.round(
+  //     (day.getTime() - now.getTime()) / (7 * 24 * 60 * 60 * 1000)
+  //   )
+
+  //   setWeekOffset(diff)
+  //   setViewMode("week")
+  // }
+
   return (
-    <div className="calendar-grid">
-      {Array.from({ length: daysInMonth }, (_, i) => {
-        const date = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          i + 1
-        )
-
-        const key = date.toDateString()
-
-        const dayChores = monthDays[key] || []
-
-        const isToday = key === today
-
-        return (
-          <div
-            key={key}
-            className={`calendar-cell ${isToday ? "today" : ""}`}
-          >
-            <div className="calendar-cell-header">
-              <span>
-                {date.toLocaleDateString("en-US", {
-                  weekday: "short",
-                })}
-              </span>
-
-              <span>{date.getDate()}</span>
-            </div>
-
-            <div className="calendar-chores">
-              {dayChores.length === 0 ? (
-                <div className="calendar-empty">
-                  Inga quests här
-                </div>
-              ) : (
-                dayChores.slice(0, 3).map((chore) => (
-                  <div
-                    key={chore.id}
-                    className="calendar-chore"
-                  >
-                    {chore.title}
-                  </div>
-                ))
-              )}
-
-              {dayChores.length > 3 && (
-                <div className="more-indicator">
-                  +{dayChores.length - 3} more
-                </div>
-              )}
-            </div>
+    <>
+      <div className="month-weekdays">
+        {weekdays.map((d) => (
+          <div key={d} className="weekday-cell">
+            {d}
           </div>
-        )
-      })}
+        ))}
+      </div>
+
+      <div className="month-grid">
+        {Array.from({ length: totalCells }, (_, i) => {
+          const dayNumber = i - startDay + 1
+
+          if (dayNumber < 1 || dayNumber > daysInMonth) {
+            return <div key={i} />
+          }
+
+          const date = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            dayNumber
+          )
+
+          const key = date.toDateString()
+          const hasChores = !!monthMap[key]?.length
+          const isToday = key === today
+return (
+  <div key={key} className={`month-day ${isToday ? "today" : ""}`}>
+    <div
+      className="day-circle"
+      onClick={() => handleDayClick(date)}
+    >
+      {dayNumber}
     </div>
+
+    {hasChores && <div className="indicator-dot" />}
+  </div>
+)
+        })}
+      </div>
+    </>
   )
 }
