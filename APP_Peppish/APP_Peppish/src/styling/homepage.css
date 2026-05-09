@@ -1,0 +1,59 @@
+/* Home Page */
+.home-page {
+  min-height: 100vh;
+}
+
+.home-header {
+  padding: 2rem;
+  font-size: 1.1rem;
+  width: 100vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  text-align: center;
+  background-color: #fff;
+}
+
+.Peppish-logo {
+  text-align: center;
+  height: 150px;
+  width: auto;
+}
+
+ h1 {
+  color: #333;
+  font-weight: 300;
+}
+
+.home-section {
+  padding: 2rem;
+  /* max-width: 1000px; */
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  margin: 1rem auto;
+  background-color: #ffffffc9;
+}
+
+.user-info > p{
+  margin-top: 1rem;
+}
+
+.home-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.home-content {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  background-color: #fff;
+  padding: 1rem;
+  border: #9ac2ec4c solid 2px;
+  border-radius: 15px;
+  margin: 0.5rem;
+  min-height: 2.5rem;
+}
+
+.user-info {
+  background: white;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}

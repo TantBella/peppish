@@ -1,0 +1,166 @@
+/* Chore List Page */
+
+.chore-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.chore-card:hover {
+  transform: translateY(-2px);
+  border-color: #ddd;
+}
+
+
+.chore-card.status-available {
+     background: linear-gradient(
+    135deg,
+    var(--accent-5),
+    var(--accent-2)
+  );
+  border-left: 4px solid #073d7f;
+}
+
+.chore-card.status-pending {
+  /* background: #fff7ed6b; */
+    background: linear-gradient(
+    135deg,
+    var(--accent-2),
+    var(--accent-1)
+  );
+  border-left: 4px solid #c2410c;
+}
+
+.chore-card.status-completed {
+      background: linear-gradient(
+    135deg,
+    var(--accent-1),
+    var(--accent-4)
+  );
+  border-left: 4px solid #9d82ed;
+}
+
+.chore-card.status-approved {
+     background: linear-gradient(
+    135deg,
+    var(--accent-3),
+    var(--accent-4)
+  );
+  border-left: 4px solid #16a34a;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 999px;
+
+  font-weight: 500;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.status-pending .status-badge {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+  padding: 0.5rem;
+}
+
+.status-completed .status-badge {
+  background: #ecfeff;
+  color: #0891b2;
+  border-color: #a5f3fc;
+  padding: 0.5rem;
+}
+
+.status-approved .status-badge {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #16a34a;
+  padding: 0.5rem;
+}
+
+.chore-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.chore-description {
+  font-size: 0.85rem;
+  color: var(--muted);
+margin: 1rem 0;
+
+}
+
+.reward-badge,
+.assigned-badge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+}
+
+.reward-badge {
+  font-size: 1.25rem;
+  padding: 0.25rem 0.5rem;
+  
+}
+
+.assigned-badge {
+  margin: 1rem;
+  padding: 0.4rem 0.5rem;
+}
+
+.btn-complete,
+.btn-approve {
+  padding: 0.5rem 0.9rem;
+
+  border-radius: 10px;
+  border: 1px solid var(--border);
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.btn-complete {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.btn-complete:hover:not(:disabled) {
+  background: #cffafe;
+}
+
+.btn-approve {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+.no-chores{
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.no-chores p{
+  font-size: 1.25rem;
+
+}

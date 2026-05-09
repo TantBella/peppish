@@ -1,4 +1,5 @@
 import { useUserBalance, useRewardHistory } from '../hooks/useRewards'
+import logoImg from '../assets/logo_img.png'
 
 export const RewardsPage = () => {
   const { data: balance, isLoading: balanceLoading, error: balanceError } = useUserBalance()
@@ -16,35 +17,36 @@ export const RewardsPage = () => {
   }
 
   return (
+    <>
     <div className="rewards-container">
-      <h1>Rewards</h1>
-
+      <h1 className="logo-icon" >
+        <img src={logoImg} alt="App logo" /> Belöningar </h1>
       {balance && (
         <div className="balance-section">
-          <h2>Your Balance</h2>
+          {/* <h2>Your Balance</h2> */}
           <div className="balance-cards">
             <div className="balance-card money">
-              <div className="balance-label">Money Earned</div>
-              <div className="balance-value">${balance.totalMoney.toFixed(2)}</div>
+              <div className="balance-label">Intjänat: </div>
+              <div className="balance-value">🤑 {balance.totalMoney.toFixed(2)}</div>
             </div>
             <div className="balance-card progress">
-              <div className="balance-label">Progress Points</div>
-              <div className="balance-value">{balance.totalProgress} ⭐</div>
+              <div className="balance-label">Dina XP: </div>
+              <div className="balance-value">💎 {balance.totalProgress} </div>
             </div>
           </div>
         </div>
       )}
 
       <div className="history-section">
-        <h2>Reward History</h2>
+        <h2>Tidigare belöningar:</h2>
         {history.length === 0 ? (
-          <p className="no-rewards">No rewards earned yet. Complete and get approved on chores to earn rewards!</p>
+          <p className="no-rewards">Du har tyvärr inte fått några belöningar ännu.. Genomför en quest för att få XP eller pengar. </p>
         ) : (
           <div className="rewards-list">
             {history.map((reward) => (
               <div key={reward.id} className={`reward-item reward-${reward.type}`}>
                 <div className="reward-icon">
-                  {reward.type === 'money' ? '$' : '⭐'}
+                  {reward.type === 'money' ? '🤑' : '💎'}
                 </div>
                 <div className="reward-details">
                   <div className="reward-value">{reward.value}</div>
@@ -58,5 +60,6 @@ export const RewardsPage = () => {
         )}
       </div>
     </div>
+        </>
   )
 }

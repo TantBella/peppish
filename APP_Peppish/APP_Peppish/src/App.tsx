@@ -9,6 +9,7 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { HomePage } from './pages/HomePage'
 import { ChoreListPage } from './pages/ChoreListPage'
+import { CalendarPage} from './pages/CalendarPage'
 import { RewardsPage } from './pages/RewardsPage'
 import { ProgressPage } from './pages/ProgressPage'
 
@@ -46,6 +47,8 @@ function App() {
               }
             >
               <Route path="/" element={<HomePage />} />
+              
+              <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/chores" element={<ChoreListPage />} />
               <Route path="/rewards" element={<RewardsPage />} />
               <Route path="/progress" element={<ProgressPage />} />
