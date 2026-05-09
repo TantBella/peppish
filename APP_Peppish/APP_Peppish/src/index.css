@@ -18,13 +18,28 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   letter-spacing: 1.5px;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+:root {
+  --bg: #ffffff;
+  --surface: #f2f2ffab;
+  --border: #cdede192;
+
+  --text: #1f2937;
+  --muted: #6b7280;
+
+  --accent-1: #ff6bbf; /* röd/rosa */
+  --accent-2: #f4fa84; /* gul */
+  --accent-3: #57d2a5; /* grön */
+  --accent-4: #9bc7fc; /* blå (men inte default dominant) */
+  --accent-5: #9d82ed; /* lila */
 }
 /* Loading States */
 .loading-container {

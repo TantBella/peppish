@@ -42,15 +42,15 @@ export const WeekCalendarGrid = ({
         return (
           <div
             key={day}
-            className={`calendar-cell ${isToday ? "today" : ""}`}
+            className={`week-day ${isToday ? "today" : ""}`}
             onClick={() => setSelectedDate(date)}
           >
-            <div className="calendar-cell-header">
+            <div className="week-day-header">
               <div>{day}</div>
               <div>{date.getDate()}</div>
             </div>
 
-            <div className="calendar-chores">
+            <div className="week-chore">
               {dayChores.slice(0, 3).map((chore) => (
                 <div
                   key={chore.id}
