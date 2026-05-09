@@ -1,0 +1,188 @@
+/* Chore List Page */
+
+
+.chore-card {
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.chores-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.no-chores {
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+/* 
+.chore-card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+} */
+
+.chore-card:hover {
+  background: #f0f0f0;
+  border-color: #007bff;
+}
+
+.chore-card.expanded {
+  background: white;
+  border-color: #007bff;
+  border-width: 2px;
+}
+
+.chore-card.status-pending {
+  border-left: 4px solid #ffc107;
+}
+
+.chore-card.status-completed {
+  border-left: 4px solid #17a2b8;
+}
+
+.chore-card.status-approved {
+  border-left: 4px solid #28a745;
+}
+
+.chore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.chore-header h3 {
+  font-size: 0.95rem;
+  color: #333;
+  margin: 0;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.status-pending .status-badge {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-completed .status-badge {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-approved .status-badge {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.chore-description {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0.25rem 0;
+}
+
+.chore-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.reward-badge {
+  background-color: #e7f3ff;
+  color: #0066cc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+.assigned-badge {
+  background-color: #f0f0f0;
+  color: #666;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* Chore Action Panel */
+.chore-action-panel {
+  border-top: 1px solid #ddd;
+  padding: 1rem 0;
+  margin-top: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-complete,
+.btn-approve {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-complete {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-complete:hover:not(:disabled) {
+  background-color: #138496;
+}
+
+.btn-approve {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.btn-complete:disabled,
+.btn-approve:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.status-complete,
+.status-info {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-complete {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-info {
+  background-color: #cce5ff;
+  color: #004085;
+}
+/* Single list views */
+.single-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

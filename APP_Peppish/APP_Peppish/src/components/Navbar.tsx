@@ -23,7 +23,7 @@ const Navbar = () => {
              <img src={home} alt="App logo" className="Peppish-logo" />
    
           </button>
-      <button onClick={() => navigate('/chores')} className="nav-button">
+      <button onClick={() => navigate('/calendar')} className="nav-button">
         
              <img src={calender} alt="App logo" className="Peppish-logo" />
    

@@ -1,6 +1,5 @@
 import { useMemo } from "react"
 import { ChoreWithUIStatus } from "../hooks/useChores"
-import { ChoreCardWrapper } from "./ChoreCardWrapper"
 
 type Props = {
   chores: ChoreWithUIStatus[]
@@ -11,9 +10,6 @@ type Props = {
 
 export const MonthView = ({
   chores,
-  userId,
-  expandedChoreId,
-  setExpandedChoreId,
 }: Props) => {
   const now = new Date()
 
@@ -37,37 +33,69 @@ export const MonthView = ({
     return grouped
   }, [chores])
 
-  const sortedDays = Object.keys(monthDays).sort(
-    (a, b) => new Date(a).getTime() - new Date(b).getTime()
-  )
+  const daysInMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).getDate()
+
+  const today = new Date().toDateString()
 
   return (
-    <div className="single-list">
-      {sortedDays.length === 0 ? (
-        <p className="no-chores">No chores this month</p>
-      ) : (
-        sortedDays.map((day) => (
-          <div key={day}>
-            <div className="day-header">
-              {new Date(day).toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "short",
-                day: "numeric",
-              })}
+    <div className="calendar-grid">
+      {Array.from({ length: daysInMonth }, (_, i) => {
+        const date = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          i + 1
+        )
+
+        const key = date.toDateString()
+
+        const dayChores = monthDays[key] || []
+
+        const isToday = key === today
+
+        return (
+          <div
+            key={key}
+            className={`calendar-cell ${isToday ? "today" : ""}`}
+          >
+            <div className="calendar-cell-header">
+              <span>
+                {date.toLocaleDateString("en-US", {
+                  weekday: "short",
+                })}
+              </span>
+
+              <span>{date.getDate()}</span>
             </div>
 
-            {monthDays[day].map((chore) => (
-              <ChoreCardWrapper
-                key={chore.id}
-                chore={chore}
-                userId={userId}
-                expandedChoreId={expandedChoreId}
-                setExpandedChoreId={setExpandedChoreId}
-              />
-            ))}
+            <div className="calendar-chores">
+              {dayChores.length === 0 ? (
+                <div className="calendar-empty">
+                  Inga quests här
+                </div>
+              ) : (
+                dayChores.slice(0, 3).map((chore) => (
+                  <div
+                    key={chore.id}
+                    className="calendar-chore"
+                  >
+                    {chore.title}
+                  </div>
+                ))
+              )}
+
+              {dayChores.length > 3 && (
+                <div className="more-indicator">
+                  +{dayChores.length - 3} more
+                </div>
+              )}
+            </div>
           </div>
-        ))
-      )}
+        )
+      })}
     </div>
   )
 }

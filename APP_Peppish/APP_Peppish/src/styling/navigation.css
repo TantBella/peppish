@@ -1,0 +1,25 @@
+/* Navbar-component-styling */
+.main-nav {
+  position: fixed;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  width: 100vw;
+  
+}
+
+.nav-button {
+  background-color: #fff;
+  padding: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  
+}
+
+.nav-button > img {
+  max-height: 4rem;
+}
+.nav-button:hover {
+  background-color: #caf5e28e;
+}

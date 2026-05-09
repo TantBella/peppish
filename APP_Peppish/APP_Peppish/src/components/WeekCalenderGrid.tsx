@@ -30,7 +30,8 @@ export const WeekCalendarGrid = ({
 
   return (
     <div
-      className="calendar-grid"
+    className="week-view"
+      // className="calendar-grid"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >

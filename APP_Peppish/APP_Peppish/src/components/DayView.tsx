@@ -26,7 +26,7 @@ export const DayView = ({
   return (
     <div className="single-list">
       {todayChores.length === 0 ? (
-        <p className="no-chores">No chores today</p>
+        <p className="no-chores"> Inga quests idag</p>
       ) : (
         todayChores.map((chore) => (
           <ChoreCardWrapper

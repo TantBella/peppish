@@ -1,15 +1,15 @@
 type ViewMode = 'day' | 'week' | 'month'
 
-type ChoreTabsProps = {
+type CalendarTabsProps = {
   viewMode: ViewMode
   setViewMode: (mode: ViewMode) => void
 }
 
-export const ChoreTabs = ({ viewMode, setViewMode }: ChoreTabsProps) => {
+export const CalendarTabs = ({ viewMode, setViewMode }: CalendarTabsProps) => {
   const tabs: { label: string; value: ViewMode }[] = [
-    { label: 'Dag-vy', value: 'day' },
-    { label: 'Veck-vy', value: 'week' },
-    { label: 'Månadsvy', value: 'month' },
+    { label: 'Idag', value: 'day' },
+    { label: 'Denna veckan', value: 'week' },
+    { label: 'Denna månaden', value: 'month' },
   ]
 
   return (
