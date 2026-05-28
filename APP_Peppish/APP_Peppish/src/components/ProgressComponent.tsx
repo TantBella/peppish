@@ -1,40 +1,51 @@
-import { useAvatarProgress, useDailyProgress } from '../hooks/useProgress'
-import logoImg from '../assets/logo_img.png'
+import { useAvatarProgress, useDailyProgress } from "../hooks/useProgress";
+import logoImg from "../assets/logo_img.png";
 
-export const ProgressPage = () => {
+export const ProgressComponent = () => {
   const {
     data: avatar,
     isLoading: avatarLoading,
     error: avatarError,
-  } = useAvatarProgress()
+  } = useAvatarProgress();
   const {
     data: dailyProgress,
     isLoading: dailyLoading,
     error: dailyError,
-  } = useDailyProgress()
+  } = useDailyProgress();
 
-  const isLoading = avatarLoading || dailyLoading
-  const error = avatarError || dailyError
+  const isLoading = avatarLoading || dailyLoading;
+  const error = avatarError || dailyError;
 
   if (isLoading) {
-    return <div className="loading-container"><div className="spinner">Loading progress...</div></div>
+    return (
+      <div className="loading-container">
+        <div className="spinner">Loading progress...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error-message alert alert-error">Failed to load progress</div>
+    return (
+      <div className="error-message alert alert-error">
+        Failed to load progress
+      </div>
+    );
   }
 
   return (
     <div className="progress-container">
-       <h1 className="logo-icon" >
-        <img src={logoImg} alt="App logo" /> nåt svenkst namn på detta:Your Progress</h1>
+      <h1 className="logo-icon">
+        <img src={logoImg} alt="App logo" /> Din XP
+      </h1>
 
       {avatar && (
         <div className="avatar-section">
           <h2>Avatar Level</h2>
           <div className="avatar-card">
             <div className="avatar-display">
-              <div className="avatar-placeholder">{avatar.avatarUrl ? '🎮' : '🧑'}</div>
+              <div className="avatar-placeholder">
+                {avatar.avatarUrl ? "🎮" : "🧑"}
+              </div>
               <div className="level-badge">Level {avatar.level}</div>
             </div>
 
@@ -83,7 +94,9 @@ export const ProgressPage = () => {
                   style={{
                     width: `${
                       dailyProgress.totalChores > 0
-                        ? (dailyProgress.completedChores / dailyProgress.totalChores) * 100
+                        ? (dailyProgress.completedChores /
+                            dailyProgress.totalChores) *
+                          100
                         : 0
                     }%`,
                   }}
@@ -92,7 +105,9 @@ export const ProgressPage = () => {
               <div className="progress-percentage">
                 {dailyProgress.totalChores > 0
                   ? Math.round(
-                      (dailyProgress.completedChores / dailyProgress.totalChores) * 100
+                      (dailyProgress.completedChores /
+                        dailyProgress.totalChores) *
+                        100,
                     )
                   : 0}
                 %
@@ -102,5 +117,5 @@ export const ProgressPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

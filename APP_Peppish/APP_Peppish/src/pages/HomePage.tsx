@@ -38,12 +38,18 @@ export const HomePage = () => {
           <p>nånting här, typ reklam?</p>
         </div>
         <div className="home-content">
+          <p>something something</p>
+        </div>
+        <div className="home-content">
           <Link to="/households">Inställningar</Link>
+        </div>
+        <div className="home-content">
+          <p>nånting här</p>
         </div>
         <div className="home-content">
           <Link to="/chores">Uppgifter & Sysslor</Link>
         </div>
-        {user?.role === 'adult' && (
+        {user?.role === "adult" && (
           <div className="home-content">
             <Link to="/chores/new">Skapa ny uppgift</Link>
           </div>

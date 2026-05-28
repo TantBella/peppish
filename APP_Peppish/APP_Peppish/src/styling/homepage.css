@@ -18,7 +18,7 @@
   width: auto;
 }
 
- h1 {
+h1 {
   color: #333;
   font-weight: 300;
 }
@@ -26,19 +26,19 @@
 .home-section {
   padding: 2rem;
   /* max-width: 1000px; */
-  
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
   margin: 1rem auto;
   background-color: #ffffffc9;
 }
 
-.user-info > p{
+.user-info > p {
   margin-top: 1rem;
 }
 
-.home-container{
+.home-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 3rem;
 }
 
 .home-content {

@@ -15,6 +15,9 @@ export const ChoreListPage = () => {
 
   const toggle = (id: string) => setExpandedId((prev) => (prev === id ? null : id))
 
+  // show only template chores (exclude scheduled occurrences which have originId)
+  const templateChores = chores.filter((c: any) => !c.originId)
+
   return (
     <div className="chore-list-page">
       <div className="chore-list-header">
@@ -22,11 +25,11 @@ export const ChoreListPage = () => {
         <Link to="/chores/new" className="btn-primary btn-small">Skapa uppgift</Link>
       </div>
 
-      {chores.length === 0 ? (
+      {templateChores.length === 0 ? (
         <div className="empty">Inga quests ännu. Lägg till en uppgift för att komma igång.</div>
       ) : (
         <div className="chore-list">
-          {chores.map((chore: ChoreWithUIStatus) => (
+          {templateChores.map((chore: ChoreWithUIStatus) => (
             <div key={chore.id} className="chore-item">
               <ChoreCard
                 chore={chore}
