@@ -7,6 +7,8 @@ interface Props {
   userId?: string
   expandedChoreId: string | null
   setExpandedChoreId: (id: string | null) => void
+  inlineActions?: boolean
+  compact?: boolean
 }
 
 export const ChoreCardWrapper = ({
@@ -14,6 +16,8 @@ export const ChoreCardWrapper = ({
   userId,
   expandedChoreId,
   setExpandedChoreId,
+  inlineActions = true,
+  compact = false,
 }: Props) => {
   const isExpanded = expandedChoreId === chore.id
 
@@ -28,9 +32,10 @@ export const ChoreCardWrapper = ({
         currentUserId={userId}
         isExpanded={isExpanded}
         onToggle={toggle}
+        compact={compact}
       />
 
-      {isExpanded && (
+      {isExpanded && inlineActions && (
         <ChoreActionPanel
           chore={chore}
           onSuccess={() => setExpandedChoreId(null)}

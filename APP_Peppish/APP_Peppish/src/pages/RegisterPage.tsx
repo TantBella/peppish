@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authService } from '../services/authService'
@@ -20,6 +20,16 @@ export const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+
+  const [households, setHouseholds] = useState<any[]>([])
+  const [selectedHousehold, setSelectedHousehold] = useState<string>('')
+  const [newHouseholdName, setNewHouseholdName] = useState('')
+
+  useEffect(() => {
+    import('../services/householdService').then(({ householdService }) =>
+      householdService.getHouseholds().then((h) => setHouseholds(h))
+    )
+  }, [])
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -61,7 +71,17 @@ export const RegisterPage = () => {
     setErrors({})
 
     try {
-      const response = await authService.register(name, email, password, role)
+      // determine householdId: existing or create new
+      let householdId: string | undefined = undefined
+      if (selectedHousehold === 'create' && newHouseholdName.trim()) {
+        const { householdService } = await import('../services/householdService')
+        const h = await householdService.createHousehold(newHouseholdName.trim())
+        householdId = h.id
+      } else if (selectedHousehold && selectedHousehold !== 'create') {
+        householdId = selectedHousehold
+      }
+
+      const response = await authService.register(name, email, password, role, householdId)
       localStorage.setItem('token', response.token)
       localStorage.setItem('user', JSON.stringify(response.user))
       await login(email, password)
@@ -155,6 +175,20 @@ export const RegisterPage = () => {
             </select>
             {errors.role && <span className="error-text">{errors.role}</span>}
           </div>
+
+            <div className="form-group">
+              <label htmlFor="household">Household</label>
+              <select id="household" value={selectedHousehold} onChange={(e) => setSelectedHousehold(e.target.value)}>
+                <option value="">(None)</option>
+                {households.map((h) => (
+                  <option key={h.id} value={h.id}>{h.name}</option>
+                ))}
+                <option value="create">Create new household</option>
+              </select>
+              {selectedHousehold === 'create' && (
+                <input value={newHouseholdName} onChange={(e) => setNewHouseholdName(e.target.value)} placeholder="New household name" />
+              )}
+            </div>
 
           <button type="submit" disabled={isLoading} className="btn-primary">
             {isLoading ? 'Creating account...' : 'Register'}

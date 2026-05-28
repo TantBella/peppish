@@ -5,13 +5,15 @@ interface ChoreCardProps {
   currentUserId?: string
   isExpanded: boolean
   onToggle: () => void
+  compact?: boolean
 }
 
 export const ChoreCard = ({
   chore,
-  currentUserId,
+  // currentUserId,
   isExpanded,
   onToggle,
+  compact = false,
 }: ChoreCardProps) => {
   return (
     <div
@@ -25,23 +27,18 @@ export const ChoreCard = ({
         <span className="status-badge">{chore.uiStatus}</span>
       </div>
 
-      {chore.description && (
+      {!compact && chore.description && (
         <p className="chore-description">{chore.description}</p>
       )}
 
-      <div className="chore-meta">
-        <span className="reward-badge">
-          {chore.rewardType === 'money' ? '🤑' : '💎'} {chore.rewardValue || 0}
-        </span>
-
-        {chore.assignedTo && (
-          <span className="assigned-badge">
-            {chore.assignedTo === currentUserId
-              ? 'Tilldelad'
-              : 'Vald'}
+      {!compact && (
+        <div className="chore-meta">
+          <span className="reward-badge">
+            {chore.rewardType === 'money' ? '🤑' : '💎'} {chore.rewardValue || 0}
           </span>
-        )}
-      </div>
+
+        </div>
+      )}
     </div>
   )
 }
