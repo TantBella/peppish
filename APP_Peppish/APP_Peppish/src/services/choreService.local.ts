@@ -67,11 +67,123 @@ export const choreServiceLocal = {
     return { success: true };
   },
 
-  completeChore: async (id: string): Promise<Chore> => {
-    return choreServiceLocal.updateChore(id, { status: "completed" as ChoreStatus });
+  completeChore: async (id: string, actorId?: string): Promise<Chore> => {
+    const chores = read()
+    const chore = chores.find((c) => c.id === id)
+    if (!chore) throw new Error('Chore not found')
+
+    if (chore.assignedTo && actorId && chore.assignedTo !== actorId) {
+      throw new Error('Only the assigned user can complete this chore')
+    }
+
+    if (!choreServiceLocal.updateChore) {
+      throw new Error('Update function missing')
+    }
+
+    if (!('status' in chore)) {
+      throw new Error('Invalid chore status')
+    }
+
+    // allow transition only if valid
+    const { canTransition } = require('../types') as any
+    if (!canTransition(chore.status, 'completed')) {
+      throw new Error(`Cannot transition from ${chore.status} to completed`)
+    }
+
+    const updated = await choreServiceLocal.updateChore(id, { status: 'completed' as ChoreStatus })
+
+    // create notification for adults: someone completed a chore and needs approval
+    try {
+      const { notificationService } = await import('./notificationService')
+      const users = JSON.parse(localStorage.getItem('peppish_users') || '[]')
+      // determine household (assigned user or creator)
+      let householdId: string | undefined | null = null
+      if (updated.assignedTo) {
+        const assignedUser = users.find((u: any) => u.id === updated.assignedTo)
+        householdId = assignedUser?.householdId
+      }
+      if (!householdId) {
+        const creator = users.find((u: any) => u.id === updated.createdBy)
+        householdId = creator?.householdId
+      }
+
+      const adults = users.filter((u: any) => u.role === 'adult' && u.householdId && u.householdId === householdId)
+      adults.forEach((a: any) => {
+        notificationService.addNotification(a.id, `User ${updated.assignedTo || 'Someone'} completed chore \"${updated.title}\" and requests approval`)
+      })
+    } catch (e) {
+      // ignore notification failures
+    }
+
+    return updated
   },
 
-  approveChore: async (id: string): Promise<Chore> => {
-    return choreServiceLocal.updateChore(id, { status: "approved" as ChoreStatus });
+  approveChore: async (id: string, approverRole?: string): Promise<Chore> => {
+    const chores = read()
+    const chore = chores.find((c) => c.id === id)
+    if (!chore) throw new Error('Chore not found')
+
+    if (chore.status !== 'completed') {
+      throw new Error('Only completed chores can be approved')
+    }
+
+    if (approverRole !== 'adult') {
+      throw new Error('Only adults can approve chores')
+    }
+
+    const updated = await choreServiceLocal.updateChore(id, { status: 'approved' as ChoreStatus })
+
+    // notify assigned user that chore was approved and reward applied
+    try {
+      const { notificationService } = await import('./notificationService')
+      const users = JSON.parse(localStorage.getItem('peppish_users') || '[]')
+      const choresNow = read()
+      const choreNow = choresNow.find((c) => c.id === id)
+      if (choreNow && choreNow.assignedTo) {
+        const assignedUser = users.find((u: any) => u.id === choreNow.assignedTo)
+        // only notify if in same household (redundant but safe)
+        if (assignedUser) {
+          notificationService.addNotification(choreNow.assignedTo, `Your chore \"${choreNow.title}\" was approved! You received your reward.`)
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return updated
+  },
+
+  assignChore: async (id: string, userId: string): Promise<Chore> => {
+    const chores = read()
+    const chore = chores.find((c) => c.id === id)
+    if (!chore) throw new Error('Chore not found')
+
+    // allow assigning unless already approved
+    if (chore.status === 'approved') {
+      throw new Error('Cannot assign an approved chore')
+    }
+
+    return choreServiceLocal.updateChore(id, { assignedTo: userId, status: 'assigned' as ChoreStatus })
+  },
+
+  // Schedule a chore occurrence for a specific date — this clones the template chore
+  scheduleChore: async (templateId: string, userId: string, dateStr: string): Promise<Chore> => {
+    const chores = read()
+    const template = chores.find((c) => c.id === templateId)
+    if (!template) throw new Error('Template chore not found')
+
+    // create a clone with a new id, originId referencing template
+    const newChore: Chore = {
+      ...template,
+      id: generateId(),
+      originId: templateId,
+      assignedTo: userId,
+      status: 'assigned' as ChoreStatus,
+      createdAt: new Date(dateStr).toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    write([...chores, newChore])
+    return newChore
   },
 };

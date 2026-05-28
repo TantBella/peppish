@@ -11,6 +11,7 @@ export interface User {
   email: string
   name?: string
   role: Role
+  householdId?: string
 }
 
 export interface Chore {
@@ -25,6 +26,7 @@ export interface Chore {
   createdBy: string
   createdAt: string
   updatedAt: string
+  originId?: string
 }
 
 export interface AuthResponse {
@@ -39,3 +41,14 @@ export interface ApiError {
 }
 
 export type UIChoreStatus = 'Pending' | 'Completed' | 'Approved'
+
+export const canTransition = (from: ChoreStatus, to: ChoreStatus): boolean => {
+  const transitions: Record<ChoreStatus, ChoreStatus[]> = {
+    available: ['assigned'],
+    assigned: ['completed', 'available'],
+    completed: ['approved'],
+    approved: [],
+  }
+
+  return transitions[from]?.includes(to)
+}

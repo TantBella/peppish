@@ -49,6 +49,8 @@ export const DayView = ({
             userId={userId}
             expandedChoreId={expandedChoreId}
             setExpandedChoreId={setExpandedChoreId}
+            inlineActions={false}
+            compact={true}
           />
         ))
       )}

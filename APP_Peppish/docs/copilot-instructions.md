@@ -44,12 +44,12 @@ If a learning is relevant, the AI should explicitly acknowledge it.
 ## 3. Project Structure (MANDATORY)
 
 /src
-  /components
-  /pages
-  /services
-  /hooks
-  /types
-  /utils (optional)
+/components
+/pages
+/services
+/hooks
+/types
+/utils (optional)
 
 ---
 
@@ -70,9 +70,11 @@ If a learning is relevant, the AI should explicitly acknowledge it.
 Component → Hook → Service → Persistence Layer
 
 Current persistence layer:
+
 - LocalStorage
 
 Future persistence layer:
+
 - REST API
 
 ---
@@ -80,17 +82,20 @@ Future persistence layer:
 ### Responsibilities
 
 Components:
+
 - UI only
 - No API calls
 - No business logic
 
 Hooks:
+
 - State + side effects
 - Use React Query
 - Transform data
 - Handle ALL mapping
 
 Services:
+
 - Persistence only
 - May use LocalStorage or API
 - Return raw domain data
@@ -99,6 +104,7 @@ Services:
 ---
 
 ## 5. React Query Rules
+
 React Query may still be used even when LocalStorage is the active persistence layer,
 to preserve future API architecture.
 
@@ -120,7 +126,8 @@ Wrong:
 - ALWAYS type responses
 <!-- - NEVER hardcode data -->
 - Do not hardcode UI state inside components.
-Seed/mock data may exist inside dedicated persistence or seed files.
+  Seed/mock data may exist inside dedicated persistence or seed files.
+
 ---
 
 ## Persistence Abstraction (MANDATORY)
@@ -128,6 +135,7 @@ Seed/mock data may exist inside dedicated persistence or seed files.
 The application currently uses LocalStorage.
 
 Components and hooks MUST NOT know whether data comes from:
+
 - LocalStorage
 - API
 - Mock data
@@ -141,32 +149,37 @@ Future migration to API must require changes only inside services.
 /services/apiClient.ts
 
 Must:
+
 - Handle base URL
 - Attach token
 - Handle errors
 
 ---
+
 ### Environment Rules (STRICT)
 
 - Base URL MUST come from VITE_API_URL
 - NEVER hardcode localhost or any URL in services
 - Code must work for dev, staging, and production without changes
+
 ---
+
 ## Golden Example
 
 ```ts
 export const choreService = {
-  getChores: (params) =>
-    apiClient.get<Chore[]>('/chore-instances', { params })
-}
+  getChores: (params) => apiClient.get<Chore[]>("/chore-instances", { params }),
+};
 
 export const useChores = (filters) =>
   useQuery({
-    queryKey: ['chores', filters],
-    queryFn: () => choreService.getChores(filters)
-  })
-  ```
- ## 7. Domain Rules
+    queryKey: ["chores", filters],
+    queryFn: () => choreService.getChores(filters),
+  });
+```
+
+## 7. Domain Rules
+
 - Chore from API is the ONLY entity
 - Chore === ChoreInstanceDto
 
@@ -179,11 +192,13 @@ approved → Approved
 MUST happen in hooks only
 
 ## 8. State
+
 - Server state → React Query
 - UI state → useState
 - No duplication
 
 ## 9. Types
+
 - No any
 - Must match API
 
@@ -198,10 +213,12 @@ The architecture must still support future JWT authentication.
 - Logout on 401
 
 ## 11. Routing
+
 - Use React Router
 - Use AuthGuard
 
 ## 12. UX
+
 - Clear states
 - Immediate feedback
 - Never hide actions
@@ -231,3 +248,5 @@ All must be true:
 - No API in components
 - UI matches backend
 - Code compiles
+
+Also see definition-of-done.md for phase-specific criteria.

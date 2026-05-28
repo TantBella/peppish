@@ -10,9 +10,10 @@ export const authService = {
     name: string,
     email: string,
     password: string,
-    role: 'adult' | 'child'
+    role: 'adult' | 'child',
+    householdId?: string
   ): Promise<AuthResponse> => {
-    return authServiceLocal.register(name, email, password, role)
+    return authServiceLocal.register(name, email, password, role, householdId)
   },
 
   getCurrentUser: async (): Promise<User> => {

@@ -2,39 +2,64 @@
 
 ## Phase 1 – Setup
 
-- [X] Create React app
-- [X] Setup routing
-- [X] Setup persistence layer abstraction
-- [X] Setup LocalStorage persistence
-- [X] Update Architecture
+- [x] Create React app
+- [x] Setup routing
+- [x] Setup persistence layer abstraction
+- [x] Setup LocalStorage persistence
+- [x] Update Architecture
+
+### Phase 1.5 - Domain & Data model
+
+- [ ] Define domain models (TypeScript interfaces/types)
+- [ ] Implement chore state machine (enum + transitions)
+- [ ] Implement reward rules (XP + money logic)
+- [ ] Implement daily chore grouping logic
+- [ ] Implement mock data factory (seed data)
+- [ ] Central state store
 
 ## Phase 2 – Auth
 
-- [X] Login page
-- [X] Store JWT
-- [X] Protect routes
+- [x] Login page
+- [x] Store JWT
+- [x] Protect routes
+
+### Phase 2.5 – Core Services
+
+- [ ] ChoreService (create, assign, complete, approve)
+- [ ] RewardService (XP + money calculation)
+- [ ] HouseholdService
+- [ ] ProgressService (daily bar logic)
 
 ## Phase 3 – Chores
 
-- [X] Chore list (week view)
-- [X] Complete chore action
-- [X] Approve chore (adult)
+- [x] Chore list (week view)
+- [x] Complete chore action
+- [x] Approve chore (adult)
+
+### Phase 3.5 – UI states
+
+- [ ] Loading states (simulated API calls)
+- [ ] Empty states (no chores, no users)
+- [ ] Error states (invalid approval, etc.)
+- [ ] Optimistic updates (optional but useful)
 
 ## Phase 4 – Rewards
 
-- [X] Show balance
-- [X] Show reward history
+- [x] Show balance
+- [x] Show reward history
+- [ ] Wallet (money ledger, not just “balance”)
+- [ ] XP ledger (daily history)
+- [ ] Reward events (log: “chore approved → +10 kr”)
 
 ## Phase 5 – Progress
 
-- [X] Show avatar progress
-- [X] Show daily progress bar
+- [x] Show avatar progress
+- [x] Show daily progress bar
+- [ ] Daily chore aggregation engine
+- [ ] Reset logic (midnight / new day)
+- [ ] Completion ratio calculation per user
 
-## Phase 6 -
-- [ ]
-- [ ]
-
-## Phase 7 – Testing
+## Phase 6 – Testing
 
 - [ ] API client & interceptor tests
 - [ ] Auth context & hooks tests
@@ -42,5 +67,5 @@
 - [ ] Integration tests
 - [ ] Error handling tests
 
-<!-- ## Phase 8 - Future stuff -->
+<!-- ## Phase 7 - Future stuff -->
 <!-- - [ ] Setup API integration -->

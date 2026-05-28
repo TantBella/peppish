@@ -7,6 +7,9 @@ import { WeekCalendarGrid } from "../components/WeekCalenderGrid";
 import { CalendarTabs } from "../components/CalendarTabs";
 import { DayView } from "../components/DayView";
 import { MonthView } from "../components/MonthView";
+import Modal from '../components/Modal'
+import { ChoreActionPanel } from '../components/ChoreActionPanel'
+import { ChoreCard } from '../components/ChoreCard'
 
 import { useChoreCalendar, ViewMode } from "../hooks/useChoreCalendar";
 
@@ -32,6 +35,8 @@ export const CalendarPage = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Failed</div>;
+
+  const expandedChore = chores.find((c) => c.id === expandedChoreId) || null
 
   return (
     <div className="calendar-list-container">
@@ -81,6 +86,17 @@ export const CalendarPage = () => {
           setExpandedChoreId={setExpandedChoreId}
         />
       )}
+
+      {/* Modal for calendar views when a chore is selected */}
+      {expandedChore && (
+        <Modal onClose={() => setExpandedChoreId(null)} full>
+          <div className="modal-chore-full">
+            <ChoreCard chore={expandedChore} currentUserId={user?.id} isExpanded={true} onToggle={() => {}} />
+            <ChoreActionPanel chore={expandedChore} onSuccess={() => setExpandedChoreId(null)} allowAdminActions={false} allowPicking={true} />
+          </div>
+        </Modal>
+      )}
+
     </div>
   );
 };

@@ -40,11 +40,19 @@ export const choreService = {
     return choreServiceLocal.deleteChore(id)
   },
 
-  completeChore: async (id: string): Promise<Chore> => {
-    return choreServiceLocal.completeChore(id)
+  completeChore: async (id: string, actorId?: string): Promise<Chore> => {
+    return choreServiceLocal.completeChore(id, actorId)
   },
 
-  approveChore: async (id: string): Promise<Chore> => {
-    return choreServiceLocal.approveChore(id)
+  approveChore: async (id: string, approverRole?: string): Promise<Chore> => {
+    return choreServiceLocal.approveChore(id, approverRole)
+  },
+
+  assignChore: async (id: string, userId: string): Promise<Chore> => {
+    return choreServiceLocal.assignChore(id, userId)
+  },
+
+  scheduleChore: async (templateId: string, userId: string, dateStr: string): Promise<Chore> => {
+    return choreServiceLocal.scheduleChore(templateId, userId, dateStr)
   },
 }
