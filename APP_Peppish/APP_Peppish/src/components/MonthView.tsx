@@ -18,7 +18,7 @@ export const MonthView = ({
   setViewMode,
   // setWeekOffset,
 }: Props) => {
-  const now = new Date()
+const now = useMemo(() => new Date(), [])
 
   const weekdays = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"]
 

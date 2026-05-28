@@ -43,9 +43,11 @@ export const HomePage = () => {
         <div className="home-content">
           <Link to="/chores">Uppgifter & Sysslor</Link>
         </div>
-        <div className="home-content">
-          <Link to="/chores/new">Skapa ny uppgift</Link>
-        </div>
+        {user?.role === 'adult' && (
+          <div className="home-content">
+            <Link to="/chores/new">Skapa ny uppgift</Link>
+          </div>
+        )}
       </div>
     </div>
   );

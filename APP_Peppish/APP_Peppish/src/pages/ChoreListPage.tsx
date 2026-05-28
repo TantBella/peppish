@@ -33,6 +33,7 @@ export const ChoreListPage = () => {
                 currentUserId={user?.id}
                 isExpanded={expandedId === chore.id}
                 onToggle={() => toggle(chore.id)}
+                compact={false}
               />
 
               {expandedId === chore.id && (

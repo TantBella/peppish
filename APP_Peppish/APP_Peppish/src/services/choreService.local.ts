@@ -1,4 +1,5 @@
 import { Chore, ChoreStatus } from '../types'
+import { canTransition } from '../types/choreTransitions'
 
 const STORAGE_KEY = "peppish_chores";
 
@@ -85,7 +86,7 @@ export const choreServiceLocal = {
     }
 
     // allow transition only if valid
-    const { canTransition } = require('../types') as any
+    // const { canTransition } = require('../types') as any
     if (!canTransition(chore.status, 'completed')) {
       throw new Error(`Cannot transition from ${chore.status} to completed`)
     }
@@ -109,7 +110,7 @@ export const choreServiceLocal = {
 
       const adults = users.filter((u: any) => u.role === 'adult' && u.householdId && u.householdId === householdId)
       adults.forEach((a: any) => {
-        notificationService.addNotification(a.id, `User ${updated.assignedTo || 'Someone'} completed chore \"${updated.title}\" and requests approval`)
+        notificationService.addNotification(a.id, `User ${updated.assignedTo || 'Someone'} completed chore "${updated.title}" and requests approval`)
       })
     } catch (e) {
       // ignore notification failures
@@ -143,7 +144,7 @@ export const choreServiceLocal = {
         const assignedUser = users.find((u: any) => u.id === choreNow.assignedTo)
         // only notify if in same household (redundant but safe)
         if (assignedUser) {
-          notificationService.addNotification(choreNow.assignedTo, `Your chore \"${choreNow.title}\" was approved! You received your reward.`)
+          notificationService.addNotification(choreNow.assignedTo, `Your chore "${choreNow.title}" was approved! You received your reward.`)
         }
       }
     } catch (e) {

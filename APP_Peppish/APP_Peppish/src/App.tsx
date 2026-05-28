@@ -12,9 +12,10 @@ import { ChoreListPage } from './pages/ChoreListPage'
 import { CreateChorePage } from './pages/CreateChorePage'
 import { EditChorePage } from './pages/EditChorePage'
 import { CalendarPage} from './pages/CalendarPage'
-import { RewardsPage } from './pages/RewardsPage'
-import { ProgressPage } from './pages/ProgressPage'
+// import { RewardsPage } from './pages/RewardsPage'
+// import { ProgressPage } from './pages/ProgressPage'
 import { NotificationsPage } from './pages/NotificationsPage'
+import { RewardsAndProgressPage } from './pages/RewardsAndProgressPage'
 import { HouseholdManagementPage } from './pages/HouseholdManagementPage'
 
 const queryClient = new QueryClient()
@@ -51,19 +52,18 @@ function App() {
               }
             >
               <Route path="/" element={<HomePage />} />
-              
+
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/chores" element={<ChoreListPage />} />
               <Route path="/chores/new" element={<CreateChorePage />} />
               <Route path="/chores/:id/edit" element={<EditChorePage />} />
-              <Route path="/rewards" element={<RewardsPage />} />
-              <Route path="/progress" element={<ProgressPage />} />
+              <Route path="/rewards" element={<RewardsAndProgressPage />} />
+              <Route path="/progress" element={<RewardsAndProgressPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/households" element={<HouseholdManagementPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
-
           </Routes>
         </Router>
       </AuthProvider>

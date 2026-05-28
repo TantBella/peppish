@@ -10,7 +10,7 @@ interface ChoreCardProps {
 
 export const ChoreCard = ({
   chore,
-  currentUserId,
+  // currentUserId,
   isExpanded,
   onToggle,
   compact = false,
@@ -37,13 +37,6 @@ export const ChoreCard = ({
             {chore.rewardType === 'money' ? '🤑' : '💎'} {chore.rewardValue || 0}
           </span>
 
-          {chore.assignedTo && (
-            <span className="assigned-badge">
-              {chore.assignedTo === currentUserId
-                ? 'Tilldelad'
-                : 'Vald'}
-            </span>
-          )}
         </div>
       )}
     </div>
