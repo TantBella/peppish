@@ -30,7 +30,11 @@
 - [X] Show avatar progress
 - [X] Show daily progress bar
 
-## Phase 6 – Testing
+## Phase 6 -
+- [ ]
+- [ ]
+
+## Phase 7 – Testing
 
 - [ ] API client & interceptor tests
 - [ ] Auth context & hooks tests
@@ -38,5 +42,5 @@
 - [ ] Integration tests
 - [ ] Error handling tests
 
-<!-- ## Phase 7 - Future stuff -->
+<!-- ## Phase 8 - Future stuff -->
 <!-- - [ ] Setup API integration -->

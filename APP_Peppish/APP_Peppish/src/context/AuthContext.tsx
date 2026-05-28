@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const defaultUser: User = {
         id: '2',
         email: 'child@example.com',
-        name: 'Child',
+        name: 'Barn1',
         role: 'child'
       }
       const defaultToken = `mock-jwt-token-${defaultUser.id}-${Date.now()}`
