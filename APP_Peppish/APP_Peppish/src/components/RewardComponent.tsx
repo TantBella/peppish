@@ -1,7 +1,7 @@
 import { useUserBalance, useRewardHistory } from "../hooks/useRewards";
 import logoImg from "../assets/logo_img.png";
 
-export const RewardsPage = () => {
+export const RewardComponent = () => {
   const {
     data: balance,
     isLoading: balanceLoading,
