@@ -1,13 +1,6 @@
-import { rewardServiceLocal, Reward, UserBalance } from './rewardService.local'
+import { rewardServiceLocal } from './rewardService.local'
+import { rewardServiceApi, Reward, UserBalance } from './rewardService.api'
 
 export type { Reward, UserBalance }
 
-export const rewardService = {
-  getUserBalance: async (): Promise<UserBalance> => {
-    return rewardServiceLocal.getUserBalance()
-  },
-
-  getRewardHistory: async (limit?: number): Promise<Reward[]> => {
-    return rewardServiceLocal.getRewardHistory(limit)
-  },
-}
+export const rewardService = process.env.REACT_APP_API_URL ? rewardServiceApi : rewardServiceLocal

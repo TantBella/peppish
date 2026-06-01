@@ -82,8 +82,7 @@ export const RegisterPage = () => {
       }
 
       const response = await authService.register(name, email, password, role, householdId)
-      localStorage.setItem('token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.user))
+      // After successful registration, perform login to populate auth state
       await login(email, password)
       navigate('/')
     } catch (err) {

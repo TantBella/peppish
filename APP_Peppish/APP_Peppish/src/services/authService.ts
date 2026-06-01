@@ -1,22 +1,6 @@
 import { AuthResponse, User } from '../types'
 import { authServiceLocal } from './authService.local'
+import { authServiceApi } from './authService.api'
 
-export const authService = {
-  login: async (email: string, password: string): Promise<AuthResponse> => {
-    return authServiceLocal.login(email, password)
-  },
-
-  register: async (
-    name: string,
-    email: string,
-    password: string,
-    role: 'adult' | 'child',
-    householdId?: string
-  ): Promise<AuthResponse> => {
-    return authServiceLocal.register(name, email, password, role, householdId)
-  },
-
-  getCurrentUser: async (): Promise<User> => {
-    return authServiceLocal.getCurrentUser()
-  },
-}
+// Use API-backed service when REACT_APP_API_URL is set; otherwise keep local fallback
+export const authService = process.env.REACT_APP_API_URL ? authServiceApi : authServiceLocal

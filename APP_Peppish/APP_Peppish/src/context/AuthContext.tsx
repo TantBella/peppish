@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '../types'
 import { authService } from '../services/authService'
-import { seedInitialData } from '../utils/seedData'
+import { setAuthToken } from '../services/apiClient'
 
 interface AuthContextType {
   user: User | null
@@ -19,29 +19,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Seed initial data if first time
-    seedInitialData()
-
     const storedToken = localStorage.getItem('token')
     const storedUser = localStorage.getItem('user')
 
     if (storedToken && storedUser) {
       setToken(storedToken)
       setUser(JSON.parse(storedUser))
-    } else {
-      // Auto-login with default user for MVP testing (bypasses login)
-      const defaultUser: User = {
-        id: '2',
-        email: 'child@example.com',
-        name: 'Barn1',
-        role: 'child'
-      }
-      const defaultToken = `mock-jwt-token-${defaultUser.id}-${Date.now()}`
-      localStorage.setItem('token', defaultToken)
-      localStorage.setItem('user', JSON.stringify(defaultUser))
-      setToken(defaultToken)
-      setUser(defaultUser)
+      setAuthToken(storedToken)
     }
+
     setIsLoading(false)
   }, [])
 
@@ -51,6 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('user', JSON.stringify(response.user))
     setToken(response.token)
     setUser(response.user)
+    setAuthToken(response.token)
   }
 
   const logout = () => {
@@ -58,6 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('user')
     setToken(null)
     setUser(null)
+    setAuthToken(null)
   }
 
   return (
