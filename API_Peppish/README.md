@@ -18,7 +18,7 @@ The system supports:
 
 * .NET 8 Web API
 * Entity Framework Core
-* SQL Server
+* PostgreSQL
 * ASP.NET Identity
 * REST API architecture
 
@@ -42,7 +42,7 @@ Create an `appsettings.Development.json` file:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=...;Database=...;Trusted_Connection=True;"
+    "DefaultConnection": "Host=localhost;Database=peppish;Username=postgres;Password=yourpassword"
   },
   "Jwt": {
     "Key": "your-secret-key"
@@ -111,7 +111,7 @@ Authorization: Bearer <token>
 
 ## Database
 
-* Uses SQL Server
+* Uses PostgreSQL
 * Managed via Entity Framework Core migrations
 * All data is scoped by HouseholdId for isolation
 

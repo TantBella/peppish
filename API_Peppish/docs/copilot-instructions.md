@@ -40,7 +40,7 @@ If a learning is relevant, the AI should explicitly acknowledge it.
 
 * .NET 8 Web API
 * Entity Framework Core
-* SQL Server
+* PostgreSQL
 * ASP.NET Identity for authentication
 * RESTful API architecture
 
