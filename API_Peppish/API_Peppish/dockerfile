@@ -5,6 +5,8 @@ WORKDIR /src
 # RUN dotnet restore
 COPY . .
 RUN dotnet restore
+
+COPY api_peppish/api_peppish/ ./
 RUN dotnet publish -c Release -o /app/publish
 
 # COPY api_peppish/api_peppish/ ./
