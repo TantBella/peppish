@@ -21,3 +21,4 @@ obj/
 # --- IDE ---
 .vscode/
 .idea/
+API_Peppish/API_Peppish/appsettings.Development.json
