@@ -1,10 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { AuthProvider } from './context/AuthContext'
-
 import { ProtectedRoute } from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
-
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { HomePage } from './pages/HomePage'

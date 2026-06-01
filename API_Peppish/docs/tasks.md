@@ -13,6 +13,7 @@ For EVERY task:
 7. Mark task complete ONLY if fully working
 
 DO NOT:
+
 - Skip ahead to future tasks
 - Implement partial logic
 - Combine multiple tasks
@@ -34,34 +35,34 @@ A task is complete ONLY if:
 
 # Phase 0 – Project Setup
 
-* [X] Verify project builds successfully
-* [X] Add required NuGet packages:
+- [x] Verify project builds successfully
+- [x] Add required NuGet packages:
+  - Microsoft.AspNetCore.Identity.EntityFrameworkCore
+  - Npgsql.EntityFrameworkCore.PostgreSQL
+  - Microsoft.EntityFrameworkCore.Design
 
-  * Microsoft.AspNetCore.Identity.EntityFrameworkCore
-  * Microsoft.EntityFrameworkCore.SqlServer
-  * Microsoft.EntityFrameworkCore.Design
-* [X] Create folder structure:
+- [x] Create folder structure:
+  - /Controllers
+  - /Services
+  - /Repositories
+  - /Entities
+  - /DTOs
+  - /Data
 
-  * /Controllers
-  * /Services
-  * /Repositories
-  * /Entities
-  * /DTOs
-  * /Data
-* [X] Configure connection string in appsettings.json
+- [x] Configure connection string in appsettings.json
 
 ---
 
 # Phase 1 – Identity & Database
 
-* [X] Create `ApplicationUser` extending IdentityUser
+- [x] Create `ApplicationUser` extending IdentityUser
+  - Add: DisplayName, HouseholdId
 
-  * Add: DisplayName, HouseholdId
-* [X] Create `AppDbContext` extending IdentityDbContext<ApplicationUser>
-* [X] Register DbContext in Program.cs
-* [X] Add Identity configuration in Program.cs
-* [X] Run initial migration
-* [X] Verify database is created
+- [x] Create `AppDbContext` extending IdentityDbContext<ApplicationUser>
+- [x] Register DbContext in Program.cs
+- [x] Add Identity configuration in Program.cs
+- [x] Run initial migration
+- [x] Verify database is created
 
 ---
 
@@ -69,33 +70,33 @@ A task is complete ONLY if:
 
 Create entities EXACTLY as defined in DOMAIN.md
 
-* [X] Household
-* [X] ChoreTemplate
-* [X] ChoreAssignment
-* [X] ChoreInstance
-* [X] RewardLedger
-* [X] AvatarProgress
+- [x] Household
+- [x] ChoreTemplate
+- [x] ChoreAssignment
+- [x] ChoreInstance
+- [x] RewardLedger
+- [x] AvatarProgress
 
 Rules:
 
-* Include Id (Guid)
-* Include HouseholdId where required
-* Include timestamps where relevant
-* NO business logic inside entities
+- Include Id (Guid)
+- Include HouseholdId where required
+- Include timestamps where relevant
+- NO business logic inside entities
 
 ---
 
 # Phase 3 – DbContext Integration
 
-* [X] Add DbSets for all entities
-* [X] Configure relationships using Fluent API
-* [X] Add constraints:
+- [x] Add DbSets for all entities
+- [x] Configure relationships using Fluent API
+- [x] Add constraints:
+  - FK: User → Household
+  - FK: Assignment → Template
+  - FK: Instance → Assignment
 
-  * FK: User → Household
-  * FK: Assignment → Template
-  * FK: Instance → Assignment
-* [X] Run migration: AddDomainEntities
-* [X] Update database
+- [x] Run migration: AddDomainEntities
+- [x] Update database
 
 ---
 
@@ -108,17 +109,17 @@ Each repository MUST:
 - Always filter by HouseholdId where applicable
 - Never return IQueryable outside repository
 
-* [X] HouseholdRepository
-* [X] ChoreTemplateRepository
-* [X] ChoreAssignmentRepository
-* [X] ChoreInstanceRepository
-* [X] RewardRepository
+* [x] HouseholdRepository
+* [x] ChoreTemplateRepository
+* [x] ChoreAssignmentRepository
+* [x] ChoreInstanceRepository
+* [x] RewardRepository
 
 Rules:
 
-* Only data access
-* Async methods only
-* No business logic
+- Only data access
+- Async methods only
+- No business logic
 
 ---
 
@@ -126,13 +127,13 @@ Rules:
 
 Create services:
 
-* [X] UserService
-* [X] HouseholdService
-* [X] ChoreTemplateService
-* [X] ChoreAssignmentService
-* [X] ChoreInstanceService
-* [X] RewardService
-* [X] ProgressService
+- [x] UserService
+- [x] HouseholdService
+- [x] ChoreTemplateService
+- [x] ChoreAssignmentService
+- [x] ChoreInstanceService
+- [x] RewardService
+- [x] ProgressService
 
 ---
 
@@ -140,39 +141,37 @@ Create services:
 
 ### ChoreInstanceService
 
-* [X] Get chores by date range
+- [x] Get chores by date range
 
-* [X] Generate instances (on-demand)
+- [x] Generate instances (on-demand)
 
-* [X] Complete chore:
+- [x] Complete chore:
+  - Validate assigned user
+  - Set status → Completed
+  - Set CompletedAt
 
-  * Validate assigned user
-  * Set status → Completed
-  * Set CompletedAt
-
-* [X] Approve chore:
-
-  * Validate Adult role
-  * Set status → Approved
-  * Set ApprovedAt
-  * Call RewardService
+- [x] Approve chore:
+  - Validate Adult role
+  - Set status → Approved
+  - Set ApprovedAt
+  - Call RewardService
 
 ---
 
 ### RewardService
 
-* [X] Create reward ONLY on Approved chore
-* [X] Add entry to RewardLedger
-* [X] Ensure no duplicate rewards
+- [x] Create reward ONLY on Approved chore
+- [x] Add entry to RewardLedger
+- [x] Ensure no duplicate rewards
 
 ---
 
 ### ProgressService
 
-* [X] Calculate daily progress:
+- [x] Calculate daily progress:
+  - completed / total \* 100
 
-  * completed / total * 100
-* [X] Update AvatarProgress on approval
+- [x] Update AvatarProgress on approval
 
 ---
 
@@ -180,18 +179,18 @@ Create services:
 
 Create DTOs for ALL responses
 
-* [X] UserDto
-* [X] HouseholdDto
-* [X] ChoreTemplateDto
-* [X] ChoreAssignmentDto
-* [X] ChoreInstanceDto
-* [X] RewardDto
-* [X] ProgressDto
+- [x] UserDto
+- [x] HouseholdDto
+- [x] ChoreTemplateDto
+- [x] ChoreAssignmentDto
+- [x] ChoreInstanceDto
+- [x] RewardDto
+- [x] ProgressDto
 
 Rules:
 
-* No navigation properties
-* Flat structure only
+- No navigation properties
+- Flat structure only
 
 ---
 
@@ -203,117 +202,327 @@ Implement controllers strictly following api-spec.md
 
 ## AuthController
 
-* [X] POST /auth/register
-* [X] POST /auth/login
-* [X] Return JWT token
+- [x] POST /auth/register
+- [x] POST /auth/login
+- [x] Return JWT token
 
 ---
 
 ## UsersController
 
-* [X] GET /users/me
-* [X] GET /users/{id}/rewards
-* [X] GET /users/{id}/balance
-* [X] GET /users/{id}/progress
+- [x] GET /users/me
+- [x] GET /users/{id}/rewards
+- [x] GET /users/{id}/balance
+- [x] GET /users/{id}/progress
 
 ---
 
 ## HouseholdsController
 
-* [X] GET /households/{id}
+- [x] GET /households/{id}
 
 ---
 
 ## ChoreTemplatesController
 
-* [X] POST /chore-templates
-* [X] GET /chore-templates
+- [x] POST /chore-templates
+- [x] GET /chore-templates
 
 ---
 
 ## ChoreAssignmentsController
 
-* [X] POST /chore-assignments
-* [X] GET /users/{userId}/assignments
+- [x] POST /chore-assignments
+- [x] GET /users/{userId}/assignments
 
 ---
 
 ## ChoreInstancesController
 
-* [X] GET /chores?from=&to=
-* [X] POST /chores/{id}/complete
-* [X] POST /chores/{id}/approve
+- [x] GET /chores?from=&to=
+- [x] POST /chores/{id}/complete
+- [x] POST /chores/{id}/approve
 
 ---
 
 # Phase 8 – Authorization
 
-* [X] Add role-based authorization:
+- [x] Add role-based authorization:
+  - Adult
+  - Child
 
-  * Adult
-  * Child
-* [X] Protect endpoints with [Authorize]
-* [X] Enforce rules in services:
-
-  * Child cannot approve
-  * Only assigned user can complete
+- [x] Protect endpoints with [Authorize]
+- [x] Enforce rules in services:
+  - Child cannot approve
+  - Only assigned user can complete
 
 ---
 
 # Phase 9 – Household Isolation
 
-* [X] Ensure ALL queries filter by HouseholdId
-* [X] Validate user belongs to household before access
-* [X] Prevent cross-household data leaks
+- [x] Ensure ALL queries filter by HouseholdId
+- [x] Validate user belongs to household before access
+- [x] Prevent cross-household data leaks
 
 ---
 
 # Phase 10 – Validation
 
-* [X] Validate all incoming DTOs
-* [X] Return standard error format
-* [X] Handle invalid states:
-
-  * Completing already completed task
-  * Approving non-completed task
+- [x] Validate all incoming DTOs
+- [x] Return standard error format
+- [x] Handle invalid states:
+  - Completing already completed task
+  - Approving non-completed task
 
 ---
 
 # Phase 11 – Logging
 
-* [X] Log:
-
-  * approvals
-  * reward creation
-  * unauthorized access attempts
+- [x] Log:
+  - approvals
+  - reward creation
+  - unauthorized access attempts
 
 ---
 
 # Phase 12 – Testing (Core Only)
 
-* [X] Unit tests for:
-
-  * reward creation
-  * approval flow
-  * chore completion
-  * household isolation
+- [x] Unit tests for:
+  - reward creation
+  - approval flow
+  - chore completion
+  - household isolation
 
 ---
 
 # Phase 13 – Final Verification
 
-* [X] All endpoints match API-SPEC.md
-* [X] All rules from DOMAIN.md are enforced
-* [X] No business logic in controllers
-* [X] Rewards only created after approval
-* [X] Application runs without errors
+- [x] All endpoints match API-SPEC.md
+- [x] All rules from DOMAIN.md are enforced
+- [x] No business logic in controllers
+- [x] Rewards only created after approval
+- [x] Application runs without errors
 
 ---
 
 # Future (Not in MVP)
 
-* [ ] Background job for instance generation
-* [ ] Notifications
-* [ ] Avatar animations
-* [ ] Streak system
-* [ ] Leaderboard
+- [ ] Background job for instance generation
+- [ ] Notifications
+- [ ] Avatar animations
+- [ ] Streak system
+- [ ] Leaderboard
+
+# Phase 14 – Production Readiness & Missing MVP Features
+
+## Authentication
+
+### Refresh Tokens
+
+- [ ] Implement refresh token support
+- [ ] Store refresh tokens securely
+- [ ] Add refresh token entity
+- [ ] Add token expiration handling
+- [ ] POST /auth/refresh
+- [ ] POST /auth/logout
+
+Rules:
+
+- Access tokens must be short-lived
+- Refresh tokens must be revocable
+- Logout must invalidate refresh token
+
+---
+
+## Rewards Catalog
+
+### New Entities
+
+- [ ] Create Reward entity
+- [ ] Create RewardRedemption entity
+
+Reward fields:
+
+- Id
+- HouseholdId
+- Name
+- Description
+- Cost
+- IsActive
+- CreatedAt
+
+RewardRedemption fields:
+
+- Id
+- RewardId
+- UserId
+- RedeemedAt
+- Status
+
+Rules:
+
+- Rewards belong to a household
+- Only adults can create rewards
+- Children can redeem rewards
+- User must have sufficient balance
+
+---
+
+## Reward Endpoints
+
+### RewardsController
+
+- [ ] POST /rewards
+- [ ] GET /rewards
+- [ ] PUT /rewards/{id}
+- [ ] DELETE /rewards/{id}
+- [ ] POST /rewards/{id}/redeem
+- [ ] GET /users/{id}/redemptions
+
+Rules:
+
+- Household isolation required
+- Redemption must create ledger entry
+- Insufficient balance must return validation error
+
+---
+
+## Household Management
+
+### Household Creation
+
+- [ ] POST /households
+- [ ] Create initial household during registration (optional)
+
+### Household Membership
+
+- [ ] Generate invite code
+- [ ] POST /households/join
+- [ ] Validate invite code
+- [ ] Add user to household
+
+Rules:
+
+- User may only belong to one household
+- Invite codes must expire
+- Household membership must be validated
+
+---
+
+## Entity Improvements
+
+### Audit Fields
+
+- [ ] Add CreatedAt to all aggregate entities
+- [ ] Add UpdatedAt to mutable entities
+
+Applies to:
+
+- Household
+- ChoreTemplate
+- ChoreAssignment
+- Reward
+- AvatarProgress
+
+---
+
+## Soft Delete
+
+- [ ] Add IsDeleted
+- [ ] Add DeletedAt
+
+Applies to:
+
+- ChoreTemplate
+- Reward
+- ChoreAssignment
+
+Rules:
+
+- Deleted records should not appear in queries
+- Physical deletion should be avoided
+
+---
+
+## Pagination
+
+- [ ] Add page parameter
+- [ ] Add pageSize parameter
+
+Applies to:
+
+- GET /chores
+- GET /chore-templates
+- GET /rewards
+
+Rules:
+
+- Default page size = 25
+- Maximum page size = 100
+
+---
+
+## Concurrency
+
+### Optimistic Concurrency
+
+- [ ] Add RowVersion to mutable entities
+- [ ] Handle concurrent approvals
+
+Rules:
+
+- Prevent duplicate reward creation
+- Prevent duplicate approvals
+
+---
+
+## Integration Testing
+
+- [ ] Auth integration tests
+- [ ] Household isolation integration tests
+- [ ] Chore completion integration tests
+- [ ] Chore approval integration tests
+- [ ] Reward redemption integration tests
+
+---
+
+## Deployment Readiness
+
+### Configuration
+
+- [ ] Environment-specific settings
+- [ ] Connection strings via environment variables
+- [ ] Secrets not stored in source control
+
+### API Infrastructure
+
+- [ ] HTTPS enforcement
+- [ ] Production CORS configuration
+- [ ] Global exception handling middleware
+- [ ] Health endpoint (/health)
+
+### Logging
+
+- [ ] Structured logging
+- [ ] Correlation IDs
+- [ ] Request logging
+
+### Containerization
+
+- [ ] Create Dockerfile
+- [ ] Verify production container build
+
+---
+
+## Database Portability
+
+### PostgreSQL Compatibility
+
+- [ ] Add PostgreSQL provider support
+- [ ] Verify EF Core migrations
+- [ ] Verify compatibility with Neon PostgreSQL
+
+Rules:
+
+- Application should run on both SQL Server and PostgreSQL
+- No provider-specific business logic
