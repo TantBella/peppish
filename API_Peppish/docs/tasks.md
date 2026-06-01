@@ -524,5 +524,5 @@ Rules:
 
 Rules:
 
-- Application should run on both SQL Server and PostgreSQL
+- Application should run on PostgreSQL
 - No provider-specific business logic
