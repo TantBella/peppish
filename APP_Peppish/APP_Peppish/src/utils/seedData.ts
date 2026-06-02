@@ -3,6 +3,13 @@ import { Chore } from '../types'
 const SEED_DATA_KEY = 'peppish_seeded'
 
 export const seedInitialData = () => {
+  // Do not seed when an external API is configured unless explicitly allowed
+  const useSeedExplicit = process.env.REACT_APP_USE_SEED === 'true'
+  if (process.env.REACT_APP_API_URL && !useSeedExplicit) {
+    // Running against a real backend — skip seeding localStorage
+    return
+  }
+
   // Only seed once
   if (localStorage.getItem(SEED_DATA_KEY)) {
     return

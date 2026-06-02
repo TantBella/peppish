@@ -1,7 +1,4 @@
 import { userServiceLocal } from './userService.local'
+import { userServiceApi } from './userService.api'
 
-export const userService = {
-  getUsers: userServiceLocal.getUsers,
-  updateUser: userServiceLocal.updateUser,
-  createUser: userServiceLocal.createUser,
-}
+export const userService = process.env.REACT_APP_API_URL ? userServiceApi : userServiceLocal

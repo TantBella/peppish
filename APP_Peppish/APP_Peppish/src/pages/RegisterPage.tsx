@@ -81,9 +81,7 @@ export const RegisterPage = () => {
         householdId = selectedHousehold
       }
 
-      const response = await authService.register(name, email, password, role, householdId)
-      localStorage.setItem('token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.user))
+      await authService.register(name, email, password, role, householdId)
       await login(email, password)
       navigate('/')
     } catch (err) {
