@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNotifications } from '../hooks/useNotifications'
-import '../styling/homepage.css'
 
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false)
