@@ -1,54 +1,55 @@
-import axios, { AxiosInstance } from 'axios'
-import { ApiError } from '../types'
+import axios, { AxiosInstance } from "axios";
+import { ApiError } from "../types";
 
-let authToken: string | null = null
+let authToken: string | null = null;
 
 export const setAuthToken = (token: string | null) => {
-  authToken = token
-}
+  authToken = token;
+};
 
 const createApiClient = (): AxiosInstance => {
-  const raw = process.env.REACT_APP_API_URL || 'http://localhost:5000'
-  const normalized = raw.replace(/\/$/, '')
-  const baseURL = normalized.endsWith('/api') ? normalized : `${normalized}/api`
+  const raw = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const normalized = raw.replace(/\/$/, "");
+  const baseURL = normalized.endsWith("/api")
+    ? normalized
+    : `${normalized}/api`;
 
   const instance = axios.create({
     baseURL,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-  })
+  });
 
   instance.interceptors.request.use((config) => {
     if (authToken) {
-      config.headers = config.headers || {}
-      ;(config.headers as any).Authorization = `Bearer ${authToken}`
+      config.headers = config.headers || {};
+      (config.headers as any).Authorization = `Bearer ${authToken}`;
     }
-    return config
-  })
+    return config;
+  });
 
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
-        // Clear in-memory token and redirect to login; AuthContext should handle cleanup
-        authToken = null
+        authToken = null;
         try {
-          window.location.href = '/login'
+          window.location.href = "/login";
         } catch (e) {
           // ignore in non-browser environments
         }
       }
       const apiError: ApiError = {
         message: error.response?.data?.message || error.message,
-        code: error.response?.data?.code || 'UNKNOWN_ERROR',
+        code: error.response?.data?.code || "UNKNOWN_ERROR",
         status: error.response?.status || 500,
-      }
-      return Promise.reject(apiError)
-    }
-  )
+      };
+      return Promise.reject(apiError);
+    },
+  );
 
-  return instance
-}
+  return instance;
+};
 
-export const apiClient = createApiClient()
+export const apiClient = createApiClient();
