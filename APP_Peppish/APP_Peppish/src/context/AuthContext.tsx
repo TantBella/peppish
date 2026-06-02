@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setToken(response.token);
     setAuthToken(response.token);
-    setUser(response.user ?? null);
+    setUser(user);
   };
 
   const logout = (): void => {
