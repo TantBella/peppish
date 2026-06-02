@@ -85,7 +85,6 @@ export const choreServiceLocal = {
       throw new Error('Invalid chore status')
     }
 
-    // allow transition only if valid
     // const { canTransition } = require('../types') as any
     if (!canTransition(chore.status, 'completed')) {
       throw new Error(`Cannot transition from ${chore.status} to completed`)
@@ -93,11 +92,9 @@ export const choreServiceLocal = {
 
     const updated = await choreServiceLocal.updateChore(id, { status: 'completed' as ChoreStatus })
 
-    // create notification for adults: someone completed a chore and needs approval
     try {
       const { notificationService } = await import('./notificationService')
       const users = JSON.parse(localStorage.getItem('peppish_users') || '[]')
-      // determine household (assigned user or creator)
       let householdId: string | undefined | null = null
       if (updated.assignedTo) {
         const assignedUser = users.find((u: any) => u.id === updated.assignedTo)
@@ -134,7 +131,6 @@ export const choreServiceLocal = {
 
     const updated = await choreServiceLocal.updateChore(id, { status: 'approved' as ChoreStatus })
 
-    // notify assigned user that chore was approved and reward applied
     try {
       const { notificationService } = await import('./notificationService')
       const users = JSON.parse(localStorage.getItem('peppish_users') || '[]')
@@ -142,7 +138,7 @@ export const choreServiceLocal = {
       const choreNow = choresNow.find((c) => c.id === id)
       if (choreNow && choreNow.assignedTo) {
         const assignedUser = users.find((u: any) => u.id === choreNow.assignedTo)
-        // only notify if in same household (redundant but safe)
+
         if (assignedUser) {
           notificationService.addNotification(choreNow.assignedTo, `Your chore "${choreNow.title}" was approved! You received your reward.`)
         }
@@ -159,7 +155,6 @@ export const choreServiceLocal = {
     const chore = chores.find((c) => c.id === id)
     if (!chore) throw new Error('Chore not found')
 
-    // allow assigning unless already approved
     if (chore.status === 'approved') {
       throw new Error('Cannot assign an approved chore')
     }
@@ -167,13 +162,11 @@ export const choreServiceLocal = {
     return choreServiceLocal.updateChore(id, { assignedTo: userId, status: 'assigned' as ChoreStatus })
   },
 
-  // Schedule a chore occurrence for a specific date — this clones the template chore
   scheduleChore: async (templateId: string, userId: string, dateStr: string): Promise<Chore> => {
     const chores = read()
     const template = chores.find((c) => c.id === templateId)
     if (!template) throw new Error('Template chore not found')
 
-    // create a clone with a new id, originId referencing template
     const newChore: Chore = {
       ...template,
       id: generateId(),

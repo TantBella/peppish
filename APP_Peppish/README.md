@@ -9,44 +9,41 @@ The app allows users (adults and children) to assign, track and complete chores 
 
 ### User Roles
 
-* **Adult**
+- **Adult**
+  - Assign chores to children
+  - Approve completed chores
+  - Create and manage tasks
 
-  * Assign chores to children
-  * Approve completed chores
-  * Create and manage tasks
-
-* **Child**
-
-  * View and select chores
-  * Create custom chores
-  * Mark chores as completed (pending approval)
+- **Child**
+  - View and select chores
+  - Create custom chores
+  - Mark chores as completed (pending approval)
 
 ---
 
 ### Chore System
 
-* Daily chores
-* Weekly chores
-* Irregular chores
-* Self-assigned or assigned by others
+- Daily chores
+- Weekly chores
+- Irregular chores
+- Self-assigned or assigned by others
 
 ---
 
 ### Rewards and Progress
 
-* **Piggy Bank**: Earn money for completing rewarded chores
-* **Progress Bottle**:
-
-  * Fills as required chores are completed
-  * When full, triggers avatar interaction
+- **Piggy Bank**: Earn money for completing rewarded chores
+- **Progress Bottle**:
+  - Fills as required chores are completed
+  - When full, triggers avatar interaction
 
 ---
 
 ### Gamification
 
-* Visual progress tracking
-* Avatar-based feedback
-* Reward reinforcement system
+- Visual progress tracking
+- Avatar-based feedback
+- Reward reinforcement system
 
 ---
 
@@ -54,17 +51,17 @@ The app allows users (adults and children) to assign, track and complete chores 
 
 ### Frontend
 
-* React (Vite)
-* TypeScript
-* Tailwind CSS
-* Zustand (state management)
-* React Router
-* Axios
+- React
+- TypeScript
+- Tailwind CSS
+- Zustand (state management)
+- React Router
+- Axios
 
 ### Optional Enhancements
 
-* React Hook Form and Zod (forms and validation)
-* Framer Motion (animations)
+- React Hook Form and Zod (forms and validation)
+- Framer Motion (animations)
 
 ---
 
@@ -89,8 +86,8 @@ This frontend connects to an existing backend API.
 
 ### Requirements
 
-* REST API
-* JWT Authentication
+- REST API
+- JWT Authentication
 
 ### Example Endpoints
 
@@ -130,7 +127,7 @@ npm install
 Create a `.env` file in the root:
 
 ```
-VITE_API_URL=<your-backend-url>
+REACT_APP_API_URL=<your-backend-url>
 ```
 
 ### 4. Run Development Server

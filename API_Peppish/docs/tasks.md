@@ -308,10 +308,18 @@ Implement controllers strictly following api-spec.md
 # Future (Not in MVP)
 
 - [ ] Background job for instance generation
-- [ ] Notifications
+- [x] Notifications (entity, repository, service, controller implemented; migration and tests pending)
 - [ ] Avatar animations
 - [ ] Streak system
 - [ ] Leaderboard
+
+## Notification Tasks (added)
+
+- [x] Create Notification entity, repository, service, and controller (implementation added)
+- [ ] Add EF Core migration and update database
+- [ ] Add unit + integration tests for notification flows
+- [x] Wire notification emits in ChoreAssignmentService and ChoreInstanceService (assignment, completion, approval). RewardService wiring pending
+- [ ] Add Notification preferences per user (email/push/none)
 
 # Phase 14 – Production Readiness & Missing MVP Features
 

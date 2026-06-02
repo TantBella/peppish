@@ -21,7 +21,6 @@ export const NotificationsPage = () => {
 
     load()
 
-    // refresh on storage events (other tabs) or every 5 seconds
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'peppish_notifications' || e.key === null) {
         load()

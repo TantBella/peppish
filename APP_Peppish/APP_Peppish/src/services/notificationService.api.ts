@@ -1,25 +1,41 @@
-import { apiClient } from './apiClient'
+import { apiClient } from "./apiClient";
 
 export interface NotificationEntry {
-  id: string
-  userId: string
-  message: string
-  read?: boolean
-  createdAt: string
+  id: string;
+  userId: string;
+  type: string;
+  payload: string;
+  isRead: boolean;
+  createdAt: string;
+  readAt?: string;
 }
 
 export const notificationServiceApi = {
-  getNotifications: async (userId: string): Promise<NotificationEntry[]> => {
-    const res = await apiClient.get('/notifications', { params: { userId } })
-    return res.data as NotificationEntry[]
+  getNotifications: async (): Promise<NotificationEntry[]> => {
+    const res = await apiClient.get("/notifications");
+    return res.data as NotificationEntry[];
   },
 
-  addNotification: async (userId: string, message: string): Promise<NotificationEntry> => {
-    const res = await apiClient.post('/notifications', { userId, message })
-    return res.data as NotificationEntry
+  addNotification: async (...args: any[]): Promise<NotificationEntry> => {
+    let body: any;
+    if (
+      args.length === 2 &&
+      typeof args[0] === "string" &&
+      typeof args[1] === "string"
+    ) {
+      body = { userId: args[0], type: "generic", payload: args[1] };
+    } else {
+      body = args[0];
+    }
+    const res = await apiClient.post("/notifications", body);
+    return res.data as NotificationEntry;
   },
 
   markRead: async (id: string): Promise<void> => {
-    await apiClient.patch(`/notifications/${id}`, { read: true })
+    await apiClient.patch(`/notifications/${id}/read`);
   },
-}
+
+  deleteNotification: async (id: string): Promise<void> => {
+    await apiClient.delete(`/notifications/${id}`);
+  },
+};

@@ -10,6 +10,82 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
   text-align: center;
   background-color: #fff;
+  position: relative;
+}
+
+.notification-container {
+  position: relative;
+}
+
+.notification-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.notification-badge {
+  background: #d9534f;
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  position: absolute;
+  top: -6px;
+  right: -8px;
+}
+
+.notification-panel {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  width: 320px;
+  max-height: 360px;
+  overflow: auto;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  z-index: 40;
+  outline: none;
+}
+
+.notification-item button:focus {
+  outline: 2px solid #4d90fe;
+}
+
+.notification-panel-header {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-list {
+  padding: 8px;
+}
+
+.notification-empty {
+  padding: 8px;
+  color: #666;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.notification-item.unread {
+  background: #f9fbff;
+}
+
+.notification-main {
+  max-width: 220px;
+}
+
+.notification-actions button {
+  margin-left: 8px;
 }
 
 .Peppish-logo {

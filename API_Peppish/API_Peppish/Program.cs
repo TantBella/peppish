@@ -60,6 +60,7 @@ builder.Services.AddScoped<IChoreAssignmentRepository, ChoreAssignmentRepository
 builder.Services.AddScoped<IChoreInstanceRepository, ChoreInstanceRepository>();
 builder.Services.AddScoped<IRewardRepository, RewardRepository>();
 builder.Services.AddScoped<IAvatarProgressRepository, AvatarProgressRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 // Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -69,6 +70,7 @@ builder.Services.AddScoped<IChoreAssignmentService, ChoreAssignmentService>();
 builder.Services.AddScoped<IChoreInstanceService, ChoreInstanceService>();
 builder.Services.AddScoped<IRewardService, RewardService>();
 builder.Services.AddScoped<IProgressService, ProgressService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Add HttpContextAccessor for UserContextService
 builder.Services.AddHttpContextAccessor();

@@ -7,47 +7,54 @@ namespace API_Peppish.Services;
 
 public interface IChoreAssignmentService
 {
-    Task<ChoreAssignment> AssignAsync(AssignChoreRequest request, CancellationToken cancellationToken = default);
-    Task<List<ChoreAssignment>> GetUserAssignmentsAsync(string userId, CancellationToken cancellationToken = default);
+  Task<ChoreAssignment> AssignAsync(AssignChoreRequest request, CancellationToken cancellationToken = default);
+  Task<List<ChoreAssignment>> GetUserAssignmentsAsync(string userId, CancellationToken cancellationToken = default);
 }
 
 public class ChoreAssignmentService(
     IChoreAssignmentRepository repository,
     IUserContextService userContextService,
-    AppDbContext dbContext) : IChoreAssignmentService
+    AppDbContext dbContext,
+    INotificationService notificationService) : IChoreAssignmentService
 {
-    public async Task<ChoreAssignment> AssignAsync(AssignChoreRequest request, CancellationToken cancellationToken = default)
+  public async Task<ChoreAssignment> AssignAsync(AssignChoreRequest request, CancellationToken cancellationToken = default)
+  {
+    var householdId = userContextService.GetCurrentHouseholdId();
+    var userId = userContextService.GetCurrentUserId();
+
+    var template = await dbContext.ChoreTemplates
+        .FirstOrDefaultAsync(t => t.Id == request.ChoreTemplateId && t.HouseholdId == householdId, cancellationToken)
+        ?? throw new InvalidOperationException("Chore template not found");
+
+    var assignedUser = await dbContext.Users
+        .FirstOrDefaultAsync(u => u.Id == request.AssignedToUserId && u.HouseholdId == householdId, cancellationToken)
+        ?? throw new InvalidOperationException("User not found in this household");
+
+    var assignment = new ChoreAssignment
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
-        var userId = userContextService.GetCurrentUserId();
+      HouseholdId = householdId,
+      ChoreTemplateId = request.ChoreTemplateId,
+      AssignedToUserId = request.AssignedToUserId,
+      AssignedByUserId = userId,
+      StartDate = request.StartDate
+    };
 
-        // Verify template exists and belongs to household
-        var template = await dbContext.ChoreTemplates
-            .FirstOrDefaultAsync(t => t.Id == request.ChoreTemplateId && t.HouseholdId == householdId, cancellationToken)
-            ?? throw new InvalidOperationException("Chore template not found");
+    await repository.CreateAsync(assignment, cancellationToken);
+    await repository.SaveChangesAsync(cancellationToken);
 
-        // Verify assigned user exists and belongs to household
-        var assignedUser = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == request.AssignedToUserId && u.HouseholdId == householdId, cancellationToken)
-            ?? throw new InvalidOperationException("User not found in this household");
-
-        var assignment = new ChoreAssignment
-        {
-            HouseholdId = householdId,
-            ChoreTemplateId = request.ChoreTemplateId,
-            AssignedToUserId = request.AssignedToUserId,
-            AssignedByUserId = userId,
-            StartDate = request.StartDate
-        };
-
-        await repository.CreateAsync(assignment, cancellationToken);
-        await repository.SaveChangesAsync(cancellationToken);
-        return assignment;
-    }
-
-    public async Task<List<ChoreAssignment>> GetUserAssignmentsAsync(string userId, CancellationToken cancellationToken = default)
+    try
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
-        return await repository.GetByUserAsync(userId, householdId, cancellationToken);
+      var payload = System.Text.Json.JsonSerializer.Serialize(new { assignmentId = assignment.Id, templateId = assignment.ChoreTemplateId, startDate = assignment.StartDate });
+      await notificationService.CreateNotificationAsync(new API_Peppish.DTOs.CreateNotificationRequest { UserId = assignment.AssignedToUserId, Type = "chore_assigned", Payload = payload, HouseholdId = assignment.HouseholdId });
     }
+    catch { /* don't fail assignment on notification error */ }
+
+    return assignment;
+  }
+
+  public async Task<List<ChoreAssignment>> GetUserAssignmentsAsync(string userId, CancellationToken cancellationToken = default)
+  {
+    var householdId = userContextService.GetCurrentHouseholdId();
+    return await repository.GetByUserAsync(userId, householdId, cancellationToken);
+  }
 }
