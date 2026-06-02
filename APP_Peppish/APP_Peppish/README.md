@@ -16,13 +16,13 @@ You may also see any lint errors in the console.
 
 ### Connecting to a deployed API
 
-To run the frontend against a deployed backend, set the REACT_APP_API_URL environment variable. Example: create a file named `.env` in the APP_Peppish folder with:
+To run the frontend against a deployed backend, set the VITE_API_URL environment variable. Example: create a file named `.env` in the APP_Peppish folder with:
 
-REACT_APP_API_URL=https://the-api-url.com
+VITE_API_URL=https://the-api-url.com
 
 If you still want to seed local demo data while using an API (not recommended against production), set:
 
-REACT_APP_USE_SEED=true
+VITE_USE_SEED=true
 
 
 ### `npm test`

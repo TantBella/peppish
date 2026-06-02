@@ -3,19 +3,15 @@ import { Chore } from '../types'
 const SEED_DATA_KEY = 'peppish_seeded'
 
 export const seedInitialData = () => {
-  // Do not seed when an external API is configured unless explicitly allowed
-  const useSeedExplicit = process.env.REACT_APP_USE_SEED === 'true'
-  if (process.env.REACT_APP_API_URL && !useSeedExplicit) {
-    // Running against a real backend — skip seeding localStorage
+  const useSeedExplicit = import.meta.env.VITE_USE_SEED === "true"
+  if (import.meta.env.VITE_API_URL && !useSeedExplicit) {
     return
   }
 
-  // Only seed once
   if (localStorage.getItem(SEED_DATA_KEY)) {
     return
   }
 
-  // Seed chores
   const today = new Date()
   const mockChores: Chore[] = [
     {
@@ -83,7 +79,6 @@ export const seedInitialData = () => {
 
   localStorage.setItem('peppish_chores', JSON.stringify(mockChores))
 
-  // Seed rewards for user 2 (child)
   const mockRewards = [
     {
       id: 'reward-1',
@@ -113,7 +108,6 @@ export const seedInitialData = () => {
 
   localStorage.setItem('peppish_rewards', JSON.stringify(mockRewards))
 
-  // Seed progress for user 2
   const mockProgress = {
     '2': {
       level: 3,
@@ -123,6 +117,5 @@ export const seedInitialData = () => {
 
   localStorage.setItem('peppish_progress', JSON.stringify(mockProgress))
 
-  // Mark as seeded
   localStorage.setItem(SEED_DATA_KEY, 'true')
 }

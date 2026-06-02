@@ -47,7 +47,7 @@ test_case_1_4 = {
   name: "Environment variables loaded",
   steps: [
     "1. Check .env file exists in APP_Peppish folder",
-    "2. Verify REACT_APP_API_URL is set",
+    "2. Verify VITE_API_URL is set",
     "3. Verify API requests go to correct endpoint"
   ],
   expected: ".env file configured, API calls use correct base URL",

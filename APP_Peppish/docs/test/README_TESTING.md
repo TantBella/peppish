@@ -358,7 +358,7 @@ npm run build
 ### Set Real API URL
 ```bash
 # .env
-REACT_APP_API_URL=http://localhost:7099
+VITE_API_URL=http://localhost:7099
 ```
 
 ### Run Tests Against Live Backend
