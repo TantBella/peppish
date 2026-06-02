@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useToast } from "../context/ToastContext";
 
 interface FormErrors {
   email?: string;
@@ -16,7 +15,6 @@ export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { addToast } = useToast();
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -51,25 +49,8 @@ export const LoginPage = () => {
       await login(email, password);
       navigate("/");
     } catch (err: any) {
-      const details = err?.details;
-      if (details?.errors) {
-        const fieldErrors: FormErrors = {};
-        for (const k of Object.keys(details.errors)) {
-          const msg = details.errors[k];
-          if (k === "email") fieldErrors.email = msg;
-          if (k === "password") fieldErrors.password = msg;
-        }
-        setErrors(fieldErrors);
-      }
-
-      setErrors((prev) => ({
-        ...prev,
-        submit: err?.message || "Inloggning misslyckades. Försök igen.",
-      }));
-
-      try {
-        addToast(err?.message || "In", "error");
-      } catch {}
+      const msg = err?.message || "Inloggning misslyckades. Försök igen.";
+      setErrors({ submit: msg });
     } finally {
       setIsLoading(false);
     }
