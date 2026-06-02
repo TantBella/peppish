@@ -15,6 +15,8 @@ import { CalendarPage} from './pages/CalendarPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { RewardsAndProgressPage } from './pages/RewardsAndProgressPage'
 import { HouseholdManagementPage } from './pages/HouseholdManagementPage'
+import { ToastProvider } from './context/ToastContext'
+import ToastContainer from './components/ToastContainer'
 
 const queryClient = new QueryClient()
 
@@ -33,8 +35,9 @@ function MainLayout() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
+      <ToastProvider>
+        <AuthProvider>
+          <Router>
           <Routes>
 
             {/* Public routes */}
@@ -63,8 +66,10 @@ function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </Router>
-      </AuthProvider>
+          <ToastContainer />
+          </Router>
+        </AuthProvider>
+      </ToastProvider>
     </QueryClientProvider>
   )
 }

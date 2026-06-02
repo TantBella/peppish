@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 interface FormErrors {
   email?: string
@@ -15,6 +16,7 @@ export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { addToast } = useToast()
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -48,10 +50,22 @@ export const LoginPage = () => {
     try {
       await login(email, password)
       navigate('/')
-    } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : 'Login failed. Please try again.',
-      })
+    } catch (err: any) {
+      // parse field errors from API if present
+      const details = err?.details
+      if (details?.errors) {
+        const fieldErrors: FormErrors = {}
+        for (const k of Object.keys(details.errors)) {
+          const msg = details.errors[k]
+          if (k === 'email') fieldErrors.email = msg
+          if (k === 'password') fieldErrors.password = msg
+        }
+        setErrors(fieldErrors)
+      }
+
+      setErrors((prev) => ({ ...prev, submit: err?.message || 'Login failed. Please try again.' }))
+      // show toast
+      try { addToast(err?.message || 'Login failed', 'error') } catch {}
     } finally {
       setIsLoading(false)
     }

@@ -8,8 +8,8 @@ export const setAuthToken = (token: string | null) => {
 };
 
 const createApiClient = (): AxiosInstance => {
-  const raw = process.env.REACT_APP_API_URL || "http://localhost:5000";
-  const normalized = raw.replace(/\/$/, "");
+  const raw = process.env.REACT_APP_API_URL ?? "http://localhost:5000";
+  const normalized = String(raw).replace(/\/$/, "");
   const baseURL = normalized.endsWith("/api")
     ? normalized
     : `${normalized}/api`;
@@ -44,6 +44,7 @@ const createApiClient = (): AxiosInstance => {
         message: error.response?.data?.message || error.message,
         code: error.response?.data?.code || "UNKNOWN_ERROR",
         status: error.response?.status || 500,
+        details: error.response?.data,
       };
       return Promise.reject(apiError);
     },

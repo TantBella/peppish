@@ -7,9 +7,11 @@ import { WeekCalendarGrid } from "../components/WeekCalenderGrid";
 import { CalendarTabs } from "../components/CalendarTabs";
 import { DayView } from "../components/DayView";
 import { MonthView } from "../components/MonthView";
-import Modal from '../components/Modal'
-import { ChoreActionPanel } from '../components/ChoreActionPanel'
-import { ChoreCard } from '../components/ChoreCard'
+import Modal from "../components/Modal";
+import { ChoreActionPanel } from "../components/ChoreActionPanel";
+import { ChoreCard } from "../components/ChoreCard";
+import Loading from "../components/Loading";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useChoreCalendar, ViewMode } from "../hooks/useChoreCalendar";
 
@@ -26,6 +28,7 @@ export const CalendarPage = () => {
     useChoreCalendar(chores, weekOffset);
 
   const activeDate = selectedDate ?? new Date();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (selectedDate) {
@@ -33,10 +36,23 @@ export const CalendarPage = () => {
     }
   }, [selectedDate]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Failed</div>;
+  if (isLoading) return <Loading message="Laddar..." />;
+  if (error)
+    return (
+      <div className="error-message">
+        <div>Failed to load calendar</div>
+        <button
+          className="btn-primary"
+          onClick={() =>
+            queryClient.invalidateQueries({ queryKey: ["chores"] })
+          }
+        >
+          Retry
+        </button>
+      </div>
+    );
 
-  const expandedChore = chores.find((c) => c.id === expandedChoreId) || null
+  const expandedChore = chores.find((c) => c.id === expandedChoreId) || null;
 
   return (
     <div className="calendar-list-container">
@@ -91,12 +107,21 @@ export const CalendarPage = () => {
       {expandedChore && (
         <Modal onClose={() => setExpandedChoreId(null)} full>
           <div className="modal-chore-full">
-            <ChoreCard chore={expandedChore} currentUserId={user?.id} isExpanded={true} onToggle={() => {}} />
-            <ChoreActionPanel chore={expandedChore} onSuccess={() => setExpandedChoreId(null)} allowAdminActions={false} allowPicking={true} />
+            <ChoreCard
+              chore={expandedChore}
+              currentUserId={user?.id}
+              isExpanded={true}
+              onToggle={() => {}}
+            />
+            <ChoreActionPanel
+              chore={expandedChore}
+              onSuccess={() => setExpandedChoreId(null)}
+              allowAdminActions={false}
+              allowPicking={true}
+            />
           </div>
         </Modal>
       )}
-
     </div>
   );
 };
