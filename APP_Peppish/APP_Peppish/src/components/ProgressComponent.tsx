@@ -1,5 +1,6 @@
 import { useAvatarProgress, useDailyProgress } from "../hooks/useProgress";
 import logoImg from "../assets/logo_img.png";
+import Loading from "../components/Loading";
 
 export const ProgressComponent = () => {
   const {
@@ -17,11 +18,7 @@ export const ProgressComponent = () => {
   const error = avatarError || dailyError;
 
   if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner">Loading progress...</div>
-      </div>
-    );
+    return <Loading message="Laddar..." />;
   }
 
   if (error) {

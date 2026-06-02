@@ -1,0 +1,15 @@
+.skeleton-line{background:linear-gradient(90deg,#f0f0f0,#e8e8e8,#f0f0f0);height:12px;border-radius:6px;margin:8px 0;animation: shimmer 1.2s infinite}
+.chore-skeleton{padding:12px;border-radius:8px;background:#fff;border:1px solid #eee;margin-bottom:8px}
+.chore-skeleton.compact{padding:8px}
+.chore-skeleton .title{height:16px;width:60%}
+.chore-skeleton .meta{height:12px;width:40%}
+.chore-skeleton .actions{height:10px;width:30%}
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+
+/* Loading / spinner */
+.loading-container{display:flex;align-items:center;gap:8px;justify-content:center;padding:16px}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid #e6e6e6;border-top-color:#4d90fe;animation:spin 1s linear infinite}
+.loading-message{color:#444;font-size:0.95rem}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+

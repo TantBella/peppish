@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authService } from '../services/authService'
+import { useToast } from '../context/ToastContext'
 
 interface FormErrors {
   name?: string
@@ -20,6 +21,7 @@ export const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { addToast } = useToast()
 
   const [households, setHouseholds] = useState<any[]>([])
   const [selectedHousehold, setSelectedHousehold] = useState<string>('')
@@ -84,10 +86,22 @@ export const RegisterPage = () => {
       await authService.register(name, email, password, role, householdId)
       await login(email, password)
       navigate('/')
-    } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : 'Registration failed. Please try again.',
-      })
+    } catch (err: any) {
+      const details = err?.details
+      if (details?.errors) {
+        const fieldErrors: FormErrors = {}
+        for (const k of Object.keys(details.errors)) {
+          const msg = details.errors[k]
+          if (k === 'email') fieldErrors.email = msg
+          if (k === 'password') fieldErrors.password = msg
+          if (k === 'name') fieldErrors.name = msg
+          if (k === 'role') fieldErrors.role = msg
+        }
+        setErrors(fieldErrors)
+      }
+
+      setErrors((prev) => ({ ...prev, submit: err?.message || 'Registration failed. Please try again.' }))
+      try { addToast(err?.message || 'Registration failed', 'error') } catch {}
     } finally {
       setIsLoading(false)
     }

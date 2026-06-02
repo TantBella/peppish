@@ -1,71 +1,68 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 interface FormErrors {
-  email?: string
-  password?: string
-  submit?: string
+  email?: string;
+  password?: string;
+  submit?: string;
 }
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
+    const newErrors: FormErrors = {};
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = "Email är obligatoriskt";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Invalid email format'
+      newErrors.email = "Ogiltig email";
     }
 
     if (!password) {
-      newErrors.password = 'Password is required'
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = "Lösenord är obligatoriskt";
+    } else if (password.length < 8) {
+      newErrors.password = "Lösenordet måste vara minst 8 tecken";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setIsLoading(true)
-    setErrors({})
+    setIsLoading(true);
+    setErrors({});
 
     try {
-      await login(email, password)
-      navigate('/')
-    } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : 'Login failed. Please try again.',
-      })
+      await login(email, password);
+      navigate("/");
+    } catch (err: any) {
+      const msg = err?.message || "Inloggning misslyckades. Försök igen.";
+      setErrors({ submit: msg });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Login to Peppish</h1>
-        
+        <h1>Logga in</h1>
+
         {errors.submit && (
-          <div className="error-message alert alert-error">
-            {errors.submit}
-          </div>
+          <div className="error-message alert alert-error">{errors.submit}</div>
         )}
 
         <form onSubmit={handleSubmit}>
@@ -76,42 +73,47 @@ export const LoginPage = () => {
               type="email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
-                if (errors.email) setErrors({ ...errors, email: undefined })
+                setEmail(e.target.value);
+                if (errors.email) setErrors({ ...errors, email: undefined });
               }}
               disabled={isLoading}
-              className={errors.email ? 'input-error' : ''}
-              placeholder="your@email.com"
+              className={errors.email ? "input-error" : ""}
+              placeholder="din@email.com"
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Lösenord</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value)
-                if (errors.password) setErrors({ ...errors, password: undefined })
+                setPassword(e.target.value);
+                if (errors.password)
+                  setErrors({ ...errors, password: undefined });
               }}
               disabled={isLoading}
-              className={errors.password ? 'input-error' : ''}
+              className={errors.password ? "input-error" : ""}
               placeholder="••••••••"
             />
-            {errors.password && <span className="error-text">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-text">{errors.password}</span>
+            )}
           </div>
 
           <button type="submit" disabled={isLoading} className="btn-primary">
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? "Loggar in..." : "Logga in"}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>Don't have an account? <Link to="/register">Register here</Link></p>
+          <p>
+            Har du inget konto? <Link to="/register">Registera här</Link>
+          </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

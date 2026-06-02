@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Loading from '../components/Loading'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -10,11 +11,7 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
   const { user, isLoading } = useAuth()
 
   if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner">Loading...</div>
-      </div>
-    )
+    return <Loading />
   }
 
   if (!user) {

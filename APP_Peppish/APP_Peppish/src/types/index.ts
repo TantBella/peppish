@@ -38,6 +38,7 @@ export interface ApiError {
   message: string
   code: string
   status: number
+  details?: any
 }
 
 export type UIChoreStatus = 'Pending' | 'Completed' | 'Approved'
