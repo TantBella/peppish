@@ -81,8 +81,7 @@ export const RegisterPage = () => {
         householdId = selectedHousehold
       }
 
-      const response = await authService.register(name, email, password, role, householdId)
-      // After successful registration, perform login to populate auth state
+      await authService.register(name, email, password, role, householdId)
       await login(email, password)
       navigate('/')
     } catch (err) {

@@ -1,4 +1,3 @@
-import { AuthResponse, User } from '../types'
 import { authServiceLocal } from './authService.local'
 import { authServiceApi } from './authService.api'
 

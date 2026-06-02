@@ -8,7 +8,9 @@ export const setAuthToken = (token: string | null) => {
 }
 
 const createApiClient = (): AxiosInstance => {
-  const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000'
+  const raw = process.env.REACT_APP_API_URL || 'http://localhost:5000'
+  const normalized = raw.replace(/\/$/, '')
+  const baseURL = normalized.endsWith('/api') ? normalized : `${normalized}/api`
 
   const instance = axios.create({
     baseURL,
