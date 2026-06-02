@@ -118,10 +118,7 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapControllers();
 
 app.Run();
-
-Console.WriteLine("JWT KEY: " + builder.Configuration["Jwt:Key"]);
-Console.WriteLine("JWT ISSUER: " + builder.Configuration["Jwt:Issuer"]);
-Console.WriteLine("JWT AUDIENCE: " + builder.Configuration["Jwt:Audience"]);
