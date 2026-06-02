@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useToast } from "../context/ToastContext";
 
 interface FormErrors {
   email?: string;
@@ -16,7 +15,6 @@ export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { addToast } = useToast();
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
