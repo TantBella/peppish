@@ -18,11 +18,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-  options.Password.RequiredLength = 6;
-  options.Password.RequireDigit = false;
+  options.Password.RequiredLength = 8;
+  options.Password.RequireDigit = true;
   options.Password.RequireNonAlphanumeric = false;
-  options.Password.RequireUppercase = false;
-  options.Password.RequireLowercase = false;
+  options.Password.RequireUppercase = true;
+  options.Password.RequireLowercase = true;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
@@ -93,6 +93,12 @@ var app = builder.Build();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
+if (app.Environment.IsDevelopment())
+{
+  app.UseSwagger();
+  app.UseSwaggerUI();
+}
+//ta bort nedan vid senare tillfälle
 app.UseSwagger();
 app.UseSwaggerUI();
 
