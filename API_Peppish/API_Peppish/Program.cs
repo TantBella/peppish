@@ -84,7 +84,7 @@ builder.Services.AddCors(options =>
   options.AddPolicy("AllowFrontend", policy =>
   {
     policy
-          .WithOrigins("https://peppish.vercel.app", "http://localhost:3000")
+          .WithOrigins("https://peppish.vercel.app", "peppish-6zry6r3jx-tantbellas-projects.vercel.app", "http://localhost:3000", "http://localhost:5000")
           .AllowAnyHeader()
           .AllowAnyMethod();
   });

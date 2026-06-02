@@ -78,7 +78,7 @@ export const LoginPage = () => {
               }}
               disabled={isLoading}
               className={errors.email ? "input-error" : ""}
-              placeholder="your@email.com"
+              placeholder="din@email.com"
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
@@ -104,7 +104,7 @@ export const LoginPage = () => {
           </div>
 
           <button type="submit" disabled={isLoading} className="btn-primary">
-            {isLoading ? "Loggar in..." : "Login"}
+            {isLoading ? "Loggar in..." : "Logga in"}
           </button>
         </form>
 
