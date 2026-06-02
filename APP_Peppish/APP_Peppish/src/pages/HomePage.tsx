@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import logoName from "../assets/logo.png";
 import mottos from "../data/mottos.json";
 import { Link } from "react-router-dom";
+import NotificationPanel from "../components/NotificationPanel";
 
 export const HomePage = () => {
   const { user } = useAuth();
@@ -18,6 +19,10 @@ export const HomePage = () => {
         <img src={logoName} alt="App logo" className="Peppish-logo" />
 
         <p className="home-motto">{randomMotto}</p>
+
+        <div style={{ position: 'absolute', right: 16, top: 16 }}>
+          <NotificationPanel />
+        </div>
       </header>
 
       <div className="home-section">

@@ -15,7 +15,8 @@ public class UsersController(
     UserManager<ApplicationUser> userManager,
     IRewardService rewardService,
     IProgressService progressService,
-    IChoreAssignmentService choreAssignmentService) : ControllerBase
+    IChoreAssignmentService choreAssignmentService,
+    INotificationService notificationService) : ControllerBase
 {
     [HttpGet("me")]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
@@ -78,5 +79,12 @@ public class UsersController(
     {
         var progress = await progressService.GetUserProgressAsync(userId);
         return Ok(progress);
+    }
+
+    [HttpGet("{userId}/notifications")]
+    public async Task<ActionResult<List<NotificationDto>>> GetUserNotifications(string userId)
+    {
+        var list = await notificationService.GetUserNotificationsAsync(userId);
+        return Ok(list);
     }
 }

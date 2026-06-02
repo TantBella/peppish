@@ -10,11 +10,11 @@
 
 ### Phase 1.5 - Domain & Data model
 
-- [ ] Define domain models (TypeScript interfaces/types)
-- [ ] Implement chore state machine (enum + transitions)
-- [ ] Implement reward rules (XP + money logic)
-- [ ] Implement daily chore grouping logic
-- [ ] Implement mock data factory (seed data)
+- [x] Define domain models (TypeScript interfaces/types)
+- [x] Implement chore state machine (enum + transitions)
+- [x] Implement reward rules (XP + money logic)
+- [x] Implement daily chore grouping logic
+- [x] Implement mock data factory (seed data)
 - [ ] Central state store
 
 ## Phase 2 – Auth
@@ -25,10 +25,10 @@
 
 ### Phase 2.5 – Core Services
 
-- [ ] ChoreService (create, assign, complete, approve)
-- [ ] RewardService (XP + money calculation)
-- [ ] HouseholdService
-- [ ] ProgressService (daily bar logic)
+- [x] ChoreService (create, assign, complete, approve)
+- [x] RewardService (XP + money calculation)
+- [x] HouseholdService
+- [x] ProgressService (daily bar logic)
 
 ## Phase 3 – Chores
 
@@ -67,5 +67,12 @@
 - [ ] Integration tests
 - [ ] Error handling tests
 
+## Notifications
+
+- [x] Notifications API client/service (src/services/notificationService.api.ts)
+- [x] useNotifications hook (react-query) (src/hooks/useNotifications.ts)
+- [ ] Notifications UI (panel & header badge)
+- [ ] Integrate mark-read & delete flows with API
+- [ ] Unit/integration tests for notifications
+
 <!-- ## Phase 7 - Future stuff -->
-<!-- - [ ] Setup API integration -->

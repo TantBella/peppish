@@ -16,6 +16,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ChoreInstance> ChoreInstances { get; set; } = null!;
     public DbSet<RewardLedger> RewardLedgers { get; set; } = null!;
     public DbSet<AvatarProgress> AvatarProgresses { get; set; } = null!;
+    public DbSet<Notification> Notifications { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -155,5 +156,29 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
                 .IsUnique()
                 .HasDatabaseName("IX_AvatarProgress_Household_User_Unique");
         });
+
+        // Notification
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.Type).IsRequired().HasMaxLength(128);
+            entity.Property(e => e.Payload).HasMaxLength(4000);
+            entity.Property(e => e.IsRead).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+
+            entity.HasOne<Household>()
+                .WithMany()
+                .HasForeignKey(e => e.HouseholdId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(e => new { e.UserId, e.CreatedAt }).HasDatabaseName("IX_Notification_User_CreatedAt");
+        });
     }
 }
+
+
+
