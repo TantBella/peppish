@@ -1,5 +1,6 @@
 import { useUserBalance, useRewardHistory } from "../hooks/useRewards";
 import logoImg from "../assets/logo_img.png";
+import Loading from "../components/Loading";
 
 export const RewardComponent = () => {
   const {
@@ -17,11 +18,7 @@ export const RewardComponent = () => {
   const error = balanceError || historyError;
 
   if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner">Loading rewards...</div>
-      </div>
-    );
+    return <Loading message="Laddar..." />;
   }
 
   if (error) {
