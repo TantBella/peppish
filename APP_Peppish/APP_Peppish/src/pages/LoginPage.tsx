@@ -51,25 +51,8 @@ export const LoginPage = () => {
       await login(email, password);
       navigate("/");
     } catch (err: any) {
-      const details = err?.details;
-      if (details?.errors) {
-        const fieldErrors: FormErrors = {};
-        for (const k of Object.keys(details.errors)) {
-          const msg = details.errors[k];
-          if (k === "email") fieldErrors.email = msg;
-          if (k === "password") fieldErrors.password = msg;
-        }
-        setErrors(fieldErrors);
-      }
-
-      setErrors((prev) => ({
-        ...prev,
-        submit: err?.message || "Inloggning misslyckades. Försök igen.",
-      }));
-
-      try {
-        addToast(err?.message || "In", "error");
-      } catch {}
+      const msg = err?.message || "Inloggning misslyckades. Försök igen.";
+      setErrors({ submit: msg });
     } finally {
       setIsLoading(false);
     }
