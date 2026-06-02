@@ -1,85 +1,87 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { useToast } from '../context/ToastContext'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 interface FormErrors {
-  email?: string
-  password?: string
-  submit?: string
+  email?: string;
+  password?: string;
+  submit?: string;
 }
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const { addToast } = useToast()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
+    const newErrors: FormErrors = {};
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = "Email är obligatoriskt";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Invalid email format'
+      newErrors.email = "Ogiltig email";
     }
 
     if (!password) {
-      newErrors.password = 'Password is required'
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = "Lösenord är obligatoriskt";
+    } else if (password.length < 8) {
+      newErrors.password = "Lösenordet måste vara minst 8 tecken";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setIsLoading(true)
-    setErrors({})
+    setIsLoading(true);
+    setErrors({});
 
     try {
-      await login(email, password)
-      navigate('/')
+      await login(email, password);
+      navigate("/");
     } catch (err: any) {
-      // parse field errors from API if present
-      const details = err?.details
+      const details = err?.details;
       if (details?.errors) {
-        const fieldErrors: FormErrors = {}
+        const fieldErrors: FormErrors = {};
         for (const k of Object.keys(details.errors)) {
-          const msg = details.errors[k]
-          if (k === 'email') fieldErrors.email = msg
-          if (k === 'password') fieldErrors.password = msg
+          const msg = details.errors[k];
+          if (k === "email") fieldErrors.email = msg;
+          if (k === "password") fieldErrors.password = msg;
         }
-        setErrors(fieldErrors)
+        setErrors(fieldErrors);
       }
 
-      setErrors((prev) => ({ ...prev, submit: err?.message || 'Login failed. Please try again.' }))
-      // show toast
-      try { addToast(err?.message || 'Login failed', 'error') } catch {}
+      setErrors((prev) => ({
+        ...prev,
+        submit: err?.message || "Inloggning misslyckades. Försök igen.",
+      }));
+
+      try {
+        addToast(err?.message || "In", "error");
+      } catch {}
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Login to Peppish</h1>
-        
+        <h1>Logga in</h1>
+
         {errors.submit && (
-          <div className="error-message alert alert-error">
-            {errors.submit}
-          </div>
+          <div className="error-message alert alert-error">{errors.submit}</div>
         )}
 
         <form onSubmit={handleSubmit}>
@@ -90,42 +92,47 @@ export const LoginPage = () => {
               type="email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
-                if (errors.email) setErrors({ ...errors, email: undefined })
+                setEmail(e.target.value);
+                if (errors.email) setErrors({ ...errors, email: undefined });
               }}
               disabled={isLoading}
-              className={errors.email ? 'input-error' : ''}
+              className={errors.email ? "input-error" : ""}
               placeholder="your@email.com"
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Lösenord</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value)
-                if (errors.password) setErrors({ ...errors, password: undefined })
+                setPassword(e.target.value);
+                if (errors.password)
+                  setErrors({ ...errors, password: undefined });
               }}
               disabled={isLoading}
-              className={errors.password ? 'input-error' : ''}
+              className={errors.password ? "input-error" : ""}
               placeholder="••••••••"
             />
-            {errors.password && <span className="error-text">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-text">{errors.password}</span>
+            )}
           </div>
 
           <button type="submit" disabled={isLoading} className="btn-primary">
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? "Loggar in..." : "Login"}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>Don't have an account? <Link to="/register">Register here</Link></p>
+          <p>
+            Har du inget konto? <Link to="/register">Registera här</Link>
+          </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
