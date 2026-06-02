@@ -47,7 +47,7 @@ Project-specific conventions and mistakes to avoid.
 ### API Client & Interceptors (Axios)
 - Request interceptor: Always attach Bearer token from localStorage before each request
 - Response interceptor: Catch 401 status and automatically logout + redirect to /login
-- Never hardcode API URLs - use environment variables (REACT_APP_API_URL for react-scripts)
+- Never hardcode API URLs - use environment variables (VITE_API_URL for Vite)
 - Create .env and .env.example files for environment configuration
 
 ### Architecture: Service Layer Pattern

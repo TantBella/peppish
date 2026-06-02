@@ -41,18 +41,18 @@ They represent the SAME concept.
 
 ## 1. Base Configuration
 
-- Base URL: REACT_APP_API_URL
+- Base URL: VITE_API_URL
 - Content-Type: application/json
 - Authentication: Bearer Token (JWT)
 
 ### Development (example)
 
-REACT_APP_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:5000
 
 ### Rules
 
 - NEVER hardcode URLs in code
-- ALWAYS use REACT_APP_API_URL
+- ALWAYS use VITE_API_URL
 - Environment variables MUST control all environments
 
 ### Headers

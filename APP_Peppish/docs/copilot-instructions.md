@@ -158,7 +158,7 @@ Must:
 
 ### Environment Rules (STRICT)
 
-- Base URL MUST come from REACT_APP_API_URL
+- Base URL MUST come from VITE_API_URL
 - NEVER hardcode localhost or any URL in services
 - Code must work for dev, staging, and production without changes
 

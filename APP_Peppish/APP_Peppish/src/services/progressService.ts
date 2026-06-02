@@ -3,4 +3,4 @@ import { progressServiceApi, AvatarProgress, DailyProgress } from './progressSer
 
 export type { AvatarProgress, DailyProgress }
 
-export const progressService = process.env.REACT_APP_API_URL ? progressServiceApi : progressServiceLocal
+export const progressService = import.meta.env.VITE_API_URL ? progressServiceApi : progressServiceLocal
