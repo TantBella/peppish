@@ -22,22 +22,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = useCallback(
-    (
-      message: string,
-      type: ToastType = "info",
-      durationMs: number | null | undefined = undefined,
-    ) => {
+    (message: string, type: ToastType = "info", durationMs?: number | null) => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
       setToasts((t) => [...t, { id, type, message }]);
 
       if (durationMs === null) return;
-      const timeout =
-        typeof durationMs === "number"
-          ? durationMs
-          : type === "error"
-            ? null
-            : 5000;
-      if (timeout === null) return;
+      if (type === "error" && durationMs === undefined) return;
+
+      const timeout = durationMs ?? 5000;
       setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), timeout);
     },
     [],
