@@ -11,6 +11,7 @@ export const ChoreListPage = () => {
   const { data: chores = [], isLoading, error } = useChores()
   const { user } = useAuth()
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
   if (isLoading) {
     return (
@@ -30,11 +31,10 @@ export const ChoreListPage = () => {
   }
 
   if (error) {
-    const qc = useQueryClient()
     return (
       <div className="error-message">
         <div>Failed to load chores</div>
-        <button className="btn-primary" onClick={() => qc.invalidateQueries({ queryKey: ['chores'] })}>Retry</button>
+        <button className="btn-primary" onClick={() => queryClient.invalidateQueries({ queryKey: ['chores'] })}>Retry</button>
       </div>
     )
   }
