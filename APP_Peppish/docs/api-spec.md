@@ -47,7 +47,7 @@ They represent the SAME concept.
 
 ### Development (example)
 
-REACT_APP_API_URL=http://localhost:3000
+REACT_APP_API_URL=http://localhost:5000
 
 ### Rules
 
