@@ -32,6 +32,15 @@ var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
+if (string.IsNullOrWhiteSpace(jwtKey))
+  throw new InvalidOperationException("Jwt:Key saknas");
+
+if (string.IsNullOrWhiteSpace(jwtIssuer))
+  throw new InvalidOperationException("Jwt:Issuer saknas");
+
+if (string.IsNullOrWhiteSpace(jwtAudience))
+  throw new InvalidOperationException("Jwt:Audience saknas");
+
 var key = Encoding.ASCII.GetBytes(jwtKey!);
 builder.Services.AddAuthentication(options =>
 {
@@ -112,3 +121,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+Console.WriteLine("JWT KEY: " + builder.Configuration["Jwt:Key"]);
+Console.WriteLine("JWT ISSUER: " + builder.Configuration["Jwt:Issuer"]);
+Console.WriteLine("JWT AUDIENCE: " + builder.Configuration["Jwt:Audience"]);
