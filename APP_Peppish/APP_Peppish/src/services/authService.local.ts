@@ -54,13 +54,13 @@ export const authServiceLocal = {
   ): Promise<AuthResponse> => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 500))
-     
+
     const users = getUsers()
-     
+
     if (users.find(u => u.email === email)) {
       throw new Error('User already exists')
     }
-     
+
     const newUser: User = {
       id: `user-${Date.now()}`,
       email,
@@ -68,9 +68,9 @@ export const authServiceLocal = {
       role,
       householdId
     }
-     
+
     saveUsers([...users, newUser])
-     
+
     return {
       token: `mock-jwt-token-${newUser.id}-${Date.now()}`,
       user: newUser
