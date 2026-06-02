@@ -5,6 +5,5 @@
       "destination": "/index.html"
     }
   ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "build"
+  "outputDirectory": "dist"
 }
