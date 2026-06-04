@@ -1,4 +1,5 @@
-import { notificationServiceLocal } from './notificationService.local'
-import { notificationServiceApi } from './notificationService.api'
+import { notificationServiceApi } from "./notificationService.api";
 
-export const notificationService = notificationServiceApi
+export const notificationService = import.meta.env.VITE_API_URL
+  ? notificationServiceApi
+  : null;

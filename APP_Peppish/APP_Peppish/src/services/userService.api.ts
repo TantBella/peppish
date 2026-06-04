@@ -1,19 +1,29 @@
-import { apiClient } from './apiClient'
-import { User } from '../types'
+import { apiClient } from "./apiClient";
+import { User } from "../types";
 
 export const userServiceApi = {
-  getUsers: async (): Promise<User[]> => {
-    const res = await apiClient.get('/users')
-    return res.data as User[]
+  getMe: async (): Promise<User> => {
+    const res = await apiClient.get("/users/me");
+    return res.data as User;
   },
-
-  updateUser: async (id: string, patch: Partial<User>): Promise<User> => {
-    const res = await apiClient.patch(`/users/${id}`, patch)
-    return res.data as User
+  getAssignments: async (userId: string) => {
+    const res = await apiClient.get(`/users/${userId}/assignments`);
+    return res.data;
   },
-
-  createUser: async (user: User): Promise<User> => {
-    const res = await apiClient.post('/users', user)
-    return res.data as User
+  getRewards: async (userId: string) => {
+    const res = await apiClient.get(`/users/${userId}/rewards`);
+    return res.data;
   },
-}
+  getBalance: async (userId: string) => {
+    const res = await apiClient.get(`/users/${userId}/balance`);
+    return res.data;
+  },
+  getProgress: async (userId: string) => {
+    const res = await apiClient.get(`/users/${userId}/progress`);
+    return res.data;
+  },
+  getNotifications: async (userId: string) => {
+    const res = await apiClient.get(`/users/${userId}/notifications`);
+    return res.data;
+  },
+};

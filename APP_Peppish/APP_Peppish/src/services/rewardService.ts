@@ -1,6 +1,7 @@
-import { rewardServiceLocal } from './rewardService.local'
-import { rewardServiceApi, Reward, UserBalance } from './rewardService.api'
+import { rewardServiceApi, Reward, UserBalance } from "./rewardService.api";
 
-export type { Reward, UserBalance }
+export type { Reward, UserBalance };
 
-export const rewardService = import.meta.env.VITE_API_URL ? rewardServiceApi : rewardServiceLocal
+export const rewardService = import.meta.env.VITE_API_URL
+  ? rewardServiceApi
+  : null;

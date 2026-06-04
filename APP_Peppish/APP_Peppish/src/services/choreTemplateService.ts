@@ -1,4 +1,5 @@
-import { choreTemplateServiceApi } from './choreTemplateService.api'
-import { choreTemplateServiceLocal } from './choreTemplateService.local'
+import { choreTemplateServiceApi } from "./choreTemplateService.api";
 
-export const choreTemplateService = import.meta.env.VITE_API_URL ? choreTemplateServiceApi : choreTemplateServiceLocal
+export const choreTemplateService = import.meta.env.VITE_API_URL
+  ? choreTemplateServiceApi
+  : null;
