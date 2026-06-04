@@ -21,7 +21,7 @@ export const DayView = ({
  
 
   const filtered = chores.filter(
-    (c) => new Date(c.createdAt).toDateString() === targetDate.toDateString()
+    (c) => new Date(c.dueDate).toDateString() === targetDate.toDateString()
   )
 
   // const todayChores = useMemo(() => {

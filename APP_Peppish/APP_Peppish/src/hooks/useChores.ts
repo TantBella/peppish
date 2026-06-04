@@ -3,12 +3,8 @@ import { choreService } from '../services/choreService'
 import { Chore, ChoreStatus, UIChoreStatus } from '../types'
 
 const mapChoreStatusToUI = (status: ChoreStatus): UIChoreStatus => {
-  if (status === 'available' || status === 'assigned') {
-    return 'Pending'
-  }
-  if (status === 'completed') {
-    return 'Completed'
-  }
+  if (status === 'Pending') return 'Pending'
+  if (status === 'Completed') return 'Completed'
   return 'Approved'
 }
 
@@ -36,7 +32,7 @@ export const useChore = (id: string) => {
       const chore = await choreService.getChoreById(id)
       return {
         ...chore,
-        uiStatus: mapChoreStatusToUI(chore.status),
+        uiStatus: mapChoreStatusToUI(chore!.status),
       } as ChoreWithUIStatus
     },
     enabled: !!id,

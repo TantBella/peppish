@@ -1,61 +1,53 @@
-import { useMemo } from "react"
-import { ChoreWithUIStatus } from "../hooks/useChores"
+import { useMemo } from "react";
+import { ChoreWithUIStatus } from "../hooks/useChores";
 
-export type ViewMode = "day" | "week" | "month"
+export type ViewMode = "day" | "week" | "month";
 
-export type WeekDates = Record<string, Date>
+export type WeekDates = Record<string, Date>;
 
-const DAYS = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"]
+const DAYS = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"];
 
 export const getWeekDates = (offset = 0): WeekDates => {
-  const now = new Date()
-  now.setDate(now.getDate() + offset * 7)
+  const now = new Date();
+  now.setDate(now.getDate() + offset * 7);
 
-  const dayOfWeek = now.getDay()
-  const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+  const dayOfWeek = now.getDay();
+  const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
 
-  const monday = new Date(now.setDate(diff))
+  const monday = new Date(now.setDate(diff));
 
-  const week: WeekDates = {}
+  const week: WeekDates = {};
 
   DAYS.forEach((day, i) => {
-    const date = new Date(monday)
-    date.setDate(date.getDate() + i)
-    week[day] = date
-  })
+    const date = new Date(monday);
+    date.setDate(date.getDate() + i);
+    week[day] = date;
+  });
 
-  return week
-}
+  return week;
+};
 
-/**
- * CENTRAL CALENDAR ENGINE
- * All filtering + grouping lives here
- */
 export const useChoreCalendar = (
   chores: ChoreWithUIStatus[],
-  weekOffset: number
+  weekOffset: number,
 ) => {
-  const weekDates = useMemo(() => getWeekDates(weekOffset), [weekOffset])
+  const weekDates = useMemo(() => getWeekDates(weekOffset), [weekOffset]);
+  const today = useMemo(() => new Date().toDateString(), []);
 
-  const today = useMemo(() => new Date().toDateString(), [])
-
-  const todayChores = useMemo(() => {
-    return chores.filter(
-      (c) => new Date(c.createdAt).toDateString() === today
-    )
-  }, [chores, today])
+  const todayChores = useMemo(
+    () => chores.filter((c) => new Date(c.dueDate).toDateString() === today),
+    [chores, today],
+  );
 
   const monthChores = useMemo(() => {
-    const now = new Date()
-
+    const now = new Date();
     return chores.filter((c) => {
-      const d = new Date(c.createdAt)
+      const d = new Date(c.dueDate);
       return (
-        d.getMonth() === now.getMonth() &&
-        d.getFullYear() === now.getFullYear()
-      )
-    })
-  }, [chores])
+        d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+      );
+    });
+  }, [chores]);
 
   const choresByWeekDay = useMemo(() => {
     const grouped: Record<string, ChoreWithUIStatus[]> = {
@@ -66,28 +58,22 @@ export const useChoreCalendar = (
       Fre: [],
       Lör: [],
       Sön: [],
-    }
-
+    };
     chores.forEach((chore) => {
-      const choreDate = new Date(chore.createdAt).toDateString()
-
+      const choreDate = new Date(chore.dueDate).toDateString();
       for (const [day, date] of Object.entries(weekDates)) {
-        if (choreDate === date.toDateString()) {
-          grouped[day].push(chore)
-        }
+        if (choreDate === date.toDateString()) grouped[day].push(chore);
       }
-    })
-
-    return grouped
-  }, [chores, weekDates])
+    });
+    return grouped;
+  }, [chores, weekDates]);
 
   const choresBySelectedDate = (date: Date | null) => {
-    if (!date) return []
-
+    if (!date) return [];
     return chores.filter(
-      (c) => new Date(c.createdAt).toDateString() === date.toDateString()
-    )
-  }
+      (c) => new Date(c.dueDate).toDateString() === date.toDateString(),
+    );
+  };
 
   return {
     weekDates,
@@ -95,5 +81,5 @@ export const useChoreCalendar = (
     monthChores,
     choresByWeekDay,
     choresBySelectedDate,
-  }
-}
+  };
+};

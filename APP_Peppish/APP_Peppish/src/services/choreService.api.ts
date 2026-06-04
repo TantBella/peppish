@@ -1,66 +1,44 @@
-import { Chore, ChoreStatus, ChoreType, RewardType } from '../types'
-import { apiClient } from './apiClient'
+import { apiClient } from "./apiClient";
 
-interface CreateChorePayload {
-  title: string
-  description?: string
-  type: ChoreType
-  rewardType: RewardType
-  rewardValue?: number
-  assignedTo?: string
-  createdBy: string
-}
-
-export const choreServiceApi = {
-  getChores: async (params?: { status?: ChoreStatus; assignedTo?: string }): Promise<Chore[]> => {
-    const res = await apiClient.get('/chore-instances', { params })
-    return res.data as Chore[]
+export const choreTemplateApi = {
+  getAll: async () => {
+    const res = await apiClient.get("/chore-templates");
+    return res.data;
   },
-
-  getChoreById: async (id: string): Promise<Chore> => {
-    const res = await apiClient.get(`/chores/${id}`)
-    return res.data as Chore
+  create: async (payload: {
+    title: string;
+    description?: string;
+    rewardAmount: number;
+    rewardPoints: number;
+    recurrence: string;
+  }) => {
+    const res = await apiClient.post("/chore-templates", payload);
+    return res.data;
   },
+};
 
-  createChore: async (payload: CreateChorePayload): Promise<Chore> => {
-    const res = await apiClient.post('/chores', payload)
-    return res.data as Chore
+export const choreAssignmentApi = {
+  assign: async (payload: {
+    choreTemplateId: string;
+    assignedToUserId: string;
+    startDate: string;
+  }) => {
+    const res = await apiClient.post("/chore-assignments", payload);
+    return res.data;
   },
+};
 
-  updateChore: async (id: string, payload: Partial<Chore>): Promise<Chore> => {
-    const res = await apiClient.patch(`/chores/${id}`, payload)
-    return res.data as Chore
+export const choreInstanceApi = {
+  getAll: async (params?: { from?: string; to?: string }) => {
+    const res = await apiClient.get("/chores", { params });
+    return res.data;
   },
-
-  deleteChore: async (id: string): Promise<{ success: boolean }> => {
-    const res = await apiClient.delete(`/chores/${id}`)
-    return res.data as { success: boolean }
+  complete: async (id: string) => {
+    const res = await apiClient.post(`/chores/${id}/complete`);
+    return res.data;
   },
-
-  completeChore: async (id: string, actorId?: string): Promise<Chore> => {
-    const res = await apiClient.post(`/chores/${id}/complete`, { actorId })
-    return res.data as Chore
+  approve: async (id: string) => {
+    const res = await apiClient.post(`/chores/${id}/approve`);
+    return res.data;
   },
-
-  approveChore: async (id: string, approverRole?: string): Promise<Chore> => {
-    const res = await apiClient.post(`/chores/${id}/approve`, { approverRole })
-    return res.data as Chore
-  },
-
-  assignChore: async (id: string, userId: string): Promise<Chore> => {
-    const res = await apiClient.patch(`/chores/${id}`, { assignedTo: userId, status: 'assigned' as ChoreStatus })
-    return res.data as Chore
-  },
-
-  scheduleChore: async (templateId: string, userId: string, dateStr: string): Promise<Chore> => {
-    // Best-effort: create a new occurrence via POST /chores using originId and createdAt
-    const payload = {
-      originId: templateId,
-      assignedTo: userId,
-      createdAt: new Date(dateStr).toISOString(),
-      // Other fields expected by API should be provided by caller or defaulted server-side
-    } as any
-    const res = await apiClient.post('/chores', payload)
-    return res.data as Chore
-  },
-}
+};

@@ -3,106 +3,81 @@ import { Chore } from '../types'
 const SEED_DATA_KEY = 'peppish_seeded'
 
 export const seedInitialData = () => {
-  const useSeedExplicit = import.meta.env.VITE_USE_SEED === "true"
-  if (import.meta.env.VITE_API_URL && !useSeedExplicit) {
-    return
-  }
+  const useSeedExplicit = import.meta.env.VITE_USE_SEED === 'true'
+  if (import.meta.env.VITE_API_URL && !useSeedExplicit) return
 
-  if (localStorage.getItem(SEED_DATA_KEY)) {
-    return
-  }
+  if (localStorage.getItem(SEED_DATA_KEY)) return
 
   const today = new Date()
-  const mockChores: Chore[] = [
+
+  const mockTemplates = [
     {
-      id: 'chore-1',
+      id: 'tmpl-1',
       title: 'Städa rummet',
       description: 'Tidy up and organize your room',
-      type: 'daily',
-      status: 'available',
-      rewardType: 'money',
-      rewardValue: 5,
-      createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
+      rewardAmount: 10,
+      rewardPoints: 100,
+      recurrence: 'Daily',
     },
     {
-      id: 'chore-2',
-      title: 'Göra läxan',
-      description: 'Complete math and science assignments',
-      type: 'daily',
-      status: 'assigned',
-      assignedTo: '2',
-      rewardType: 'progress',
-      rewardValue: 50,
-      createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
-    },
-    {
-      id: 'chore-3',
+      id: 'tmpl-2',
       title: 'Diska',
       description: 'Clean and dry all dishes after dinner',
-      type: 'daily',
-      status: 'completed',
-      rewardType: 'money',
-      rewardValue: 3,
-      createdBy: '1',
-      createdAt: new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(today.getTime() - 23 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'chore-4',
-      title: 'Slänga skräp',
-      description: 'Empty the trash bins',
-      type: 'weekly',
-      status: 'approved',
-      rewardType: 'money',
-      rewardValue: 8,
-      createdBy: '1',
-      createdAt: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'chore-5',
-      title: 'Träna trummor',
-      description: 'Play for 30 minutes',
-      type: 'daily',
-      status: 'available',
-      rewardType: 'progress',
-      rewardValue: 100,
-      createdBy: '1',
-      createdAt: today.toISOString(),
-      updatedAt: today.toISOString(),
+      rewardAmount: 3,
+      rewardPoints: 20,
+      recurrence: 'Daily',
     },
   ]
 
+  const mockChores: Chore[] = [
+    {
+      id: 'inst-1',
+      title: 'Städa rummet',
+      dueDate: today.toISOString(),
+      status: 'Pending',
+      assignedToUserId: undefined,
+      assignedToUserName: undefined,
+      rewardAmount: 10,
+    },
+    {
+      id: 'inst-2',
+      title: 'Diska',
+      dueDate: today.toISOString(),
+      status: 'Pending',
+      assignedToUserId: '2',
+      assignedToUserName: 'Child User',
+      rewardAmount: 3,
+    },
+    {
+      id: 'inst-3',
+      title: 'Diska',
+      dueDate: new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString(),
+      status: 'Completed',
+      assignedToUserId: '2',
+      assignedToUserName: 'Child User',
+      rewardAmount: 3,
+    },
+    {
+      id: 'inst-4',
+      title: 'Slänga skräp',
+      dueDate: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'Approved',
+      assignedToUserId: '2',
+      assignedToUserName: 'Child User',
+      rewardAmount: 8,
+    },
+  ]
+
+  localStorage.setItem('peppish_chore_templates', JSON.stringify(mockTemplates))
   localStorage.setItem('peppish_chores', JSON.stringify(mockChores))
 
   const mockRewards = [
     {
       id: 'reward-1',
       userId: '2',
-      choreId: 'chore-4',
-      type: 'money' as const,
-      value: 8,
+      amount: 8,
+      reason: 'Completed chore: Slänga skräp',
       createdAt: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'reward-2',
-      userId: '2',
-      choreId: 'chore-3',
-      type: 'money' as const,
-      value: 3,
-      createdAt: new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: 'reward-3',
-      userId: '2',
-      choreId: 'chore-2',
-      type: 'progress' as const,
-      value: 50,
-      createdAt: today.toISOString(),
     },
   ]
 
@@ -110,8 +85,8 @@ export const seedInitialData = () => {
 
   const mockProgress = {
     '2': {
-      level: 3,
-      experience: 450,
+      currentLevel: 3,
+      currentXp: 450,
     },
   }
 
