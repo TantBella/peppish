@@ -50,7 +50,7 @@ public class HouseholdsController(
             if (appUser != null)
             {
                 var roles = await userManager.GetRolesAsync(appUser);
-                user.Role = roles.FirstOrDefault() ?? "Child";
+                user.Role = roles.FirstOrDefault() ?? "Adult";
             }
         }
 
