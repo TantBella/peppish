@@ -1,55 +1,57 @@
-export type Role = 'adult' | 'child'
+export type Role = "Adult" | "Child";
 
-export type ChoreType = 'daily' | 'weekly' | 'irregular'
-
-export type ChoreStatus = 'available' | 'assigned' | 'completed' | 'approved'
-
-export type RewardType = 'money' | 'progress'
+export type ChoreStatus = "Pending" | "Completed" | "Approved";
 
 export interface User {
-  id: string
-  email: string
-  name?: string
-  role: Role
-  householdId?: string
+  id: string;
+  name?: string;
+  email?: string;
+  role: Role;
+  householdId?: string;
 }
 
 export interface Chore {
-  id: string
-  title: string
-  description?: string
-  type: ChoreType
-  status: ChoreStatus
-  rewardType: RewardType
-  rewardValue?: number
-  assignedTo?: string
-  createdBy: string
-  createdAt: string
-  updatedAt: string
-  originId?: string
+  id: string;
+  title: string;
+  dueDate: string;
+  status: ChoreStatus;
+  assignedToUserId?: string;
+  assignedToUserName?: string;
+  rewardAmount?: number;
+}
+
+export interface ChoreTemplate {
+  id: string;
+  title: string;
+  description?: string;
+  rewardAmount?: number;
+  rewardPoints?: number;
+  recurrence?: string;
+}
+
+export interface ChoreAssignment {
+  id: string;
+  choreTemplateId: string;
+  assignedToUserId: string;
+  assignedToUserName?: string;
+  startDate: string;
 }
 
 export interface AuthResponse {
-  token: string
-  user: User
+  token: string;
+  user: User;
 }
 
 export interface ApiError {
-  message: string
-  code: string
-  status: number
-  details?: any
+  message: string;
+  code: string;
+  status: number;
+  details?: any;
 }
 
-export type UIChoreStatus = 'Pending' | 'Completed' | 'Approved'
+export type UIChoreStatus = "Pending" | "Completed" | "Approved";
 
-export const canTransition = (from: ChoreStatus, to: ChoreStatus): boolean => {
-  const transitions: Record<ChoreStatus, ChoreStatus[]> = {
-    available: ['assigned'],
-    assigned: ['completed', 'available'],
-    completed: ['approved'],
-    approved: [],
-  }
+export const mapApiStatusToUI = (status: ChoreStatus): UIChoreStatus => status;
 
-  return transitions[from]?.includes(to)
-}
+export const canTransition = (_from: ChoreStatus, _to: ChoreStatus): boolean =>
+  true;
