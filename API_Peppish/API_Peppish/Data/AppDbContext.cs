@@ -34,10 +34,14 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<ChoreTemplate>(entity =>
         {
             entity.HasKey(e => e.Id);
+
             entity.Property(e => e.HouseholdId).IsRequired();
             entity.Property(e => e.Title).IsRequired().HasMaxLength(256);
             entity.Property(e => e.Description).HasMaxLength(1024);
-            entity.Property(e => e.RewardAmount).HasPrecision(10, 2);
+
+            entity.Property(e => e.RewardValue).HasPrecision(10, 2).IsRequired();
+            entity.Property(e => e.RewardType).IsRequired();
+
             entity.Property(e => e.Recurrence).IsRequired();
             entity.Property(e => e.CreatedByUserId).IsRequired();
             entity.Property(e => e.CreatedAt).IsRequired();
@@ -114,9 +118,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<RewardLedger>(entity =>
         {
             entity.HasKey(e => e.Id);
+
             entity.Property(e => e.HouseholdId).IsRequired();
             entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.Amount).HasPrecision(10, 2).IsRequired();
+
+            entity.Property(e => e.MoneyAmount).HasPrecision(10, 2).IsRequired();
+            entity.Property(e => e.XpAmount).IsRequired();
+
             entity.Property(e => e.Reason).IsRequired().HasMaxLength(512);
             entity.Property(e => e.CreatedAt).IsRequired();
 

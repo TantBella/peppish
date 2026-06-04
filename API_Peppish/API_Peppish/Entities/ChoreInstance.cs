@@ -14,6 +14,7 @@ public class ChoreInstance
     public Guid ChoreAssignmentId { get; set; }
     public DateTime DueDate { get; set; }
     public ChoreStatus Status { get; set; } = ChoreStatus.Pending;
+    public Guid? RewardLedgerId { get; set; }
     public DateTime? CompletedAt { get; set; }
     public DateTime? ApprovedAt { get; set; }
     public string? ApprovedByUserId { get; set; }

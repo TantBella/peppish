@@ -35,6 +35,6 @@ public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbC
   public string GetCurrentUserRole()
   {
     return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
-        ?? "Child";
+        ?? "Adult";
   }
 }

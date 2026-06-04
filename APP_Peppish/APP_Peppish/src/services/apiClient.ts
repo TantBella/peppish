@@ -8,6 +8,7 @@ export const setAuthToken = (token: string | null) => {
 };
 
 const createApiClient = (): AxiosInstance => {
+  const getToken = () => localStorage.getItem("token");
   const envRaw = import.meta.env.VITE_API_URL ?? "";
   const raw = typeof envRaw === "string" && envRaw.trim() !== "" ? envRaw : "";
   const normalized = String(raw).replace(/\/$/, "");
@@ -26,6 +27,7 @@ const createApiClient = (): AxiosInstance => {
   });
 
   instance.interceptors.request.use((config) => {
+    const token = getToken();
     if (authToken) {
       config.headers = config.headers || {};
       (config.headers as any).Authorization = `Bearer ${authToken}`;
