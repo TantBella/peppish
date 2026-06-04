@@ -13,35 +13,51 @@ public interface IChoreTemplateRepository
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
-public class ChoreTemplateRepository(AppDbContext context) : IChoreTemplateRepository
+public class ChoreTemplateRepository : IChoreTemplateRepository
 {
-    public async Task<ChoreTemplate?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
+    private readonly AppDbContext context;
+
+    public ChoreTemplateRepository(AppDbContext context)
+    {
+        this.context = context;
+    }
+
+    public async Task<ChoreTemplate?> GetByIdAsync(
+        Guid id,
+        Guid householdId,
+        CancellationToken cancellationToken = default)
     {
         return await context.ChoreTemplates
             .FirstOrDefaultAsync(t => t.Id == id && t.HouseholdId == householdId, cancellationToken);
     }
 
-    public async Task<List<ChoreTemplate>> GetByHouseholdAsync(Guid householdId, CancellationToken cancellationToken = default)
+    public async Task<List<ChoreTemplate>> GetByHouseholdAsync(
+        Guid householdId,
+        CancellationToken cancellationToken = default)
     {
         return await context.ChoreTemplates
             .Where(t => t.HouseholdId == householdId)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ChoreTemplate> CreateAsync(ChoreTemplate template, CancellationToken cancellationToken = default)
+    public Task<ChoreTemplate> CreateAsync(
+        ChoreTemplate template,
+        CancellationToken cancellationToken = default)
     {
-        await context.ChoreTemplates.AddAsync(template, cancellationToken);
-        return template;
+        context.ChoreTemplates.Add(template);
+        return Task.FromResult(template);
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        await context.SaveChangesAsync(cancellationToken);
-    }
-
-
-    public async Task UpdateAsync(ChoreTemplate template, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(
+        ChoreTemplate template,
+        CancellationToken cancellationToken = default)
     {
         context.ChoreTemplates.Update(template);
+        return Task.CompletedTask;
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return context.SaveChangesAsync(cancellationToken);
     }
 }

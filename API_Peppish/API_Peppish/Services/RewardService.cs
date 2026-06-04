@@ -6,7 +6,7 @@ namespace API_Peppish.Services;
 
 public interface IRewardService
 {
-    Task<UserBalanceResult> GetUserBalanceAsync(string userId, Guid householdId, CancellationToken cancellationToken = default);
+    Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default);
 
     Task<List<RewardDto>> GetUserRewardsAsync(string userId, CancellationToken cancellationToken = default);
 }
