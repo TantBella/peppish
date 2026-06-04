@@ -82,16 +82,16 @@ public class ChoreInstanceService(
         ?? throw new InvalidOperationException("Assignment not found");
 
     if (assignment.AssignedToUserId != userId)
-      throw new UnauthorizedAccessException("You are not assigned to this chore");
+      throw new UnauthorizedAccessException("Denna uppgiften är inte din");
 
     if (instance.Status != ChoreStatus.Pending)
-      throw new InvalidOperationException($"Cannot complete chore with status {instance.Status}");
+      throw new InvalidOperationException($"Kan inte slutföra en syssla med denna status {instance.Status}");
 
     instance.Status = ChoreStatus.Completed;
     instance.CompletedAt = DateTime.UtcNow;
 
     await instanceRepository.UpdateAsync(instance, cancellationToken);
-    logger.LogInformation("Chore {choreId} marked as completed by {userId}", id, userId);
+    logger.LogInformation("{choreId} är markerad som färdig av {userId}", id, userId);
 
     try
     {
@@ -116,13 +116,13 @@ public class ChoreInstanceService(
     var role = userContextService.GetCurrentUserRole();
 
     if (role != "Adult")
-      throw new UnauthorizedAccessException("Only adults can approve chores");
+      throw new UnauthorizedAccessException("Endast vuxna kan godkänna att en syssla är slutförd");
 
     var instance = await instanceRepository.GetByIdAsync(id, householdId, cancellationToken)
         ?? throw new InvalidOperationException("Chore instance not found");
 
     if (instance.Status != ChoreStatus.Completed)
-      throw new InvalidOperationException($"Cannot approve chore with status {instance.Status}. Must be Completed first.");
+      throw new InvalidOperationException($"Kan inte godkänna en syssla med denna status {instance.Status}. Den måste bli klarmarkerad först.");
 
     using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
     try

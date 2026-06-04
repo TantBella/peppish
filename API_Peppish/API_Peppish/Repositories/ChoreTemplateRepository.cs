@@ -9,6 +9,7 @@ public interface IChoreTemplateRepository
     Task<ChoreTemplate?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
     Task<List<ChoreTemplate>> GetByHouseholdAsync(Guid householdId, CancellationToken cancellationToken = default);
     Task<ChoreTemplate> CreateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
+    Task UpdateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
@@ -36,5 +37,11 @@ public class ChoreTemplateRepository(AppDbContext context) : IChoreTemplateRepos
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+
+    public async Task UpdateAsync(ChoreTemplate template, CancellationToken cancellationToken = default)
+    {
+        context.ChoreTemplates.Update(template);
     }
 }

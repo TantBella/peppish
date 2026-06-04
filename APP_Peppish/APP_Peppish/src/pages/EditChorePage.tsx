@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { choreService } from "../services/choreService";
+import { choreTemplateApi } from "../services/choreService.api";
 import { useAuth } from "../context/AuthContext";
 import { useChore } from "../hooks/useChores";
-import { ChoreType, RewardType, Chore } from "../types";
 import Loading from "../components/Loading";
 
 export const EditChorePage = () => {
@@ -17,38 +16,38 @@ export const EditChorePage = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState<ChoreType>("daily");
-  const [rewardType, setRewardType] = useState<RewardType>("money");
-  const [rewardValue, setRewardValue] = useState<number | "">("");
-  const [assignedTo, setAssignedTo] = useState<string | undefined>(undefined);
+  const [rewardAmount, setRewardAmount] = useState<number>(0);
+  const [rewardPoints, setRewardPoints] = useState<number>(0);
+  const [recurrence, setRecurrence] = useState("Daily");
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (chore) {
       setTitle(chore.title || "");
-      setDescription(chore.description || "");
-      setType(chore.type);
-      setRewardType(chore.rewardType);
-      setRewardValue(chore.rewardValue ?? "");
-      setAssignedTo(chore.assignedTo);
+      setRewardAmount(chore.rewardAmount ?? 0);
     }
   }, [chore]);
 
   const updateMutation = useMutation({
-    mutationFn: async (payload: Partial<Chore>) => {
+    mutationFn: async () => {
       if (!id) throw new Error("Missing id");
-      return choreService.updateChore(id, payload);
+      return choreTemplateApi.update(id, {
+        title,
+        description,
+        rewardAmount,
+        rewardPoints,
+        recurrence,
+      });
     },
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ["chores"] });
       queryClient.setQueryData(["chore", id], updated);
       navigate("/chores");
     },
-    onError: (err) => {
+    onError: (err) =>
       setFormError(
         err instanceof Error ? err.message : "Failed to update chore",
-      );
-    },
+      ),
   });
 
   if (isLoading) return <Loading message="Laddar..." />;
@@ -67,33 +66,24 @@ export const EditChorePage = () => {
       </div>
     );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
-
-    // permission check
-    if (chore && chore.createdBy !== user?.id && user?.role !== "adult") {
-      setFormError("You do not have permission to edit this chore");
-      return;
-    }
-
-    updateMutation.mutate({
-      title,
-      description,
-      type,
-      rewardType,
-      rewardValue: rewardValue === "" ? undefined : Number(rewardValue),
-      assignedTo,
-    });
-  };
+  if (user?.role !== "Adult") {
+    return (
+      <div className="error-message">
+        Du har inte behörighet att redigera uppgifter.
+      </div>
+    );
+  }
 
   return (
     <div className="edit-chore-page">
       <h1>Ändra uppgift</h1>
-
       {formError && <div className="error-message">{formError}</div>}
-
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          updateMutation.mutate();
+        }}
+      >
         <div className="form-group">
           <label htmlFor="title">Titel</label>
           <input
@@ -103,7 +93,6 @@ export const EditChorePage = () => {
             required
           />
         </div>
-
         <div className="form-group">
           <label htmlFor="description">Beskrivning</label>
           <textarea
@@ -112,49 +101,39 @@ export const EditChorePage = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="type">Typ</label>
+            <label htmlFor="recurrence">Upprepning</label>
             <select
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value as ChoreType)}
+              id="recurrence"
+              value={recurrence}
+              onChange={(e) => setRecurrence(e.target.value)}
             >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="irregular">Irregular</option>
+              <option value="Daily">Dagligen</option>
+              <option value="Weekly">Veckovis</option>
             </select>
           </div>
-
           <div className="form-group">
-            <label htmlFor="rewardType">Reward</label>
-            <select
-              id="rewardType"
-              value={rewardType}
-              onChange={(e) => setRewardType(e.target.value as RewardType)}
-            >
-              <option value="money">Money</option>
-              <option value="progress">Progress</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="rewardValue">Value</label>
+            <label htmlFor="rewardAmount">Belöning (kr)</label>
             <input
-              id="rewardValue"
+              id="rewardAmount"
               type="number"
-              value={rewardValue}
-              onChange={(e) =>
-                setRewardValue(
-                  e.target.value === "" ? "" : Number(e.target.value),
-                )
-              }
+              value={rewardAmount}
+              onChange={(e) => setRewardAmount(Number(e.target.value))}
+              min={0}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="rewardPoints">Poäng</label>
+            <input
+              id="rewardPoints"
+              type="number"
+              value={rewardPoints}
+              onChange={(e) => setRewardPoints(Number(e.target.value))}
               min={0}
             />
           </div>
         </div>
-
         <div className="form-actions">
           <button
             type="submit"
@@ -162,6 +141,13 @@ export const EditChorePage = () => {
             className="btn-primary"
           >
             {updateMutation.isPending ? "Sparar..." : "Spara ändringar"}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => navigate("/chores")}
+          >
+            Avbryt
           </button>
         </div>
       </form>

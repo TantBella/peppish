@@ -15,6 +15,19 @@ export const choreTemplateApi = {
     const res = await apiClient.post("/chore-templates", payload);
     return res.data;
   },
+  update: async (
+    id: string,
+    payload: {
+      title: string;
+      description?: string;
+      rewardAmount: number;
+      rewardPoints: number;
+      recurrence: string;
+    },
+  ) => {
+    const res = await apiClient.put(`/chore-templates/${id}`, payload);
+    return res.data;
+  },
 };
 
 export const choreAssignmentApi = {
@@ -41,4 +54,10 @@ export const choreInstanceApi = {
     const res = await apiClient.post(`/chores/${id}/approve`);
     return res.data;
   },
+};
+
+export const choreServiceApi = {
+  ...choreTemplateApi,
+  ...choreAssignmentApi,
+  ...choreInstanceApi,
 };
