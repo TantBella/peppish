@@ -33,7 +33,7 @@ public class UsersController(
             Id = user.Id,
             Name = user.DisplayName,
             Email = user.Email ?? string.Empty,
-            Role = roles.FirstOrDefault() ?? "Child",
+            Role = roles.FirstOrDefault() ?? "Adult",
             HouseholdId = user.HouseholdId
         });
     }
@@ -70,8 +70,15 @@ public class UsersController(
     [HttpGet("{userId}/balance")]
     public async Task<ActionResult<BalanceDto>> GetUserBalance(string userId)
     {
-        var balance = await rewardService.GetUserBalanceAsync(userId);
-        return Ok(new BalanceDto { Balance = balance });
+        var result = await rewardService.GetUserBalanceAsync(userId);
+
+        return Ok(new BalanceDto
+        {
+            UserId = userId,
+            MoneyBalance = result.MoneyBalance,
+            TotalXp = result.TotalXp,
+            Level = result.Level
+        });
     }
 
     [HttpGet("{userId}/progress")]

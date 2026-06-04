@@ -28,8 +28,8 @@ public class ChoreTemplateService(
             HouseholdId = householdId,
             Title = request.Title,
             Description = request.Description,
-            RewardAmount = request.RewardAmount,
-            RewardPoints = request.RewardPoints,
+            RewardValue = request.RewardValue,
+            RewardType = request.RewardType,
             Recurrence = request.Recurrence,
             CreatedByUserId = userId
         };
@@ -59,8 +59,8 @@ public class ChoreTemplateService(
 
         template.Title = request.Title ?? template.Title;
         template.Description = request.Description ?? template.Description;
-        template.RewardAmount = request.RewardAmount;
-        template.RewardPoints = request.RewardPoints;
+        template.RewardValue = request.RewardValue;
+        template.RewardType = Enum.Parse<RewardType>(request.RewardType, true);
         template.Recurrence = Enum.Parse<RecurrenceType>(request.Recurrence, true);
 
         await repository.UpdateAsync(template, cancellationToken);

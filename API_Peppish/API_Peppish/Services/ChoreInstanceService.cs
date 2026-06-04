@@ -58,7 +58,8 @@ public class ChoreInstanceService(
         Status = instance.Status.ToString(),
         AssignedToUserId = assignment.AssignedToUserId,
         AssignedToUserName = user?.DisplayName ?? string.Empty,
-        RewardAmount = template?.RewardAmount ?? 0
+          RewardValue = template?.RewardValue ?? 0,
+          RewardType = template?.RewardType.ToString()
       });
     }
 
@@ -138,21 +139,26 @@ public class ChoreInstanceService(
       var template = await dbContext.ChoreTemplates.FindAsync(new object[] { assignment.ChoreTemplateId }, cancellationToken: cancellationToken)
           ?? throw new InvalidOperationException("Template not found");
 
-      var reward = new RewardLedger
-      {
-        HouseholdId = householdId,
-        UserId = assignment.AssignedToUserId,
-        Amount = template.RewardAmount,
-        Reason = $"Completed chore: {template.Title}"
-      };
-      await rewardRepository.CreateAsync(reward, cancellationToken);
+            var reward = new RewardLedger
+            {
+                HouseholdId = householdId,
+                UserId = assignment.AssignedToUserId,
+                ChoreId = instance.Id,
+                Reason = $"Completed chore: {template.Title}",
+                MoneyAmount = template.RewardType == RewardType.Money ? template.RewardValue : 0,
+                XpAmount = template.RewardType == RewardType.Xp ? (int)template.RewardValue : 0
+            };
+            await rewardRepository.CreateAsync(reward, cancellationToken);
       await rewardRepository.SaveChangesAsync(cancellationToken);
 
       var progress = await progressRepository.GetByUserAsync(assignment.AssignedToUserId, householdId, cancellationToken)
           ?? new AvatarProgress { UserId = assignment.AssignedToUserId, HouseholdId = householdId };
 
-      progress.CurrentXp += template.RewardPoints;
-      progress.UpdatedAt = DateTime.UtcNow;
+            if (template.RewardType == RewardType.Xp)
+            {
+                progress.CurrentXp += reward.XpAmount;
+            }
+            progress.UpdatedAt = DateTime.UtcNow;
 
       progress.CurrentLevel = 1 + (progress.CurrentXp / 100);
 
@@ -164,8 +170,18 @@ public class ChoreInstanceService(
 
       try
       {
-        var payload = System.Text.Json.JsonSerializer.Serialize(new { instanceId = instance.Id, approvedBy = userId, approvedAt = instance.ApprovedAt, reward = reward.Amount });
-        await notificationService.CreateNotificationAsync(new API_Peppish.DTOs.CreateNotificationRequest { UserId = assignment.AssignedToUserId, Type = "chore_approved", Payload = payload, HouseholdId = householdId });
+                var payload = System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    instanceId = instance.Id,
+                    approvedBy = userId,
+                    approvedAt = instance.ApprovedAt,
+                    reward = new
+                    {
+                        reward.MoneyAmount,
+                        reward.XpAmount
+                    }
+                });
+                await notificationService.CreateNotificationAsync(new API_Peppish.DTOs.CreateNotificationRequest { UserId = assignment.AssignedToUserId, Type = "chore_approved", Payload = payload, HouseholdId = householdId });
       }
       catch { /* ignore */ }
     }

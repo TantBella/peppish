@@ -17,23 +17,23 @@ public class ChoreTemplatesController(IChoreTemplateService service) : Controlle
     if (string.IsNullOrEmpty(request.Title))
       return BadRequest(new { error = "Title is required" });
 
-    var serviceRequest = new Services.CreateChoreTemplateRequest
-    {
-      Title = request.Title,
-      Description = request.Description,
-      RewardAmount = request.RewardAmount,
-      RewardPoints = request.RewardPoints,
-      Recurrence = Enum.Parse<RecurrenceType>(request.Recurrence, true)
-    };
+        var serviceRequest = new Services.CreateChoreTemplateRequest
+        {
+            Title = request.Title,
+            Description = request.Description,
+            RewardValue = request.RewardValue,
+            RewardType = Enum.Parse<RewardType>(request.RewardType, true),
+            Recurrence = Enum.Parse<RecurrenceType>(request.Recurrence, true)
+        };
 
-    var template = await service.CreateAsync(serviceRequest);
+        var template = await service.CreateAsync(serviceRequest);
     return CreatedAtAction(nameof(GetAllTemplates), new ChoreTemplateDto
     {
       Id = template.Id,
       Title = template.Title,
       Description = template.Description,
-      RewardAmount = template.RewardAmount,
-      RewardPoints = template.RewardPoints,
+        RewardValue = template.RewardValue,
+        RewardType = template.RewardType.ToString(),
       Recurrence = template.Recurrence.ToString()
     });
   }
@@ -42,16 +42,16 @@ public class ChoreTemplatesController(IChoreTemplateService service) : Controlle
   public async Task<ActionResult<List<ChoreTemplateDto>>> GetAllTemplates()
   {
     var templates = await service.GetAllAsync();
-    return Ok(templates.Select(t => new ChoreTemplateDto
-    {
-      Id = t.Id,
-      Title = t.Title,
-      Description = t.Description,
-      RewardAmount = t.RewardAmount,
-      RewardPoints = t.RewardPoints,
-      Recurrence = t.Recurrence.ToString()
-    }).ToList());
-  }
+        return Ok(templates.Select(t => new ChoreTemplateDto
+        {
+            Id = t.Id,
+            Title = t.Title,
+            Description = t.Description,
+            RewardValue = t.RewardValue,
+            RewardType = t.RewardType.ToString(),
+            Recurrence = t.Recurrence.ToString()
+        }).ToList());
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTemplate(Guid id, [FromBody] UpdateChoreTemplateRequest request)
@@ -68,8 +68,8 @@ public class ChoreTemplatesController(IChoreTemplateService service) : Controlle
             Id = template.Id,
             Title = template.Title,
             Description = template.Description,
-            RewardAmount = template.RewardAmount,
-            RewardPoints = template.RewardPoints,
+            RewardValue = template.RewardValue,
+            RewardType = template.RewardType.ToString(),
             Recurrence = template.Recurrence.ToString()
         });
     }

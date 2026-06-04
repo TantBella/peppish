@@ -8,7 +8,10 @@ public interface IRewardRepository
 {
     Task<RewardLedger?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
     Task<List<RewardLedger>> GetByUserAsync(string userId, Guid householdId, CancellationToken cancellationToken = default);
-    Task<decimal> GetUserBalanceAsync(string userId, Guid householdId, CancellationToken cancellationToken = default);
+    Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
+        string userId,
+        Guid householdId,
+        CancellationToken cancellationToken = default);
     Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
@@ -28,11 +31,18 @@ public class RewardRepository(AppDbContext context) : IRewardRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<decimal> GetUserBalanceAsync(string userId, Guid householdId, CancellationToken cancellationToken = default)
+    public async Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
+        string userId,
+        Guid householdId,
+        CancellationToken cancellationToken = default)
     {
-        return await context.RewardLedgers
-            .Where(r => r.UserId == userId && r.HouseholdId == householdId)
-            .SumAsync(r => r.Amount, cancellationToken);
+        var query = context.RewardLedgers
+            .Where(r => r.UserId == userId && r.HouseholdId == householdId);
+
+        var money = await query.SumAsync(r => r.MoneyAmount, cancellationToken);
+        var xp = await query.SumAsync(r => r.XpAmount, cancellationToken);
+
+        return (money, xp);
     }
 
     public async Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default)
