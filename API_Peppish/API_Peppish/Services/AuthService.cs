@@ -175,10 +175,7 @@ namespace API_Peppish.Services
                     "Invalid email or password");
             }
             var roles = await userManager.GetRolesAsync(user);
-            logger.LogInformation(
-    "User {email} has roles: {roles}",
-    email,
-    string.Join(", ", roles));
+
             var role = roles.FirstOrDefault() ?? "ADULT";
 
             var token = GenerateJwtToken(
