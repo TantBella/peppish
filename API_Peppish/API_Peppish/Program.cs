@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine("Ny session startad lokalt och ansluten till DB");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -65,6 +64,7 @@ builder.Services.AddAuthentication(options =>
 
 // Register Repositories
 builder.Services.AddScoped<IHouseholdRepository, HouseholdRepository>();
+builder.Services.AddScoped<IJoinCodeRepository, JoinCodeRepository>();
 builder.Services.AddScoped<IChoreTemplateRepository, ChoreTemplateRepository>();
 builder.Services.AddScoped<IChoreAssignmentRepository, ChoreAssignmentRepository>();
 builder.Services.AddScoped<IChoreInstanceRepository, ChoreInstanceRepository>();
@@ -75,6 +75,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 // Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<IJoinCodeService, JoinCodeService>();
 builder.Services.AddScoped<IChoreTemplateService, ChoreTemplateService>();
 builder.Services.AddScoped<IChoreAssignmentService, ChoreAssignmentService>();
 builder.Services.AddScoped<IChoreInstanceService, ChoreInstanceService>();
