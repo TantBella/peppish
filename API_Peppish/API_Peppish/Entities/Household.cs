@@ -1,8 +1,11 @@
-namespace API_Peppish.Entities;
-
-public class Household
+namespace API_Peppish.Entities
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public class Household
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+    }
 }

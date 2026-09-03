@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine("Ny session startad lokalt och ansluten till DB");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
