@@ -10,25 +10,37 @@ public class AuthController(
     IAuthService authService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<RegisterResponse>> Register(
+        [FromBody] RegisterDto dto)
     {
-        var (success, userId, token, error) = await authService.RegisterAsync(
-            request.Name, request.Email, request.Password, request.HouseholdName);
+        var (success, userId, token, error) =
+            await authService.RegisterAsync(dto);
 
         if (!success)
             return BadRequest(new { error });
 
-        return Ok(new RegisterResponse { UserId = userId, Token = token });
+        return Ok(new RegisterResponse
+        {
+            UserId = userId,
+            Token = token
+        });
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login(
+        [FromBody] LoginRequest request)
     {
-        var (success, token, error) = await authService.LoginAsync(request.Email, request.Password);
+        var (success, token, error) =
+            await authService.LoginAsync(
+                request.Email,
+                request.Password);
 
         if (!success)
             return Unauthorized(new { error });
 
-        return Ok(new LoginResponse { Token = token });
+        return Ok(new LoginResponse
+        {
+            Token = token
+        });
     }
 }
