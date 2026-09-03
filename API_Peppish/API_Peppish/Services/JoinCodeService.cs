@@ -1,4 +1,4 @@
-﻿using API_Peppish.Entities;
+using API_Peppish.Entities;
 using API_Peppish.Repositories;
 using System.Security.Cryptography;
 
@@ -7,8 +7,8 @@ namespace API_Peppish.Services
     public interface IJoinCodeService
     {
         Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
-     string userId,
-     CancellationToken cancellationToken = default);
+            string userId,
+            CancellationToken cancellationToken = default);
     }
 
     public class JoinCodeService(
@@ -39,15 +39,14 @@ namespace API_Peppish.Services
                 Code = code,
                 HouseholdId = householdId,
                 CreatedByUserId = userId,
-                CreatedAt = createdAt,
+                CreatedAt = DateTime.UtcNow,
                 ExpiresAt = expiresAt,
                 IsUsed = false
             };
 
             await joinCodeRepository.CreateAsync(joinCode, cancellationToken);
             await joinCodeRepository.SaveChangesAsync(cancellationToken);
-            Console.WriteLine($"CreatedAt: {createdAt:O}");
-            Console.WriteLine($"ExpiresAt: {expiresAt:O}");
+
             return (true, code, expiresAt, string.Empty);
         }
 
