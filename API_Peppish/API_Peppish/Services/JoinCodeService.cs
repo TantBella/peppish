@@ -7,8 +7,8 @@ namespace API_Peppish.Services
     public interface IJoinCodeService
     {
         Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
-            string userId,
-            CancellationToken cancellationToken = default);
+     string userId,
+     CancellationToken cancellationToken = default);
     }
 
     public class JoinCodeService(
@@ -31,21 +31,23 @@ namespace API_Peppish.Services
                 code = GenerateCode();
             }
 
-            var expiresAt = DateTime.UtcNow.AddMinutes(30);
+            var createdAt = DateTime.UtcNow;
+            var expiresAt = createdAt.AddMinutes(30);
 
             var joinCode = new JoinCode
             {
                 Code = code,
                 HouseholdId = householdId,
                 CreatedByUserId = userId,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = createdAt,
                 ExpiresAt = expiresAt,
                 IsUsed = false
             };
 
             await joinCodeRepository.CreateAsync(joinCode, cancellationToken);
             await joinCodeRepository.SaveChangesAsync(cancellationToken);
-
+            Console.WriteLine($"CreatedAt: {createdAt:O}");
+            Console.WriteLine($"ExpiresAt: {expiresAt:O}");
             return (true, code, expiresAt, string.Empty);
         }
 

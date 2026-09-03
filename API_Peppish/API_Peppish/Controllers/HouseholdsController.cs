@@ -38,7 +38,7 @@ public class HouseholdsController(
                 Id = u.Id,
                 Name = u.DisplayName,
                 Email = u.Email ?? string.Empty,
-                Role = string.Empty, // Will be populated below
+                Role = string.Empty, 
                 HouseholdId = u.HouseholdId
             })
             .ToListAsync();

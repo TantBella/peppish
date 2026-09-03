@@ -162,7 +162,6 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default)
         {
             var user = await userManager.FindByEmailAsync(email);
-
             if (user == null ||
                 !await userManager.CheckPasswordAsync(user, password))
             {
@@ -175,10 +174,12 @@ namespace API_Peppish.Services
                     string.Empty,
                     "Invalid email or password");
             }
-
             var roles = await userManager.GetRolesAsync(user);
-
-            var role = roles.FirstOrDefault() ?? "CHILD";
+            logger.LogInformation(
+    "User {email} has roles: {roles}",
+    email,
+    string.Join(", ", roles));
+            var role = roles.FirstOrDefault() ?? "ADULT";
 
             var token = GenerateJwtToken(
                 user,
