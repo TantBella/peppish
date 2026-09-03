@@ -1,8 +1,6 @@
-﻿using API_Peppish.DTOs;
+using API_Peppish.DTOs;
 using API_Peppish.Entities;
 using API_Peppish.Services;
-using global::API_Peppish.DTOs;
-using global::API_Peppish.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

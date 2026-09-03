@@ -1,4 +1,4 @@
-﻿using API_Peppish.Entities;
+using API_Peppish.Entities;
 using API_Peppish.Repositories;
 using System.Security.Cryptography;
 
@@ -31,7 +31,8 @@ namespace API_Peppish.Services
                 code = GenerateCode();
             }
 
-            var expiresAt = DateTime.UtcNow.AddMinutes(30);
+            var createdAt = DateTime.UtcNow;
+            var expiresAt = createdAt.AddMinutes(30);
 
             var joinCode = new JoinCode
             {
