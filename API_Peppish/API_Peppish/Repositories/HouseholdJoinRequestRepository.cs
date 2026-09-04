@@ -15,6 +15,10 @@ namespace API_Peppish.Repositories
             Guid householdId,
             CancellationToken cancellationToken = default);
 
+        Task<HouseholdJoinRequest?> GetByIdAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default);
+
         Task AddAsync(
             HouseholdJoinRequest request,
             CancellationToken cancellationToken = default);
@@ -55,6 +59,16 @@ namespace API_Peppish.Repositories
                     r.HouseholdId == householdId &&
                     r.Status == JoinRequestStatus.Pending)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<HouseholdJoinRequest?> GetByIdAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.HouseholdJoinRequests
+                .FirstOrDefaultAsync(
+                    r => r.Id == requestId,
+                    cancellationToken);
         }
 
         public async Task AddAsync(

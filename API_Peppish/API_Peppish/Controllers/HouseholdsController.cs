@@ -91,4 +91,34 @@ public class HouseholdsController(
 
         return Ok(requests);
     }
+
+    [HttpPost("join-requests/{requestId}/approve")]
+    public async Task<IActionResult> ApproveJoinRequest(
+    Guid requestId,
+    CancellationToken cancellationToken)
+    {
+        await joinRequestService.ApproveJoinRequestAsync(
+            requestId,
+            cancellationToken);
+
+        return Ok(new
+        {
+            message = "Förfrågan har godkänts."
+        });
+    }
+
+    [HttpPost("join-requests/{requestId}/reject")]
+    public async Task<IActionResult> RejectJoinRequest(
+    Guid requestId,
+    CancellationToken cancellationToken)
+    {
+        await joinRequestService.RejectJoinRequestAsync(
+            requestId,
+            cancellationToken);
+
+        return Ok(new
+        {
+            message = "Förfrågan har nekats."
+        });
+    }
 }
