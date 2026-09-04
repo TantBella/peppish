@@ -29,7 +29,7 @@ public class HouseholdsController(
 
         var household = await householdRepository.GetByIdAsync(id);
         if (household == null)
-            return NotFound(new { error = "Inget hushåll med det namnet finns" });
+            return NotFound(new { error = "Inget hushï¿½ll med det namnet finns" });
 
         // Get all users in this household
         var users = await userManager.Users
@@ -39,7 +39,7 @@ public class HouseholdsController(
                 Id = u.Id,
                 Name = u.DisplayName,
                 Email = u.Email ?? string.Empty,
-                Role = string.Empty,
+                Role = string.Empty, 
                 HouseholdId = u.HouseholdId
             })
             .ToListAsync();
@@ -78,7 +78,7 @@ public class HouseholdsController(
 
         return Ok(new
         {
-            message = "Din förfrågan om att gå med i hushållet har skickats."
+            message = "Din fï¿½rfrï¿½gan om att gï¿½ med i hushï¿½llet har skickats."
         });
     }
 }
