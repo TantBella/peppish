@@ -81,4 +81,14 @@ public class HouseholdsController(
             message = "Din förfrågan om att gå med i hushållet har skickats."
         });
     }
+
+    [HttpGet("join-requests")]
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetPendingJoinRequests(
+    CancellationToken cancellationToken)
+    {
+        var requests = await joinRequestService.GetPendingRequestsAsync(
+            cancellationToken);
+
+        return Ok(requests);
+    }
 }

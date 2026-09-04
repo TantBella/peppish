@@ -10,11 +10,15 @@ namespace API_Peppish.Services
             string userId,
             CreateHouseholdJoinRequestDto dto,
             CancellationToken cancellationToken = default);
+
+        Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
+            CancellationToken cancellationToken = default);
     }
 
     public class HouseholdJoinRequestService(
         IHouseholdJoinRequestRepository joinRequestRepository,
-        IJoinCodeRepository joinCodeRepository) : IHouseholdJoinRequestService
+        IJoinCodeRepository joinCodeRepository,
+        IUserContextService userContextService) : IHouseholdJoinRequestService
     {
         public async Task CreateJoinRequestAsync(
             string userId,
@@ -65,6 +69,25 @@ namespace API_Peppish.Services
                 cancellationToken);
 
             await joinRequestRepository.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
+            CancellationToken cancellationToken = default)
+        {
+            var householdId = userContextService.GetCurrentHouseholdId();
+
+            var requests = await joinRequestRepository
+                .GetPendingRequestsByHouseholdAsync(
+                    householdId,
+                    cancellationToken);
+
+            return requests.Select(request => new HouseholdJoinRequestDto
+            {
+                Id = request.Id,
+                UserId = request.UserId,
+                HouseholdId = request.HouseholdId,
+                CreatedAt = request.CreatedAt,
+                Status = request.Status.ToString()
+            }).ToList();
         }
     }
 }
