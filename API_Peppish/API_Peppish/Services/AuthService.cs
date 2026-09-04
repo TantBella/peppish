@@ -118,9 +118,7 @@ namespace API_Peppish.Services
                     errors);
             }
 
-            var role = string.IsNullOrWhiteSpace(dto.Role)
-                ? "ADULT"
-                : dto.Role.ToUpperInvariant();
+            var role = dto.Role.ToUpperInvariant();
 
             if (role != "ADULT" && role != "CHILD")
             {
@@ -128,7 +126,17 @@ namespace API_Peppish.Services
                     false,
                     string.Empty,
                     string.Empty,
-                    "Ogiltig roll. Du måste välja ADULT eller CHILD.");
+                    "Rollen måste vara ADULT eller CHILD.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.HouseholdName) &&
+                role != "ADULT")
+            {
+                return (
+                    false,
+                    string.Empty,
+                    string.Empty,
+                    "Du måste vara vuxen för att skapa ett nytt hushåll.");
             }
 
             var roleResult = await userManager.AddToRoleAsync(
