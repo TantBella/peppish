@@ -55,10 +55,10 @@ namespace API_Peppish.Services
             }
 
             var existingRequest =
-            await joinRequestRepository.GetPendingRequestAsync(
-                 userId,
-                 joinCode.HouseholdId,
-                 cancellationToken);
+                await joinRequestRepository.GetPendingRequestAsync(
+                    userId,
+                    joinCode.HouseholdId,
+                    cancellationToken);
 
             if (existingRequest != null)
             {
@@ -78,32 +78,47 @@ namespace API_Peppish.Services
                 request,
                 cancellationToken);
 
-            await joinRequestRepository.SaveChangesAsync(cancellationToken);
+            await joinRequestRepository.SaveChangesAsync(
+                cancellationToken);
         }
 
         public async Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
             CancellationToken cancellationToken = default)
         {
-            var householdId = userContextService.GetCurrentHouseholdId();
+            var householdId = userContextService.GetCurrentHouseholdId()
+        ?? throw new InvalidOperationException(
+            "Användaren tillhör inget hushåll.");
 
-            var requests = await joinRequestRepository
-                .GetPendingRequestsByHouseholdAsync(
+            var requests =
+                await joinRequestRepository.GetPendingRequestsByHouseholdAsync(
                     householdId,
                     cancellationToken);
 
-            return requests.Select(request => new HouseholdJoinRequestDto
+            var result = new List<HouseholdJoinRequestDto>();
+
+            foreach (var request in requests)
             {
-                Id = request.Id,
-                UserId = request.UserId,
-                HouseholdId = request.HouseholdId,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status.ToString()
-            }).ToList();
+                var roles = await userManager.GetRolesAsync(request.User);
+
+                result.Add(new HouseholdJoinRequestDto
+                {
+                    Id = request.Id,
+                    UserId = request.UserId,
+                    DisplayName = request.User.DisplayName,
+                    Email = request.User.Email ?? string.Empty,
+                    Role = roles.FirstOrDefault() ?? "Adult",
+                    HouseholdId = request.HouseholdId,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status.ToString()
+                });
+            }
+
+            return result;
         }
 
         public async Task ApproveJoinRequestAsync(
-             Guid requestId,
-             CancellationToken cancellationToken = default)
+            Guid requestId,
+            CancellationToken cancellationToken = default)
         {
             var request = await joinRequestRepository.GetByIdAsync(
                 requestId,
@@ -146,8 +161,8 @@ namespace API_Peppish.Services
         }
 
         public async Task RejectJoinRequestAsync(
-    Guid requestId,
-    CancellationToken cancellationToken = default)
+            Guid requestId,
+            CancellationToken cancellationToken = default)
         {
             var request = await joinRequestRepository.GetByIdAsync(
                 requestId,

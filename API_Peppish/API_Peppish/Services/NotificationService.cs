@@ -18,7 +18,9 @@ public class NotificationService(
 {
     public async Task<List<NotificationDto>> GetUserNotificationsAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
         var notifs = await repository.GetByUserAsync(userId, householdId, cancellationToken);
         return notifs.Select(n => new NotificationDto
         {
@@ -64,7 +66,9 @@ public class NotificationService(
 
     public async Task MarkAsReadAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+    ?? throw new InvalidOperationException(
+        "Användaren tillhör inget hushåll.");
         var notif = await repository.GetByIdAsync(id, householdId, cancellationToken);
         if (notif == null) throw new InvalidOperationException("Notification not found");
         notif.IsRead = true;
@@ -74,7 +78,9 @@ public class NotificationService(
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+    ?? throw new InvalidOperationException(
+        "Användaren tillhör inget hushåll.");
         var notif = await repository.GetByIdAsync(id, householdId, cancellationToken);
         if (notif == null) throw new InvalidOperationException("Notification not found");
         notif.IsDeleted = true;

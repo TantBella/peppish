@@ -7,20 +7,35 @@ namespace API_Peppish.Services;
 
 public interface IChoreTemplateService
 {
-    Task<ChoreTemplate> CreateAsync(CreateChoreTemplateRequest request, CancellationToken cancellationToken = default);
-    Task<List<ChoreTemplate>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<ChoreTemplate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<ChoreTemplate?> UpdateAsync(Guid id, UpdateChoreTemplateRequest request, CancellationToken cancellationToken = default); 
+    Task<ChoreTemplate> CreateAsync(
+        CreateChoreTemplateRequest request,
+        CancellationToken cancellationToken = default);
 
+    Task<List<ChoreTemplate>> GetAllAsync(
+        CancellationToken cancellationToken = default);
+
+    Task<ChoreTemplate?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<ChoreTemplate?> UpdateAsync(
+        Guid id,
+        UpdateChoreTemplateRequest request,
+        CancellationToken cancellationToken = default);
 }
 
 public class ChoreTemplateService(
     IChoreTemplateRepository repository,
     IUserContextService userContextService) : IChoreTemplateService
 {
-    public async Task<ChoreTemplate> CreateAsync(CreateChoreTemplateRequest request, CancellationToken cancellationToken = default)
+    public async Task<ChoreTemplate> CreateAsync(
+        CreateChoreTemplateRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
+
         var userId = userContextService.GetCurrentUserId();
 
         var template = new ChoreTemplate
@@ -34,37 +49,85 @@ public class ChoreTemplateService(
             CreatedByUserId = userId
         };
 
-        await repository.CreateAsync(template, cancellationToken);
-        await repository.SaveChangesAsync(cancellationToken);
+        await repository.CreateAsync(
+            template,
+            cancellationToken);
+
+        await repository.SaveChangesAsync(
+            cancellationToken);
+
         return template;
     }
 
-    public async Task<List<ChoreTemplate>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<ChoreTemplate>> GetAllAsync(
+        CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
-        return await repository.GetByHouseholdAsync(householdId, cancellationToken);
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
+
+        return await repository.GetByHouseholdAsync(
+            householdId,
+            cancellationToken);
     }
 
-    public async Task<ChoreTemplate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<ChoreTemplate?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
-        return await repository.GetByIdAsync(id, householdId, cancellationToken);
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
+
+        return await repository.GetByIdAsync(
+            id,
+            householdId,
+            cancellationToken);
     }
 
-    public async Task<ChoreTemplate?> UpdateAsync(Guid id, UpdateChoreTemplateRequest request, CancellationToken cancellationToken = default)
+    public async Task<ChoreTemplate?> UpdateAsync(
+        Guid id,
+        UpdateChoreTemplateRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
-        var template = await repository.GetByIdAsync(id, householdId, cancellationToken);
-        if (template == null) return null;
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
-        template.Title = request.Title ?? template.Title;
-        template.Description = request.Description ?? template.Description;
-        template.RewardValue = request.RewardValue;
-        template.RewardType = Enum.Parse<RewardType>(request.RewardType, true);
-        template.Recurrence = Enum.Parse<RecurrenceType>(request.Recurrence, true);
+        var template = await repository.GetByIdAsync(
+            id,
+            householdId,
+            cancellationToken);
 
-        await repository.UpdateAsync(template, cancellationToken);
-        await repository.SaveChangesAsync(cancellationToken);
+        if (template == null)
+            return null;
+
+        template.Title =
+            request.Title ?? template.Title;
+
+        template.Description =
+            request.Description ?? template.Description;
+
+        template.RewardValue =
+            request.RewardValue;
+
+        template.RewardType =
+            Enum.Parse<RewardType>(
+                request.RewardType,
+                true);
+
+        template.Recurrence =
+            Enum.Parse<RecurrenceType>(
+                request.Recurrence,
+                true);
+
+        await repository.UpdateAsync(
+            template,
+            cancellationToken);
+
+        await repository.SaveChangesAsync(
+            cancellationToken);
+
         return template;
     }
 }

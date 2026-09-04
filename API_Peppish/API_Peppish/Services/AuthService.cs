@@ -9,7 +9,6 @@ using System.Text;
 
 namespace API_Peppish.Services
 {
-
     public interface IAuthService
     {
         Task<(bool Success, string UserId, string Token, string Error)> RegisterAsync(
@@ -32,17 +31,15 @@ namespace API_Peppish.Services
             RegisterDto dto,
             CancellationToken cancellationToken = default)
         {
-            // 1. Kontrollera att alla fält är ifyllda
             if (string.IsNullOrWhiteSpace(dto.Username) ||
                 string.IsNullOrWhiteSpace(dto.Email) ||
-                string.IsNullOrWhiteSpace(dto.Password) ||
-                string.IsNullOrWhiteSpace(dto.HouseholdName))
+                string.IsNullOrWhiteSpace(dto.Password))
             {
                 return (
                     false,
                     string.Empty,
                     string.Empty,
-                    "Username, email, password and household name are required");
+                    "Username, email and password are required");
             }
 
             // 2. Kontrollera att email inte redan används
@@ -54,43 +51,49 @@ namespace API_Peppish.Services
                     false,
                     string.Empty,
                     string.Empty,
-                    "User with this email already exists");
+                    "Det finns redan en användare med denna email");
             }
 
-            // 3. Kontrollera att hushållet inte redan finns
-            var existingHousehold = await householdRepository.GetByNameAsync(
-                dto.HouseholdName,
-                cancellationToken);
+            Guid? householdId = null;
 
-            if (existingHousehold != null)
+            // 3. Om HouseholdName anges skapas ett nytt hushåll
+            if (!string.IsNullOrWhiteSpace(dto.HouseholdName))
             {
-                return (
-                    false,
-                    string.Empty,
-                    string.Empty,
-                    "A household with this name already exists. You need an invitation to join an existing household.");
+                var existingHousehold =
+                    await householdRepository.GetByNameAsync(
+                        dto.HouseholdName,
+                        cancellationToken);
+
+                if (existingHousehold != null)
+                {
+                    return (
+                        false,
+                        string.Empty,
+                        string.Empty,
+                        "Ett hushåll med det namnet finns redan. Du behöver en inbjudan för att gå med i ett befintligt hushåll.");
+                }
+
+                var household = new Household
+                {
+                    Name = dto.HouseholdName
+                };
+
+                await householdRepository.CreateAsync(
+                    household,
+                    cancellationToken);
+
+                await householdRepository.SaveChangesAsync(
+                    cancellationToken);
+
+                householdId = household.Id;
             }
 
-            // 4. Skapa det nya hushållet
-            var household = new Household
-            {
-                Name = dto.HouseholdName
-            };
-
-            await householdRepository.CreateAsync(
-                household,
-                cancellationToken);
-
-            await householdRepository.SaveChangesAsync(
-                cancellationToken);
-
-            // 5. Skapa användaren
             var user = new ApplicationUser
             {
                 UserName = dto.Username,
                 Email = dto.Email,
                 DisplayName = dto.Username,
-                HouseholdId = household.Id
+                HouseholdId = householdId
             };
 
             var result = await userManager.CreateAsync(
@@ -104,7 +107,7 @@ namespace API_Peppish.Services
                     result.Errors.Select(e => e.Description));
 
                 logger.LogWarning(
-                    "User registration failed for {email}: {errors}",
+                    "{email}s misslyckades med registrering pga: {errors}",
                     dto.Email,
                     errors);
 
@@ -115,8 +118,18 @@ namespace API_Peppish.Services
                     errors);
             }
 
-            // 6. Den som skapar ett nytt hushåll blir vuxen
-            const string role = "ADULT";
+            var role = string.IsNullOrWhiteSpace(dto.Role)
+                ? "ADULT"
+                : dto.Role.ToUpperInvariant();
+
+            if (role != "ADULT" && role != "CHILD")
+            {
+                return (
+                    false,
+                    string.Empty,
+                    string.Empty,
+                    "Ogiltig roll. Du måste välja ADULT eller CHILD.");
+            }
 
             var roleResult = await userManager.AddToRoleAsync(
                 user,
@@ -140,13 +153,12 @@ namespace API_Peppish.Services
                     errors);
             }
 
-            // 7. Skapa JWT-token
             var token = GenerateJwtToken(
                 user,
                 role);
 
             logger.LogInformation(
-                "User {email} registered successfully",
+                "{email} är registrerad",
                 dto.Email);
 
             return (
@@ -162,18 +174,20 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default)
         {
             var user = await userManager.FindByEmailAsync(email);
+
             if (user == null ||
                 !await userManager.CheckPasswordAsync(user, password))
             {
                 logger.LogWarning(
-                    "Login failed for {email}",
+                    "{email}s inloggning misslyckades",
                     email);
 
                 return (
                     false,
                     string.Empty,
-                    "Invalid email or password");
+                    "Ogiltig email eller lösenord");
             }
+
             var roles = await userManager.GetRolesAsync(user);
 
             var role = roles.FirstOrDefault() ?? "ADULT";
@@ -183,7 +197,7 @@ namespace API_Peppish.Services
                 role);
 
             logger.LogInformation(
-                "User {email} logged in successfully",
+                "{email} har loggats in",
                 email);
 
             return (
@@ -220,22 +234,22 @@ namespace API_Peppish.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    user.Id),
+                    new Claim(
+                        ClaimTypes.NameIdentifier,
+                        user.Id),
 
-                new Claim(
-                    ClaimTypes.Email,
-                    user.Email ?? string.Empty),
+                    new Claim(
+                        ClaimTypes.Email,
+                        user.Email ?? string.Empty),
 
-                new Claim(
-                    ClaimTypes.Name,
-                    user.DisplayName ?? string.Empty),
+                    new Claim(
+                        ClaimTypes.Name,
+                        user.DisplayName ?? string.Empty),
 
-                new Claim(
-                    ClaimTypes.Role,
-                    role)
-            }),
+                    new Claim(
+                        ClaimTypes.Role,
+                        role)
+                }),
 
                 Expires = DateTime.UtcNow.AddDays(7),
 
@@ -248,8 +262,7 @@ namespace API_Peppish.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = handler.CreateToken(
-                tokenDescriptor);
+            var token = handler.CreateToken(tokenDescriptor);
 
             return handler.WriteToken(token);
         }

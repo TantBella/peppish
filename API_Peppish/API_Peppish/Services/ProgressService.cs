@@ -14,7 +14,9 @@ public class ProgressService(
 {
     public async Task<ProgressDto> GetUserProgressAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+       ?? throw new InvalidOperationException(
+           "Användaren tillhör inget hushåll.");
         var progress = await repository.GetByUserAsync(userId, householdId, cancellationToken);
 
         if (progress == null)

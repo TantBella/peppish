@@ -20,13 +20,21 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId();
-            if (householdId == Guid.Empty)
+
+            if (householdId == null)
             {
-                return (false, string.Empty, default, "Du tillhör inget hushåll.");
+                return (
+                    false,
+                    string.Empty,
+                    default,
+                    "Du tillhör inget hushåll.");
             }
 
             var code = GenerateCode();
-            while (await joinCodeRepository.GetByCodeAsync(code, cancellationToken) != null)
+
+            while (await joinCodeRepository.GetByCodeAsync(
+                code,
+                cancellationToken) != null)
             {
                 code = GenerateCode();
             }
@@ -37,24 +45,35 @@ namespace API_Peppish.Services
             var joinCode = new JoinCode
             {
                 Code = code,
-                HouseholdId = householdId,
+                HouseholdId = householdId.Value,
                 CreatedByUserId = userId,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = createdAt,
                 ExpiresAt = expiresAt,
                 IsUsed = false
             };
 
-            await joinCodeRepository.CreateAsync(joinCode, cancellationToken);
-            await joinCodeRepository.SaveChangesAsync(cancellationToken);
+            await joinCodeRepository.CreateAsync(
+                joinCode,
+                cancellationToken);
 
-            return (true, code, expiresAt, string.Empty);
+            await joinCodeRepository.SaveChangesAsync(
+                cancellationToken);
+
+            return (
+                true,
+                code,
+                expiresAt,
+                string.Empty);
         }
 
         private static string GenerateCode()
         {
-            const string characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            return RandomNumberGenerator.GetString(characters, 6);
+            const string characters =
+                "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+            return RandomNumberGenerator.GetString(
+                characters,
+                6);
         }
     }
 }
-
