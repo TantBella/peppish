@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Household> Households { get; set; } = null!;
     public DbSet<JoinCode> JoinCodes { get; set; } = null!;
+    public DbSet<HouseholdJoinRequest> HouseholdJoinRequests { get; set; } = null!;
     public DbSet<ChoreTemplate> ChoreTemplates { get; set; } = null!;
     public DbSet<ChoreAssignment> ChoreAssignments { get; set; } = null!;
     public DbSet<ChoreInstance> ChoreInstances { get; set; } = null!;
@@ -67,6 +68,33 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasIndex(e => e.Code)
                 .IsUnique();
+        });
+
+        // HouseholdJoinRequest
+        modelBuilder.Entity<HouseholdJoinRequest>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.HouseholdId).IsRequired();
+            entity.Property(e => e.JoinCodeId).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+
+            entity.HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne<Household>()
+                .WithMany()
+                .HasForeignKey(e => e.HouseholdId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne<JoinCode>()
+                .WithMany()
+                .HasForeignKey(e => e.JoinCodeId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // ChoreTemplate
