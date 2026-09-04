@@ -66,6 +66,7 @@ builder.Services.AddAuthentication(options =>
 // Register Repositories
 builder.Services.AddScoped<IHouseholdRepository, HouseholdRepository>();
 builder.Services.AddScoped<IJoinCodeRepository, JoinCodeRepository>();
+builder.Services.AddScoped<IHouseholdJoinRequestRepository, HouseholdJoinRequestRepository>();
 builder.Services.AddScoped<IChoreTemplateRepository, ChoreTemplateRepository>();
 builder.Services.AddScoped<IChoreAssignmentRepository, ChoreAssignmentRepository>();
 builder.Services.AddScoped<IChoreInstanceRepository, ChoreInstanceRepository>();
@@ -77,6 +78,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IJoinCodeService, JoinCodeService>();
+builder.Services.AddScoped<IHouseholdJoinRequestService, HouseholdJoinRequestService>();
 builder.Services.AddScoped<IChoreTemplateService, ChoreTemplateService>();
 builder.Services.AddScoped<IChoreAssignmentService, ChoreAssignmentService>();
 builder.Services.AddScoped<IChoreInstanceService, ChoreInstanceService>();

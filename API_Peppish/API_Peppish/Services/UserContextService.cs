@@ -15,7 +15,7 @@ public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbC
     public string GetCurrentUserId()
     {
         return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? throw new InvalidOperationException("User ID not found");
+            ?? throw new InvalidOperationException("Användar-ID kunde inte hittas");
     }
 
     public Guid GetCurrentHouseholdId()
@@ -25,7 +25,7 @@ public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbC
             .FirstOrDefault(u => u.Id == userId);
 
         if (user == null || user.HouseholdId == Guid.Empty)
-            throw new InvalidOperationException("Household ID not found for user");
+            throw new InvalidOperationException("Hushålls-ID kunde inte hittas för användaren");
 
         return user.HouseholdId;
     }
