@@ -1,38 +1,42 @@
 using API_Peppish.Data;
 using System.Security.Claims;
 
-namespace API_Peppish.Services;
-
-public interface IUserContextService
+namespace API_Peppish.Services
 {
-    string GetCurrentUserId();
-    Guid GetCurrentHouseholdId();
-    string GetCurrentUserRole();
-}
 
-public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserContextService
-{
-    public string GetCurrentUserId()
+    public interface IUserContextService
     {
-        return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? throw new InvalidOperationException("Anv�ndar-ID kunde inte hittas");
+        string GetCurrentUserId();
+        Guid? GetCurrentHouseholdId();
+        string GetCurrentUserRole();
     }
 
-    public Guid GetCurrentHouseholdId()
+    public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserContextService
     {
-        var userId = GetCurrentUserId();
-        var user = dbContext.Users
-            .FirstOrDefault(u => u.Id == userId);
+        public string GetCurrentUserId()
+        {
+            return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new InvalidOperationException("Användar-ID kunde inte hittas");
+        }
 
-        if (user == null || user.HouseholdId == Guid.Empty)
-            throw new InvalidOperationException("Hush�lls-ID kunde inte hittas f�r anv�ndaren");
+        public Guid? GetCurrentHouseholdId()
+        {
+            var userId = GetCurrentUserId();
 
-        return user.HouseholdId;
-    }
+            var user = dbContext.Users
+                .FirstOrDefault(u => u.Id == userId);
 
-    public string GetCurrentUserRole()
-    {
-        return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
-            ?? "Adult";
+            if (user == null)
+                throw new InvalidOperationException(
+                    "Användaren kunde inte hittas");
+
+            return user.HouseholdId;
+        }
+
+        public string GetCurrentUserRole()
+        {
+            return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
+                ?? "Adult";
+        }
     }
 }

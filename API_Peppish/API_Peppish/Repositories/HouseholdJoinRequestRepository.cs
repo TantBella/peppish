@@ -51,10 +51,11 @@ namespace API_Peppish.Repositories
         }
 
         public async Task<List<HouseholdJoinRequest>> GetPendingRequestsByHouseholdAsync(
-             Guid householdId,
-             CancellationToken cancellationToken = default)
+     Guid householdId,
+     CancellationToken cancellationToken = default)
         {
             return await _context.HouseholdJoinRequests
+                .Include(r => r.User)
                 .Where(r =>
                     r.HouseholdId == householdId &&
                     r.Status == JoinRequestStatus.Pending)

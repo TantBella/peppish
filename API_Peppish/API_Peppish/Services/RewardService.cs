@@ -17,7 +17,9 @@ public class RewardService(
 {
     public async Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
         var balance = await repository.GetUserBalanceAsync(userId, householdId, cancellationToken);
 
@@ -36,7 +38,9 @@ public class RewardService(
 
     public async Task<List<RewardDto>> GetUserRewardsAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId();
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
         var rewards = await repository.GetByUserAsync(userId, householdId, cancellationToken);
 
