@@ -81,4 +81,44 @@ public class HouseholdsController(
             message = "Din förfrågan om att gå med i hushållet har skickats."
         });
     }
+
+    [HttpGet("join-requests")]
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetPendingJoinRequests(
+    CancellationToken cancellationToken)
+    {
+        var requests = await joinRequestService.GetPendingRequestsAsync(
+            cancellationToken);
+
+        return Ok(requests);
+    }
+
+    [HttpPost("join-requests/{requestId}/approve")]
+    public async Task<IActionResult> ApproveJoinRequest(
+    Guid requestId,
+    CancellationToken cancellationToken)
+    {
+        await joinRequestService.ApproveJoinRequestAsync(
+            requestId,
+            cancellationToken);
+
+        return Ok(new
+        {
+            message = "Förfrågan har godkänts."
+        });
+    }
+
+    [HttpPost("join-requests/{requestId}/reject")]
+    public async Task<IActionResult> RejectJoinRequest(
+    Guid requestId,
+    CancellationToken cancellationToken)
+    {
+        await joinRequestService.RejectJoinRequestAsync(
+            requestId,
+            cancellationToken);
+
+        return Ok(new
+        {
+            message = "Förfrågan har nekats."
+        });
+    }
 }
