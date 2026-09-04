@@ -41,11 +41,10 @@ namespace API_Peppish.Services
             }
 
             var existingRequest =
-     await joinRequestRepository.GetPendingRequestAsync(
-         userId,
-         joinCode.HouseholdId,
-         cancellationToken);
-
+            await joinRequestRepository.GetPendingRequestAsync(
+                 userId,
+                 joinCode.HouseholdId,
+                 cancellationToken);
 
             if (existingRequest != null)
             {
@@ -65,8 +64,7 @@ namespace API_Peppish.Services
                 request,
                 cancellationToken);
 
-            await joinRequestRepository.SaveChangesAsync(
-                cancellationToken);
+            await joinRequestRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

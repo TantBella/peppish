@@ -29,7 +29,7 @@ public class HouseholdsController(
 
         var household = await householdRepository.GetByIdAsync(id);
         if (household == null)
-            return NotFound(new { error = "Inget hush�ll med det namnet finns" });
+            return NotFound(new { error = "Inget hushåll med det namnet finns" });
 
         // Get all users in this household
         var users = await userManager.Users
@@ -78,7 +78,7 @@ public class HouseholdsController(
 
         return Ok(new
         {
-            message = "Din f�rfr�gan om att g� med i hush�llet har skickats."
+            message = "Din förfrågan om att gå med i hushållet har skickats."
         });
     }
 }
