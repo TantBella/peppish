@@ -1,11 +1,7 @@
 using API_Peppish.DTOs;
-using API_Peppish.Entities;
-using API_Peppish.Repositories;
 using API_Peppish.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Controllers;
 
@@ -13,61 +9,93 @@ namespace API_Peppish.Controllers;
 [Route("api/households")]
 [Authorize]
 public class HouseholdsController(
-    IHouseholdRepository householdRepository,
-    UserManager<ApplicationUser> userManager,
+    IHouseholdService householdService,
     IUserContextService userContextService,
     IHouseholdJoinRequestService joinRequestService) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<ActionResult<HouseholdDto>> GetHousehold(Guid id)
+    [HttpGet]
+    public async Task<ActionResult<List<HouseholdDto>>> GetAllHouseholds(
+        CancellationToken cancellationToken)
     {
-        var currentHouseholdId = userContextService.GetCurrentHouseholdId();
+        var households =
+            await householdService.GetAllHouseholdsAsync(
+                cancellationToken);
 
-        // Ensure user can only access their own household
-        if (id != currentHouseholdId)
-            return Forbid();
+        return Ok(households);
+    }
 
-        var household = await householdRepository.GetByIdAsync(id);
-        if (household == null)
-            return NotFound(new { error = "Inget hushåll med det namnet finns" });
-
-        // Get all users in this household
-        var users = await userManager.Users
-            .Where(u => u.HouseholdId == id)
-            .Select(u => new UserDto
-            {
-                Id = u.Id,
-                Name = u.DisplayName,
-                Email = u.Email ?? string.Empty,
-                Role = string.Empty, 
-                HouseholdId = u.HouseholdId
-            })
-            .ToListAsync();
-
-        foreach (var user in users)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<HouseholdDto>> GetHousehold(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        try
         {
-            var appUser = await userManager.FindByIdAsync(user.Id);
-            if (appUser != null)
+            var household =
+                await householdService.GetHouseholdAsync(
+                    id,
+                    cancellationToken);
+
+            if (household == null)
             {
-                var roles = await userManager.GetRolesAsync(appUser);
-                user.Role = roles.FirstOrDefault() ?? "Adult";
+                return NotFound(
+                    new
+                    {
+                        error = "Inget hushåll med det id:t finns."
+                    });
             }
+
+            return Ok(household);
         }
-
-        var dto = new HouseholdDto
+        catch (UnauthorizedAccessException)
         {
-            Id = household.Id,
-            Name = household.Name,
-            Users = users
-        };
+            return Forbid();
+        }
+    }
 
-        return Ok(dto);
+    [HttpPut("{id}")]
+    public async Task<ActionResult<HouseholdDto>> UpdateHousehold(
+        Guid id,
+        UpdateHouseholdDto dto,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var household =
+                await householdService.UpdateHouseholdAsync(
+                    id,
+                    dto,
+                    cancellationToken);
+
+            if (household == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        error = "Inget hushåll med det id:t finns."
+                    });
+            }
+
+            return Ok(household);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(
+                new
+                {
+                    error = ex.Message
+                });
+        }
     }
 
     [HttpPost("join")]
     public async Task<IActionResult> JoinHousehold(
-    CreateHouseholdJoinRequestDto dto,
-    CancellationToken cancellationToken)
+        CreateHouseholdJoinRequestDto dto,
+        CancellationToken cancellationToken)
     {
         var userId = userContextService.GetCurrentUserId();
 
@@ -78,24 +106,27 @@ public class HouseholdsController(
 
         return Ok(new
         {
-            message = "Din förfrågan om att gå med i hushållet har skickats."
+            message =
+                "Din förfrågan om att gå med i hushållet har skickats."
         });
     }
 
     [HttpGet("join-requests")]
-    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetPendingJoinRequests(
-    CancellationToken cancellationToken)
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>>
+        GetPendingJoinRequests(
+            CancellationToken cancellationToken)
     {
-        var requests = await joinRequestService.GetPendingRequestsAsync(
-            cancellationToken);
+        var requests =
+            await joinRequestService.GetPendingRequestsAsync(
+                cancellationToken);
 
         return Ok(requests);
     }
 
     [HttpPost("join-requests/{requestId}/approve")]
     public async Task<IActionResult> ApproveJoinRequest(
-    Guid requestId,
-    CancellationToken cancellationToken)
+        Guid requestId,
+        CancellationToken cancellationToken)
     {
         await joinRequestService.ApproveJoinRequestAsync(
             requestId,
@@ -109,8 +140,8 @@ public class HouseholdsController(
 
     [HttpPost("join-requests/{requestId}/reject")]
     public async Task<IActionResult> RejectJoinRequest(
-    Guid requestId,
-    CancellationToken cancellationToken)
+        Guid requestId,
+        CancellationToken cancellationToken)
     {
         await joinRequestService.RejectJoinRequestAsync(
             requestId,
