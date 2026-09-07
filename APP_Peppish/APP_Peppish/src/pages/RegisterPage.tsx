@@ -11,6 +11,8 @@ type RegisterStep = "account" | "role";
 
 type Role = "ADULT" | "CHILD";
 
+type RegisterStep = "account" | "role" | "household" | "confirmation";
+
 export const RegisterPage = () => {
   const [step, setStep] = useState<RegisterStep>("account");
 
@@ -19,6 +21,14 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState("");
 
   const [role, setRole] = useState<Role | null>(null);
+
+  const [householdOption, setHouseholdOption] = useState<
+    "create" | "join" | null
+  >(null);
+
+  const [householdCode, setHouseholdCode] = useState("");
+
+  const [householdName, setHouseholdName] = useState("");
 
   const [errors, setErrors] = useState<FormErrors>({});
 
