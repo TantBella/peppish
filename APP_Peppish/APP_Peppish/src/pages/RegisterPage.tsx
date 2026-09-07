@@ -7,11 +7,9 @@ interface FormErrors {
   password?: string;
 }
 
-type RegisterStep = "account" | "role";
+type RegisterStep = "account" | "role" | "household" | "confirmation";
 
 type Role = "ADULT" | "CHILD";
-
-type RegisterStep = "account" | "role" | "household" | "confirmation";
 
 export const RegisterPage = () => {
   const [step, setStep] = useState<RegisterStep>("account");
@@ -27,10 +25,11 @@ export const RegisterPage = () => {
   >(null);
 
   const [householdCode, setHouseholdCode] = useState("");
-
   const [householdName, setHouseholdName] = useState("");
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   const validateAccount = (): boolean => {
     const newErrors: FormErrors = {};
@@ -58,6 +57,113 @@ export const RegisterPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateHousehold = (): boolean => {
+    setApiError("");
+
+    if (role === "CHILD" && !householdCode.trim()) {
+      setApiError("Hushållskod krävs");
+      return false;
+    }
+
+    if (role === "ADULT" && householdOption === "create") {
+      if (!householdName.trim()) {
+        setApiError("Namn på hushållet krävs");
+        return false;
+      }
+    }
+
+    if (role === "ADULT" && householdOption === "join") {
+      if (!householdCode.trim()) {
+        setApiError("Hushållskod krävs");
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const registerUser = async () => {
+    setLoading(true);
+    setApiError("");
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password,
+            householdName:
+              role === "ADULT" && householdOption === "create"
+                ? householdName.trim()
+                : "",
+            role,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setApiError(data.error || "Något gick fel vid registreringen.");
+        return null;
+      }
+
+      localStorage.setItem("token", data.token);
+
+      return data;
+    } catch {
+      setApiError("Kunde inte kontakta servern. Försök igen.");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const joinHousehold = async () => {
+    setLoading(true);
+    setApiError("");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/households/join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            joinCode: householdCode.trim(),
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setApiError(
+          data.error || data.message || "Kunde inte gå med i hushållet.",
+        );
+        return false;
+      }
+
+      return true;
+    } catch {
+      setApiError("Kunde inte kontakta servern. Försök igen.");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAccountSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -70,10 +176,51 @@ export const RegisterPage = () => {
 
   const handleRoleSelect = (selectedRole: Role) => {
     setRole(selectedRole);
+    setHouseholdOption(null);
+    setApiError("");
+    setStep("household");
   };
 
   const handleBack = () => {
-    setStep("account");
+    setApiError("");
+
+    if (step === "role") {
+      setStep("account");
+    }
+
+    if (step === "household") {
+      setStep("role");
+    }
+  };
+
+  const handleCreateHousehold = async () => {
+    if (!validateHousehold()) {
+      return;
+    }
+
+    const registered = await registerUser();
+
+    if (registered) {
+      setStep("confirmation");
+    }
+  };
+
+  const handleJoinHousehold = async () => {
+    if (!validateHousehold()) {
+      return;
+    }
+
+    const registered = await registerUser();
+
+    if (!registered) {
+      return;
+    }
+
+    const joined = await joinHousehold();
+
+    if (joined) {
+      setStep("confirmation");
+    }
   };
 
   return (
@@ -199,11 +346,186 @@ export const RegisterPage = () => {
               </button>
             </div>
 
-            {role && <p>Du valde: {role === "CHILD" ? "Barn" : "Vuxen"}</p>}
+            <button type="button" onClick={handleBack}>
+              Tillbaka
+            </button>
+          </>
+        )}
+
+        {step === "household" && (
+          <>
+            {role === "CHILD" && (
+              <>
+                <h1>Gå med i ett hushåll</h1>
+
+                <p>Be en vuxen i ditt hushåll om koden för att gå med.</p>
+
+                <div className="form-group">
+                  <label htmlFor="householdCode">Hushållskod</label>
+
+                  <input
+                    id="householdCode"
+                    type="text"
+                    value={householdCode}
+                    onChange={(e) => {
+                      setHouseholdCode(e.target.value);
+                      setApiError("");
+                    }}
+                    placeholder="Ange kod"
+                  />
+                </div>
+
+                {apiError && <span className="error-text">{apiError}</span>}
+
+                <button
+                  type="button"
+                  className="btn-primary"
+                  disabled={loading}
+                  onClick={handleJoinHousehold}
+                >
+                  {loading ? "Registrerar..." : "Gå med"}
+                </button>
+              </>
+            )}
+
+            {role === "ADULT" && (
+              <>
+                <h1>Ditt hushåll</h1>
+
+                <p>
+                  Vill du skapa ett nytt hushåll eller gå med i ett befintligt?
+                </p>
+
+                <div className="form-group">
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      setHouseholdOption("create");
+                      setApiError("");
+                    }}
+                  >
+                    Skapa nytt hushåll
+                  </button>
+                </div>
+
+                <div className="form-group">
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      setHouseholdOption("join");
+                      setApiError("");
+                    }}
+                  >
+                    Gå med med kod
+                  </button>
+                </div>
+
+                {householdOption === "create" && (
+                  <>
+                    <div className="form-group">
+                      <label htmlFor="householdName">Namn på hushållet</label>
+
+                      <input
+                        id="householdName"
+                        type="text"
+                        value={householdName}
+                        onChange={(e) => {
+                          setHouseholdName(e.target.value);
+                          setApiError("");
+                        }}
+                        placeholder="Till exempel Familjen Andersson"
+                      />
+                    </div>
+
+                    {apiError && <span className="error-text">{apiError}</span>}
+
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      disabled={loading}
+                      onClick={handleCreateHousehold}
+                    >
+                      {loading ? "Skapar konto..." : "Skapa hushåll"}
+                    </button>
+                  </>
+                )}
+
+                {householdOption === "join" && (
+                  <>
+                    <div className="form-group">
+                      <label htmlFor="householdCode">Hushållskod</label>
+
+                      <input
+                        id="householdCode"
+                        type="text"
+                        value={householdCode}
+                        onChange={(e) => {
+                          setHouseholdCode(e.target.value);
+                          setApiError("");
+                        }}
+                        placeholder="Ange kod"
+                      />
+                    </div>
+
+                    {apiError && <span className="error-text">{apiError}</span>}
+
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      disabled={loading}
+                      onClick={handleJoinHousehold}
+                    >
+                      {loading ? "Registrerar..." : "Gå med"}
+                    </button>
+                  </>
+                )}
+              </>
+            )}
 
             <button type="button" onClick={handleBack}>
               Tillbaka
             </button>
+          </>
+        )}
+
+        {step === "confirmation" && (
+          <>
+            {role === "ADULT" && householdOption === "create" && (
+              <>
+                <h1>Välkommen till Peppish!</h1>
+
+                <p>Ditt konto och ditt hushåll har skapats.</p>
+
+                <p>Hushåll: {householdName}</p>
+              </>
+            )}
+
+            {householdOption === "join" && (
+              <>
+                <h1>Förfrågan skickad</h1>
+
+                <p>Din förfrågan om att gå med i hushållet har skickats.</p>
+
+                <p>
+                  Du kommer att tillhöra hushållet när en vuxen medlem har
+                  godkänt dig.
+                </p>
+              </>
+            )}
+
+            {role === "CHILD" && (
+              <>
+                <h1>Förfrågan skickad</h1>
+
+                <p>Din förfrågan om att gå med i hushållet har skickats.</p>
+
+                <p>
+                  En vuxen i hushållet måste godkänna dig innan du blir medlem.
+                </p>
+              </>
+            )}
           </>
         )}
       </div>
