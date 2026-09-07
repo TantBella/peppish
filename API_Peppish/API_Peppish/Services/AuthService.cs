@@ -31,7 +31,7 @@ namespace API_Peppish.Services
             RegisterDto dto,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(dto.Username) ||
+            if (string.IsNullOrWhiteSpace(dto.Name) ||
                 string.IsNullOrWhiteSpace(dto.Email) ||
                 string.IsNullOrWhiteSpace(dto.Password))
             {
@@ -90,9 +90,9 @@ namespace API_Peppish.Services
 
             var user = new ApplicationUser
             {
-                UserName = dto.Username,
+                UserName = dto.Name,
                 Email = dto.Email,
-                DisplayName = dto.Username,
+                DisplayName = dto.Name,
                 HouseholdId = householdId
             };
 
