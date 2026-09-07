@@ -1,5 +1,5 @@
-using API_Peppish.Entities;
 using API_Peppish.Data;
+using API_Peppish.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories
@@ -8,6 +8,9 @@ namespace API_Peppish.Repositories
     {
         Task<Household?> GetByIdAsync(
             Guid householdId,
+            CancellationToken cancellationToken = default);
+
+        Task<List<Household>> GetAllAsync(
             CancellationToken cancellationToken = default);
 
         Task<Household?> GetByNameAsync(
@@ -22,7 +25,8 @@ namespace API_Peppish.Repositories
             CancellationToken cancellationToken = default);
     }
 
-    public class HouseholdRepository(AppDbContext context) : IHouseholdRepository
+    public class HouseholdRepository(AppDbContext context)
+        : IHouseholdRepository
     {
         public async Task<Household?> GetByIdAsync(
             Guid householdId,
@@ -31,6 +35,13 @@ namespace API_Peppish.Repositories
             return await context.Households.FindAsync(
                 new object[] { householdId },
                 cancellationToken: cancellationToken);
+        }
+
+        public async Task<List<Household>> GetAllAsync(
+            CancellationToken cancellationToken = default)
+        {
+            return await context.Households
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Household?> GetByNameAsync(

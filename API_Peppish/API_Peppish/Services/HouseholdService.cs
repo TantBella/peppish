@@ -2,7 +2,6 @@
 using API_Peppish.Entities;
 using API_Peppish.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Services
 {
@@ -10,6 +9,14 @@ namespace API_Peppish.Services
     {
         Task<HouseholdDto?> GetHouseholdAsync(
             Guid householdId,
+            CancellationToken cancellationToken = default);
+
+        Task<List<HouseholdDto>> GetAllHouseholdsAsync(
+            CancellationToken cancellationToken = default);
+
+        Task<HouseholdDto?> UpdateHouseholdAsync(
+            Guid householdId,
+            UpdateHouseholdDto dto,
             CancellationToken cancellationToken = default);
     }
 
@@ -25,7 +32,6 @@ namespace API_Peppish.Services
             var currentHouseholdId =
                 userContextService.GetCurrentHouseholdId();
 
-            // Användaren får bara komma åt sitt eget hushåll
             if (householdId != currentHouseholdId)
             {
                 throw new UnauthorizedAccessException(
@@ -42,9 +48,69 @@ namespace API_Peppish.Services
                 return null;
             }
 
-            var users = await userManager.Users
-                .Where(u => u.HouseholdId == householdId)
-                .ToListAsync(cancellationToken);
+            return await BuildHouseholdDtoAsync(
+                household,
+                cancellationToken);
+        }
+
+        public async Task<List<HouseholdDto>> GetAllHouseholdsAsync(
+            CancellationToken cancellationToken = default)
+        {
+            var households =
+                await householdRepository.GetAllAsync(
+                    cancellationToken);
+
+            var result = new List<HouseholdDto>();
+
+            foreach (var household in households)
+            {
+                result.Add(
+                    await BuildHouseholdDtoAsync(
+                        household,
+                        cancellationToken));
+            }
+
+            return result;
+        }
+
+        public async Task<HouseholdDto?> UpdateHouseholdAsync(
+            Guid householdId,
+            UpdateHouseholdDto dto,
+            CancellationToken cancellationToken = default)
+        {
+            var household =
+                await householdRepository.GetByIdAsync(
+                    householdId,
+                    cancellationToken);
+
+            if (household == null)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                throw new InvalidOperationException(
+                    "Hushållets namn får inte vara tomt.");
+            }
+
+            household.Name = dto.Name.Trim();
+
+            await householdRepository.SaveChangesAsync(
+                cancellationToken);
+
+            return await BuildHouseholdDtoAsync(
+                household,
+                cancellationToken);
+        }
+
+        private async Task<HouseholdDto> BuildHouseholdDtoAsync(
+            Household household,
+            CancellationToken cancellationToken)
+        {
+            var users = userManager.Users
+                .Where(u => u.HouseholdId == household.Id)
+                .ToList();
 
             var userDtos = new List<UserDto>();
 
@@ -71,4 +137,3 @@ namespace API_Peppish.Services
         }
     }
 }
-

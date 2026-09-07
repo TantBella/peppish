@@ -13,6 +13,17 @@ public class HouseholdsController(
     IUserContextService userContextService,
     IHouseholdJoinRequestService joinRequestService) : ControllerBase
 {
+    [HttpGet]
+    public async Task<ActionResult<List<HouseholdDto>>> GetAllHouseholds(
+        CancellationToken cancellationToken)
+    {
+        var households =
+            await householdService.GetAllHouseholdsAsync(
+                cancellationToken);
+
+        return Ok(households);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<HouseholdDto>> GetHousehold(
         Guid id,
@@ -28,7 +39,10 @@ public class HouseholdsController(
             if (household == null)
             {
                 return NotFound(
-                    new { error = "Inget hushåll med det id:t finns." });
+                    new
+                    {
+                        error = "Inget hushåll med det id:t finns."
+                    });
             }
 
             return Ok(household);
@@ -36,6 +50,45 @@ public class HouseholdsController(
         catch (UnauthorizedAccessException)
         {
             return Forbid();
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<HouseholdDto>> UpdateHousehold(
+        Guid id,
+        UpdateHouseholdDto dto,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var household =
+                await householdService.UpdateHouseholdAsync(
+                    id,
+                    dto,
+                    cancellationToken);
+
+            if (household == null)
+            {
+                return NotFound(
+                    new
+                    {
+                        error = "Inget hushåll med det id:t finns."
+                    });
+            }
+
+            return Ok(household);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(
+                new
+                {
+                    error = ex.Message
+                });
         }
     }
 
@@ -100,4 +153,3 @@ public class HouseholdsController(
         });
     }
 }
-
