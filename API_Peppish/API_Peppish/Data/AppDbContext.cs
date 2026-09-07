@@ -1,4 +1,5 @@
 using API_Peppish.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,21 @@ namespace API_Peppish.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Id = "d7b3e1a1-8a41-4b7c-9e31-111111111111",
+                    Name = "ADULT",
+                    NormalizedName = "ADULT"
+                },
+                new IdentityRole
+                {
+                    Id = "e8c4f2b2-9b52-4c8d-af42-222222222222",
+                    Name = "CHILD",
+                    NormalizedName = "CHILD"
+                }
+            );
 
             // Household
             modelBuilder.Entity<Household>(entity =>

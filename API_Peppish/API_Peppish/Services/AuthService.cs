@@ -39,10 +39,10 @@ namespace API_Peppish.Services
                     false,
                     string.Empty,
                     string.Empty,
-                    "Username, email and password are required");
+                    "Namn, email och lÃ¶senord Ã¤r obligatoriska fÃ¤lt.");
             }
 
-            // 2. Kontrollera att email inte redan används
+            // Kontrollerar att email inte redan anvÃ¤nds
             var existingUser = await userManager.FindByEmailAsync(dto.Email);
 
             if (existingUser != null)
@@ -51,12 +51,33 @@ namespace API_Peppish.Services
                     false,
                     string.Empty,
                     string.Empty,
-                    "Det finns redan en användare med denna email");
+                    "Det finns redan en anvÃ¤ndare med denna email");
             }
 
-            Guid? householdId = null;
+            // Kontrollera rollen innan vi skapar nÃ¥got
+            var role = dto.Role.ToUpperInvariant();
 
-            // 3. Om HouseholdName anges skapas ett nytt hushåll
+            if (role != "ADULT" && role != "CHILD")
+            {
+                return (
+                    false,
+                    string.Empty,
+                    string.Empty,
+                    "Rollen mÃ¥ste vara ADULT eller CHILD.");
+            }
+
+            // Endast vuxna fÃ¥r skapa nytt hushÃ¥ll
+            if (!string.IsNullOrWhiteSpace(dto.HouseholdName) &&
+                role != "ADULT")
+            {
+                return (
+                    false,
+                    string.Empty,
+                    string.Empty,
+                    "Du mÃ¥ste vara vuxen fÃ¶r att skapa ett nytt hushÃ¥ll.");
+            }
+
+            // Kontrollera att hushÃ¥llets namn inte redan finns
             if (!string.IsNullOrWhiteSpace(dto.HouseholdName))
             {
                 var existingHousehold =
@@ -70,30 +91,17 @@ namespace API_Peppish.Services
                         false,
                         string.Empty,
                         string.Empty,
-                        "Ett hushåll med det namnet finns redan. Du behöver en inbjudan för att gå med i ett befintligt hushåll.");
+                        "Ett hushÃ¥ll med det namnet finns redan. Du behÃ¶ver en inbjudan fÃ¶r att gÃ¥ med i ett befintligt hushÃ¥ll.");
                 }
-
-                var household = new Household
-                {
-                    Name = dto.HouseholdName
-                };
-
-                await householdRepository.CreateAsync(
-                    household,
-                    cancellationToken);
-
-                await householdRepository.SaveChangesAsync(
-                    cancellationToken);
-
-                householdId = household.Id;
             }
+
 
             var user = new ApplicationUser
             {
-                UserName = dto.Name,
+                UserName = dto.Email,
                 Email = dto.Email,
                 DisplayName = dto.Name,
-                HouseholdId = householdId
+                HouseholdId = null
             };
 
             var result = await userManager.CreateAsync(
@@ -118,25 +126,23 @@ namespace API_Peppish.Services
                     errors);
             }
 
-            var role = dto.Role.ToUpperInvariant();
-
-            if (role != "ADULT" && role != "CHILD")
+            if (!string.IsNullOrWhiteSpace(dto.HouseholdName))
             {
-                return (
-                    false,
-                    string.Empty,
-                    string.Empty,
-                    "Rollen måste vara ADULT eller CHILD.");
-            }
+                var household = new Household
+                {
+                    Name = dto.HouseholdName
+                };
 
-            if (!string.IsNullOrWhiteSpace(dto.HouseholdName) &&
-                role != "ADULT")
-            {
-                return (
-                    false,
-                    string.Empty,
-                    string.Empty,
-                    "Du måste vara vuxen för att skapa ett nytt hushåll.");
+                await householdRepository.CreateAsync(
+                    household,
+                    cancellationToken);
+
+                await householdRepository.SaveChangesAsync(
+                    cancellationToken);
+
+                user.HouseholdId = household.Id;
+
+                await userManager.UpdateAsync(user);
             }
 
             var roleResult = await userManager.AddToRoleAsync(
@@ -150,7 +156,7 @@ namespace API_Peppish.Services
                     roleResult.Errors.Select(e => e.Description));
 
                 logger.LogWarning(
-                    "Adding role failed for {email}: {errors}",
+                    "{email}s roll kunde inte sparas: {errors}",
                     dto.Email,
                     errors);
 
@@ -166,7 +172,7 @@ namespace API_Peppish.Services
                 role);
 
             logger.LogInformation(
-                "{email} är registrerad",
+                "{email} Ã¤r registrerad",
                 dto.Email);
 
             return (
@@ -193,7 +199,7 @@ namespace API_Peppish.Services
                 return (
                     false,
                     string.Empty,
-                    "Ogiltig email eller lösenord");
+                    "Ogiltig email eller lÃ¶senord");
             }
 
             var roles = await userManager.GetRolesAsync(user);

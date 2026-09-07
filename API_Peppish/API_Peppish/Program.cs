@@ -67,9 +67,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IHouseholdRepository, HouseholdRepository>();
 builder.Services.AddScoped<IJoinCodeRepository, JoinCodeRepository>();
 builder.Services.AddScoped<IHouseholdJoinRequestRepository, HouseholdJoinRequestRepository>();
+
 builder.Services.AddScoped<IChoreTemplateRepository, ChoreTemplateRepository>();
 builder.Services.AddScoped<IChoreAssignmentRepository, ChoreAssignmentRepository>();
 builder.Services.AddScoped<IChoreInstanceRepository, ChoreInstanceRepository>();
+
 builder.Services.AddScoped<IRewardRepository, RewardRepository>();
 builder.Services.AddScoped<IAvatarProgressRepository, AvatarProgressRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -77,11 +79,15 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 // Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+
+builder.Services.AddScoped<IHouseholdService, HouseholdService>();
 builder.Services.AddScoped<IJoinCodeService, JoinCodeService>();
 builder.Services.AddScoped<IHouseholdJoinRequestService, HouseholdJoinRequestService>();
+
 builder.Services.AddScoped<IChoreTemplateService, ChoreTemplateService>();
 builder.Services.AddScoped<IChoreAssignmentService, ChoreAssignmentService>();
 builder.Services.AddScoped<IChoreInstanceService, ChoreInstanceService>();
+
 builder.Services.AddScoped<IRewardService, RewardService>();
 builder.Services.AddScoped<IProgressService, ProgressService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
