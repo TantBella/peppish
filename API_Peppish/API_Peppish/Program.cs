@@ -126,7 +126,7 @@ builder.Services.AddCors(options =>
   options.AddPolicy("AllowFrontend", policy =>
   {
     policy
-          .WithOrigins("https://peppish.vercel.app", "http://localhost:3000", "http://localhost:5000")
+          .WithOrigins("https://peppish.vercel.app", "http://localhost:3000", "http://localhost:5000", "http://localhost:5173")
           .AllowAnyHeader()
           .AllowAnyMethod();
   });
