@@ -9,7 +9,7 @@ import log_out from "../assets/icons/log_out.png";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,11 +31,16 @@ const Navbar = () => {
         <img src={progress} alt="App logo" className="Peppish-logo" />
       </button> */}
       <button onClick={() => navigate("/chores")} className="nav-button">
-       <img src={task} alt="App logo" className="Peppish-logo" />
+        <img src={task} alt="App logo" className="Peppish-logo" />
       </button>
       {/* <button onClick={() => navigate("/notifications")} className="nav-button">
         <img src={notification} alt="App logo" className="Peppish-logo" />
       </button> */}
+      {user?.role === "ADULT" && (
+        <button onClick={() => navigate("/households")} className="nav-button">
+          Hushåll
+        </button>
+      )}
       <button onClick={handleLogout} className="nav-button">
         <img src={log_out} alt="App logo" className="Peppish-logo" />
       </button>
