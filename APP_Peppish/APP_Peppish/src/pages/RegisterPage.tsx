@@ -206,7 +206,7 @@ export const RegisterPage = () => {
 
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 5000);
     }
   };
 
@@ -228,7 +228,7 @@ export const RegisterPage = () => {
 
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 5000);
     }
   };
 
