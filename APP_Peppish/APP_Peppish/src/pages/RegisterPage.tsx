@@ -225,6 +225,10 @@ export const RegisterPage = () => {
 
     if (joined) {
       setStep("confirmation");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     }
   };
 
