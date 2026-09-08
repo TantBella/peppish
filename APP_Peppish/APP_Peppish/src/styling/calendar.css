@@ -89,7 +89,7 @@
   gap: 0.5rem;
   height: fit-content;
   transition: all 0.2s ease;
-margin: 0.75rem 0;
+  margin: 0.75rem 0;
 }
 
 .week-day:hover {
@@ -125,7 +125,7 @@ margin: 0.75rem 0;
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 1px;
-text-align: center;
+  text-align: center;
   color: var(--muted);
 
   text-transform: uppercase;
@@ -176,18 +176,13 @@ text-align: center;
 }
 
 .month-day.today .day-circle {
-  background: linear-gradient(
-    135deg,
-    var(--accent-3),
-    var(--accent-5)
-  );
+  background: linear-gradient(135deg, var(--accent-3), var(--accent-5));
   color: white;
 }
 
 .month-day:hover .day-circle {
   transform: scale(1.08);
-  background: #ffffff;
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent-4);
 }
 
 .indicator-dot {
@@ -207,9 +202,9 @@ text-align: center;
   opacity: 0.5;
 }
 
-.empty-day{
+.empty-day {
   padding: 1rem;
-    overflow-wrap: break-word;
+  overflow-wrap: break-word;
 
   background: var(--surface);
 }

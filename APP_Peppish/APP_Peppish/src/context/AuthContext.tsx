@@ -27,23 +27,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const loadUser = async () => {
+      const storedToken = localStorage.getItem("token");
 
-    if (storedToken) {
+      if (!storedToken) {
+        setIsLoading(false);
+        return;
+      }
+
       setToken(storedToken);
       setAuthToken(storedToken);
 
-      const decoded = jwtDecode<JwtPayload>(storedToken);
+      try {
+        const currentUser = await authService?.getCurrentUser();
 
-      setUser({
-        id: decoded.nameid,
-        name: decoded.unique_name,
-        email: decoded.email,
-        role: decoded.role as Role,
-      });
-    }
+        if (currentUser) {
+          setUser(currentUser);
+        }
+      } catch {
+        logout();
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    setIsLoading(false);
+    loadUser();
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {

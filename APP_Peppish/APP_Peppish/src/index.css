@@ -6,6 +6,7 @@
 @import "./styling/progress.css";
 @import "./styling/rewards.css";
 @import "./styling/toast.css";
+@import "./styling/householdmanagement.css";
 
 * {
   margin: 0;
@@ -29,7 +30,7 @@ body {
 }
 
 :root {
-  --bg: #ffffff;
+  --bg: #fcfcfa;
   --surface: #f2f2ffab;
   --border: #cdede192;
 
