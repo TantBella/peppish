@@ -6,6 +6,7 @@ import {
   HouseholdMember,
 } from "../services/householdService.api";
 import logoImg from "../assets/logo_img.png";
+import { useToast } from "../context/ToastContext";
 import Loading from "../components/Loading";
 
 interface JoinRequest {
@@ -26,6 +27,8 @@ interface JoinCode {
 
 export const HouseholdManagementPage = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
+
   const [householdName, setHouseholdName] = useState("");
   const [members, setMembers] = useState<HouseholdMember[]>([]);
 
@@ -85,14 +88,20 @@ export const HouseholdManagementPage = () => {
 
   const approveRequest = async (requestId: string) => {
     await householdJoinRequestServiceApi.approveRequest(requestId);
-
     setRequests((prev) => prev.filter((request) => request.id !== requestId));
+    showToast(
+      `Förfrågan för ${user?.name} att gå med i ${householdName} godkänd.`,
+      "success",
+    );
   };
 
   const rejectRequest = async (requestId: string) => {
     await householdJoinRequestServiceApi.rejectRequest(requestId);
-
     setRequests((prev) => prev.filter((request) => request.id !== requestId));
+    showToast(
+      `Förfrågan för ${user?.name} att gå med i ${householdName} avvisad.`,
+      "error",
+    );
   };
 
   if (!user) {
