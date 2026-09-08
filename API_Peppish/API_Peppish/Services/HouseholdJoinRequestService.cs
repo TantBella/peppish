@@ -25,10 +25,11 @@ namespace API_Peppish.Services
     }
 
     public class HouseholdJoinRequestService(
-        IHouseholdJoinRequestRepository joinRequestRepository,
-        IJoinCodeRepository joinCodeRepository,
-        IUserContextService userContextService,
-        UserManager<ApplicationUser> userManager) : IHouseholdJoinRequestService
+    IHouseholdJoinRequestRepository joinRequestRepository,
+    IJoinCodeRepository joinCodeRepository,
+    IUserContextService userContextService,
+    UserManager<ApplicationUser> userManager,
+    INotificationService notificationService) : IHouseholdJoinRequestService
     {
         public async Task CreateJoinRequestAsync(
             string userId,
@@ -161,8 +162,8 @@ namespace API_Peppish.Services
         }
 
         public async Task RejectJoinRequestAsync(
-            Guid requestId,
-            CancellationToken cancellationToken = default)
+    Guid requestId,
+    CancellationToken cancellationToken = default)
         {
             var request = await joinRequestRepository.GetByIdAsync(
                 requestId,
@@ -189,6 +190,16 @@ namespace API_Peppish.Services
             }
 
             request.Status = JoinRequestStatus.Rejected;
+
+            await notificationService.CreateNotificationAsync(
+                new CreateNotificationRequest
+                {
+                    UserId = request.UserId,
+                    HouseholdId = null,
+                    Type = "HOUSEHOLD_JOIN_REJECTED",
+                    Payload = "Din förfrågan om att gå med i hushållet har nekats."
+                },
+                cancellationToken);
 
             await joinRequestRepository.SaveChangesAsync(
                 cancellationToken);
