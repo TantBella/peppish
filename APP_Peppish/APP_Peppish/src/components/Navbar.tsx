@@ -7,6 +7,7 @@ import rewards from "../assets/icons/rewards.png";
 import task from "../assets/icons/task.png";
 import log_out from "../assets/icons/log_out.png";
 import { useAuth } from "../context/AuthContext";
+import { NotificationPanel } from "./NotificationPanel";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -36,6 +37,7 @@ const Navbar = () => {
       {/* <button onClick={() => navigate("/notifications")} className="nav-button">
         <img src={notification} alt="App logo" className="Peppish-logo" />
       </button> */}
+      <NotificationPanel />
       {user?.role === "ADULT" && (
         <button onClick={() => navigate("/households")} className="nav-button">
           Hushåll

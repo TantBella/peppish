@@ -11,6 +11,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { NoHouseholdPage } from "./pages/NoHouseholdPage";
 import { HomePage } from "./pages/HomePage";
 import { ChoreListPage } from "./pages/ChoreListPage";
 import { CreateChorePage } from "./pages/CreateChorePage";
@@ -58,7 +59,7 @@ function App() {
                 }
               >
                 <Route path="/" element={<HomePage />} />
-
+                <Route path="/no-household" element={<NoHouseholdPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/chores" element={<ChoreListPage />} />
                 <Route path="/chores/new" element={<CreateChorePage />} />

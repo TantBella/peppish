@@ -56,21 +56,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string): Promise<void> => {
     const response = await authService?.login(email, password);
-    if (!response?.token) throw new Error("No token returned from login");
 
-    const decoded = jwtDecode<JwtPayload>(response.token);
-
-    const user: User = {
-      id: decoded.nameid,
-      name: decoded.unique_name,
-      email: decoded.email,
-      role: decoded.role as Role,
-    };
+    if (!response?.token) {
+      throw new Error("No token returned from login");
+    }
 
     setToken(response.token);
     setAuthToken(response.token);
-    setUser(user);
     localStorage.setItem("token", response.token);
+
+    const currentUser = await authService?.getCurrentUser();
+
+    if (currentUser) {
+      setUser(currentUser);
+    }
   };
 
   const logout = (): void => {

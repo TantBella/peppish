@@ -4,7 +4,7 @@ import Loading from "../components/Loading";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "adult" | "child";
+  requiredRole?: "ADULT" | "CHILD";
 }
 
 export const ProtectedRoute = ({
@@ -17,9 +17,21 @@ export const ProtectedRoute = ({
     return <Loading />;
   }
 
-  if (!token) return <Navigate to="/login" replace />;
-  if (requiredRole && user?.role !== requiredRole)
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user) {
+    return <Loading />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!user.householdId && window.location.pathname !== "/no-household") {
+    return <Navigate to="/no-household" replace />;
+  }
 
   return <>{children}</>;
 };
