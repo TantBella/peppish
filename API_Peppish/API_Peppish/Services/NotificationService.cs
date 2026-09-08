@@ -18,10 +18,13 @@ public class NotificationService(
 {
     public async Task<List<NotificationDto>> GetUserNotificationsAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId()
-            ?? throw new InvalidOperationException(
-                "Användaren tillhör inget hushåll.");
-        var notifs = await repository.GetByUserAsync(userId, householdId, cancellationToken);
+        var householdId = userContextService.GetCurrentHouseholdId();
+
+        var notifs = await repository.GetByUserAsync(
+            userId,
+            householdId,
+            cancellationToken);
+
         return notifs.Select(n => new NotificationDto
         {
             Id = n.Id,
@@ -66,10 +69,15 @@ public class NotificationService(
 
     public async Task MarkAsReadAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId()
-    ?? throw new InvalidOperationException(
-        "Användaren tillhör inget hushåll.");
-        var notif = await repository.GetByIdAsync(id, householdId, cancellationToken);
+        var userId = userContextService.GetCurrentUserId();
+        var householdId = userContextService.GetCurrentHouseholdId();
+
+        var notif = await repository.GetByIdAsync(
+            id,
+            userId,
+            householdId,
+            cancellationToken);
+
         if (notif == null) throw new InvalidOperationException("Notification not found");
         notif.IsRead = true;
         notif.ReadAt = DateTime.UtcNow;
@@ -78,10 +86,15 @@ public class NotificationService(
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var householdId = userContextService.GetCurrentHouseholdId()
-    ?? throw new InvalidOperationException(
-        "Användaren tillhör inget hushåll.");
-        var notif = await repository.GetByIdAsync(id, householdId, cancellationToken);
+        var userId = userContextService.GetCurrentUserId();
+        var householdId = userContextService.GetCurrentHouseholdId();
+
+        var notif = await repository.GetByIdAsync(
+            id,
+            userId,
+            householdId,
+            cancellationToken);
+
         if (notif == null) throw new InvalidOperationException("Notification not found");
         notif.IsDeleted = true;
         await repository.SaveChangesAsync(cancellationToken);
