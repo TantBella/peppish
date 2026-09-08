@@ -1,23 +1,32 @@
-import { apiClient } from './apiClient'
+import { apiClient } from "./apiClient";
+
+export interface HouseholdMember {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  householdId?: string;
+}
 
 export interface Household {
-  id: string
-  name: string
+  id: string;
+  name: string;
+  users: HouseholdMember[];
 }
 
 export const householdServiceApi = {
   getHouseholds: async (): Promise<Household[]> => {
-    const res = await apiClient.get('/households')
-    return res.data as Household[]
+    const res = await apiClient.get("/households");
+    return res.data as Household[];
   },
 
   getHouseholdById: async (id: string): Promise<Household | undefined> => {
-    const res = await apiClient.get(`/households/${id}`)
-    return res.data as Household
+    const res = await apiClient.get(`/households/${id}`);
+    return res.data as Household;
   },
 
   createHousehold: async (name: string): Promise<Household> => {
-    const res = await apiClient.post('/households', { name })
-    return res.data as Household
+    const res = await apiClient.post("/households", { name });
+    return res.data as Household;
   },
-}
+};
