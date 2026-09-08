@@ -36,9 +36,6 @@ export const HouseholdManagementPage = () => {
   const [creatingCode, setCreatingCode] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  console.log("User:", user);
-  console.log("Household ID:", user?.householdId);
-
   useEffect(() => {
     const loadRequests = async () => {
       try {
@@ -158,18 +155,20 @@ export const HouseholdManagementPage = () => {
                   <div>Roll: {request.role}</div>
                 </div>
                 <div>
-
-                <button
-                  type="button"
-                  onClick={() => approveRequest(request.id)}
+                  <button
+                    type="button"
+                    onClick={() => approveRequest(request.id)}
                   >
-                  Godkänn
-                </button>
+                    Godkänn
+                  </button>
 
-                <button type="button" onClick={() => rejectRequest(request.id)}>
-                  Neka
-                </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => rejectRequest(request.id)}
+                  >
+                    Neka
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
