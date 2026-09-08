@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormErrors {
   name?: string;
@@ -12,6 +12,7 @@ type RegisterStep = "account" | "role" | "household" | "confirmation";
 type Role = "ADULT" | "CHILD";
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<RegisterStep>("account");
 
   const [name, setName] = useState("");
@@ -202,6 +203,10 @@ export const RegisterPage = () => {
 
     if (registered) {
       setStep("confirmation");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     }
   };
 
@@ -220,6 +225,10 @@ export const RegisterPage = () => {
 
     if (joined) {
       setStep("confirmation");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     }
   };
 
@@ -526,6 +535,13 @@ export const RegisterPage = () => {
                 </p>
               </>
             )}
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => navigate("/")}
+            >
+              Till startsidan
+            </button>
           </>
         )}
       </div>

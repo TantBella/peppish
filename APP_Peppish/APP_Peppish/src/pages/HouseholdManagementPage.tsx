@@ -1,71 +1,162 @@
-import { useEffect, useState } from 'react'
-import { householdService } from '../services/householdService'
-import { userService } from '../services/userService'
-import { useAuth } from '../context/AuthContext'
+import { useEffect, useState } from "react";
+
+import { useAuth } from "../context/AuthContext";
+
+import { householdJoinRequestServiceApi } from "../services/householdJoinRequestService.api";
+
+import Loading from "../components/Loading";
+
+interface JoinRequest {
+  id: string;
+  userId: string;
+  displayName: string;
+  email: string;
+  role: string;
+  householdId: string;
+  createdAt: string;
+  status: string;
+}
+
+interface JoinCode {
+  code: string;
+  expiresAt: string;
+}
 
 export const HouseholdManagementPage = () => {
-  const { user } = useAuth()
-  const [households, setHouseholds] = useState<any[]>([])
-  const [users, setUsers] = useState<any[]>([])
-  const [name, setName] = useState('')
-  const [selectedHousehold, setSelectedHousehold] = useState('')
+  const { user } = useAuth();
+
+  const [requests, setRequests] = useState<JoinRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [joinCode, setJoinCode] = useState<JoinCode | null>(null);
+  const [creatingCode, setCreatingCode] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    householdService.getHouseholds().then((h) => setHouseholds(h))
-    userService.getUsers().then((u) => setUsers(u))
-  }, [])
+    const loadRequests = async () => {
+      try {
+        const data = await householdJoinRequestServiceApi.getPendingRequests();
 
-  const createHousehold = async () => {
-    if (!name.trim()) return
-    const h = await householdService.createHousehold(name.trim())
-    setHouseholds((p) => [h, ...p])
-    setName('')
+        setRequests(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      loadRequests();
+    }
+  }, [user]);
+
+  const createJoinCode = async () => {
+    setCreatingCode(true);
+    setCopied(false);
+
+    try {
+      const data = await householdJoinRequestServiceApi.createJoinCode();
+
+      setJoinCode(data);
+    } finally {
+      setCreatingCode(false);
+    }
+  };
+
+  const copyJoinCode = async () => {
+    if (!joinCode) return;
+
+    await navigator.clipboard.writeText(joinCode.code);
+    setCopied(true);
+  };
+
+  const approveRequest = async (requestId: string) => {
+    await householdJoinRequestServiceApi.approveRequest(requestId);
+
+    setRequests((prev) => prev.filter((request) => request.id !== requestId));
+  };
+
+  const rejectRequest = async (requestId: string) => {
+    await householdJoinRequestServiceApi.rejectRequest(requestId);
+
+    setRequests((prev) => prev.filter((request) => request.id !== requestId));
+  };
+
+  if (!user) {
+    return <div>Du måste vara inloggad.</div>;
   }
 
-  const assignUser = async (userId: string) => {
-    if (!selectedHousehold) return
-    await userService.updateUser(userId, { householdId: selectedHousehold })
-    const u = await userService.getUsers()
-    setUsers(u)
+  if (loading) {
+    return <Loading message="Laddar hushåll..." />;
   }
-
-  if (!user) return <div>Please login</div>
 
   return (
     <div className="household-page">
-      <h1>Household Management</h1>
+      <h1>Hushåll</h1>
 
-      <section className="create-household">
-        <h2>Create household</h2>
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Household name" />
-        <button onClick={createHousehold}>Create</button>
+      <section>
+        <h2>Bjud in medlem</h2>
+
+        <button type="button" onClick={createJoinCode} disabled={creatingCode}>
+          {creatingCode ? "Skapar kod..." : "Bjud in medlem till hushåll"}
+        </button>
       </section>
 
-      <section className="household-list">
-        <h2>Households</h2>
-        <ul>
-          {households.map((h) => (
-            <li key={h.id}>{h.name} ({h.id})</li>
-          ))}
-        </ul>
+      <section>
+        <h2>Förfrågningar om att gå med</h2>
+
+        {requests.length === 0 ? (
+          <p>Det finns inga väntande förfrågningar.</p>
+        ) : (
+          <ul>
+            {requests.map((request) => (
+              <li key={request.id}>
+                <div>
+                  <strong>{request.displayName}</strong>
+                  <div>{request.email}</div>
+                  <div>Roll: {request.role}</div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => approveRequest(request.id)}
+                >
+                  Godkänn
+                </button>
+
+                <button type="button" onClick={() => rejectRequest(request.id)}>
+                  Neka
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <section className="assign-users">
-        <h2>Assign user to household</h2>
-        <select value={selectedHousehold} onChange={(e) => setSelectedHousehold(e.target.value)}>
-          <option value="">Select household</option>
-          {households.map((h) => (<option key={h.id} value={h.id}>{h.name}</option>))}
-        </select>
+      {joinCode && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>Bjud in medlem</h2>
 
-        <div className="users-list">
-          {users.map((u) => (
-            <div key={u.id} className="user-row">
-              <span>{u.name || u.email} - {u.householdId || 'No household'}</span>
-              <button onClick={() => assignUser(u.id)}>Assign</button>
+            <p>Ge den här koden till personen som ska gå med:</p>
+
+            <div>
+              <strong>{joinCode.code}</strong>
+
+              <button type="button" onClick={copyJoinCode}>
+                {copied ? "Kopierad!" : "Kopiera"}
+              </button>
             </div>
-          ))}
+
+            <p>
+              Koden gäller till:{" "}
+              {new Date(joinCode.expiresAt).toLocaleString("sv-SE")}
+            </p>
+
+            <button type="button" onClick={() => setJoinCode(null)}>
+              Stäng
+            </button>
+          </div>
         </div>
-      </section>
+      )}
     </div>
-  )
-}
+  );
+};

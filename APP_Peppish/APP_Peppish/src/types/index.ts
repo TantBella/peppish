@@ -1,4 +1,4 @@
-export type Role = "Adult" | "Child";
+export type Role = "ADULT" | "CHILD";
 
 export type ChoreStatus = "Pending" | "Completed" | "Approved";
 
