@@ -70,6 +70,31 @@
   max-width: 220px;
 }
 
+.notification-time {
+  margin-top: 1rem;
+}
+
 .notification-actions button {
   margin-left: 8px;
+}
+
+.notification-actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.notification-actions img {
+  background: transparent;
+  border: none;
+  max-width: 20px;
+}
+
+.notification-actions button {
+  background: var(--bg);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.029);
+  max-width: 40px;
+  padding: 0.5rem;
 }

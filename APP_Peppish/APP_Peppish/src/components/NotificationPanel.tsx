@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../hooks/useNotifications";
+import check_icon from "../assets/icons/check_icon.png";
+import trashbin_icon from "../assets/icons/trashbin_icon.png";
 
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -76,7 +78,7 @@ export const NotificationPanel: React.FC = () => {
             <strong>Notiser</strong>
           </div>
           <div className="notification-list">
-            {isLoading && <div className="notification-empty">Loading...</div>}
+            {isLoading && <div className="notification-empty">Laddar...</div>}
             {!isLoading && notifications.length === 0 && (
               <div className="notification-empty">Inga notiser just nu</div>
             )}
@@ -87,19 +89,33 @@ export const NotificationPanel: React.FC = () => {
                   className={`notification-item ${n.isRead ? "read" : "unread"}`}
                 >
                   <div className="notification-main">
-                    <div className="notification-type">{n.type}</div>
+                    <div className="notification-type">
+                      {n.type === "HOUSEHOLD_JOIN_REJECTED"
+                        ? "Din förfrågan om att gå med i hushållet har nekats"
+                        : n.type === "HOUSEHOLD_JOIN_APPROVED"
+                          ? "Din förfrågan om att gå med i hushållet har godkänts"
+                          : n.type === "HOUSEHOLD_JOIN_REQUEST"
+                            ? "Ny förfrågan: "
+                            : n.type}
+                    </div>
                     <div className="notification-payload">{n.payload}</div>
                     <div className="notification-time">
-                      {new Date(n.createdAt).toLocaleString()}
+                      {new Date(n.createdAt).toLocaleDateString("sv-SE", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })}
                     </div>
-                  </div>
-                  <div className="notification-actions">
-                    {!n.isRead && (
-                      <button onClick={() => markRead.mutate(n.id)}>
-                        Markera som läst
+                    <div className="notification-actions">
+                      {!n.isRead && (
+                        <button onClick={() => markRead.mutate(n.id)}>
+                          <img src={check_icon} alt="Mark as read" />
+                        </button>
+                      )}
+                      <button onClick={() => remove.mutate(n.id)}>
+                        <img src={trashbin_icon} alt="Delete" />
                       </button>
-                    )}
-                    <button onClick={() => remove.mutate(n.id)}>Radera</button>
+                    </div>
                   </div>
                 </div>
               ))}

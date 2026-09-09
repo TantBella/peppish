@@ -78,7 +78,7 @@ public class NotificationService(
             householdId,
             cancellationToken);
 
-        if (notif == null) throw new InvalidOperationException("Notification not found");
+        if (notif == null) throw new InvalidOperationException("Notis ej funnen");
         notif.IsRead = true;
         notif.ReadAt = DateTime.UtcNow;
         await repository.SaveChangesAsync(cancellationToken);
@@ -95,7 +95,7 @@ public class NotificationService(
             householdId,
             cancellationToken);
 
-        if (notif == null) throw new InvalidOperationException("Notification not found");
+        if (notif == null) throw new InvalidOperationException("Notis ej funnen");
         notif.IsDeleted = true;
         await repository.SaveChangesAsync(cancellationToken);
     }
