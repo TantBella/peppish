@@ -11,7 +11,7 @@ export const authServiceApi = {
     name: string,
     email: string,
     password: string,
-    role: 'adult' | 'child',
+    role: 'ADULT' | 'CHILD',
     householdId?: string
   ): Promise<AuthResponse> => {
     const res = await apiClient.post('/auth/register', { name, email, password, role, householdId })

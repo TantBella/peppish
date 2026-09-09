@@ -83,7 +83,16 @@ export const NoHouseholdPage = () => {
         <h1>Ditt hushåll</h1>
 
         {user?.role === "CHILD" ? (
-          <p>Fyll i koden för ditt hushåll.</p>
+          <>
+            <p>Fyll i koden för ditt hushåll.</p>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => setOption("join")}
+            >
+              Gå med i ett hushåll
+            </button>
+          </>
         ) : (
           <p>Du tillhör inget hushåll ännu. Vad vill du göra?</p>
         )}

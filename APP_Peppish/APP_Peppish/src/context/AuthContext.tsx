@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Role, User } from "../types";
 import { authService } from "../services/authService";
 import { setAuthToken } from "../services/apiClient";
-import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   user: User | null;
@@ -10,13 +9,6 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-}
-
-interface JwtPayload {
-  nameid: string;
-  email: string;
-  unique_name: string;
-  role: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("token", response.token);
 
     const currentUser = await authService?.getCurrentUser();
-
+    console.log("CURRENT USER AFTER LOGIN:", currentUser);
     if (currentUser) {
       setUser(currentUser);
     }
@@ -79,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     localStorage.removeItem("token");
   };
-
+  console.log("AUTH STATE:", { user, token, isLoading });
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}
