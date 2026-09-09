@@ -1,5 +1,5 @@
-import React from 'react'
-import '../styling/skeleton.css'
+import React from "react";
+import "../styling/skeleton.css";
 
 export const Loading: React.FC<{ message?: string }> = ({ message }) => {
   return (
@@ -7,7 +7,7 @@ export const Loading: React.FC<{ message?: string }> = ({ message }) => {
       <div className="spinner" aria-hidden></div>
       {message && <div className="loading-message">{message}</div>}
     </div>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;
