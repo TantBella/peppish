@@ -34,7 +34,12 @@ const Navbar = () => {
         <img src={task} alt="Chores" className="Peppish-logo" />
       </button>
       {user?.role === "ADULT" && (
-        <button onClick={() => navigate("/households")} className="nav-button">
+        <button
+          onClick={() =>
+            navigate(user.householdId ? "/households" : "/no-household")
+          }
+          className="nav-button"
+        >
           Hushåll
         </button>
       )}
