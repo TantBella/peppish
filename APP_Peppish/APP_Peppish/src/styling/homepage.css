@@ -1,8 +1,9 @@
-/* Home Page */
 .home-page {
   min-height: 100vh;
+  padding-bottom: 4rem;
 }
 
+/* HEADER*/
 .home-header {
   padding: 2rem;
   font-size: 1.1rem;
@@ -24,32 +25,65 @@ h1 {
   font-weight: 300;
 }
 
-.home-section {
-  padding: 2rem;
-  /* max-width: 1000px; */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
-  margin: 1rem auto;
-  background-color: #ffffffc9;
+.home-motto {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--accent-3);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  background-color: #fff;
+  min-height: 2.5rem;
+}
+
+.user-summary-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.user-summary-content p {
+  max-width: 200px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* Avatar */
+/* .avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--accent-4);
+  border-radius: 50%;
+  color: var(--muted);
+} */
+
+/* Home Page */
 .user-info > p {
   margin-top: 1rem;
 }
 
 .home-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 3rem;
+  padding: 0.5rem;
 }
 
-.home-content {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
-  background-color: #fff;
-  padding: 1rem;
-  border: #9ac2ec4c solid 2px;
-  border-radius: 15px;
-  margin: 0.5rem;
-  min-height: 2.5rem;
+.home-content-container {
+  padding-bottom: 4rem;
 }
 
 .user-info {
@@ -71,4 +105,21 @@ h1 {
   height: 100%;
   border-radius: 10px;
   transition: width 0.3s ease;
+}
+
+.card-label {
+  text-align: left;
+}
+.progress-card-footer {
+  text-align: center;
+}
+
+.home-content-button {
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1.25rem;
 }

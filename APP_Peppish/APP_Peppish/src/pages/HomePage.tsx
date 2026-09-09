@@ -8,7 +8,7 @@ import { useProgress } from "../hooks/useProgress";
 
 export const HomePage = () => {
   const { user } = useAuth();
-  const { progress, loading, error } = useProgress();
+  const { data: progress, isLoading: loading, error } = useProgress();
   const navigate = useNavigate();
 
   const randomMotto = useMemo(() => {
@@ -28,50 +28,68 @@ export const HomePage = () => {
         </div>
       </header>
 
-      <div className="home-section">
-        <section className="home-card user-summary">
-          <h1>Hej, {user?.name}!</h1>
-          <p> {user?.role === "ADULT" ? "Vuxen" : "Barn"} </p>
-          {/* Avatar, XP och level kommer här */}
-        </section>
-        <p>
-          nån mer typ text här och kanske en bild på sin avatar och så kan man
-          klicka på den för att komma in på en sida som ändrar hur den ser ut
-        </p>
-      </div>
       <div className="home-container">
+        <section className="home-content">
+          <h1>Hej, {user?.name}!</h1>
+          <div className="user-summary-content">
+            <p>
+              {user?.role === "ADULT"
+                ? "Ditt hushåll väntar på dig."
+                : "Dags att samla lite XP!"}
+            </p>
+            <div className="avatar-placeholder">
+              <p>Avatar</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div className="home-container home-content-container">
         <div className="home-content">
-          <section className="home-card">
-            <h2>Din progress</h2> {loading && <p>Laddar progress...</p>}
-            {error}
-            {progress && (
-              <>
-                <p>Level {progress.currentLevel}</p>
-                <p> {progress.currentXp} XP </p>
-                <div className="progress-bar">
-                  <div
-                    className="progress-bar-fill"
-                    style={{ width: `${progress.dailyProgressPercent}%` }}
-                  />
-                </div>
+          <div className="card-label">
+            <p>DIN PROGRESS</p>
+            <h2>Level {progress?.currentLevel ?? 1}</h2>
+          </div>
+
+          <div className="xp-display">
+            <strong>{progress?.currentXp ?? 0}</strong>
+            <span>XP</span>
+          </div>
+          {loading && <p>Laddar progress...</p>}
+          {error && <p>Kunde inte ladda progress.</p>}
+          {progress && (
+            <>
+              <div className="progress-bar">
+                <div
+                  className="progress-bar-fill"
+                  style={{
+                    width: `${progress.dailyProgressPercent}%`,
+                  }}
+                />
+              </div>
+
+              <div className="progress-card-footer">
                 <p>{progress.dailyProgressPercent}% av dagens uppgifter</p>
-              </>
-            )}
-          </section>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="home-content">
+          <h2>Dagens uppgifter</h2>
+          <p>Här ser du vad som behöver göras idag.</p>
+          <p>Du har inga uppgifter ännu.</p>
+        </div>
+
+        <div className="home-content">
+          <h2>Nästa belöning</h2>
         </div>
         <div className="home-content">
-          <p></p>
-        </div>
-        <div className="home-content">
-          <button onClick={() => navigate("/households")}>Mitt hushåll</button>
-        </div>
-        <div className="home-content">
-          <section className="home-card">
-            <h2>Nästa belöning</h2> {/* Nästa reward kommer här */}
-          </section>
-        </div>
-        <div className="home-content">
-          <Link to="/chores">Uppgifter & Sysslor</Link>
+          <h2>Din avatar</h2>
+          <p>Här kan du se och anpassa din avatar.</p>
+          <p>Din avatar kommer att utvecklas tillsammans med din level.</p>
+
+          <Link to="/avatar">Anpassa din avatar</Link>
         </div>
         {user?.role === "ADULT" && (
           <div className="home-content">
@@ -79,7 +97,7 @@ export const HomePage = () => {
           </div>
         )}
         <div className="home-content">
-          <p></p>
+          <button className="home-content-button" onClick={() => navigate("/households")}>Mitt hushåll</button>
         </div>
       </div>
     </div>
