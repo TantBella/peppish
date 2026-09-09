@@ -98,3 +98,9 @@
   max-width: 40px;
   padding: 0.5rem;
 }
+
+.notification-container {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
