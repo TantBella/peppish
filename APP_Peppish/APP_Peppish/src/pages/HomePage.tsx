@@ -43,7 +43,7 @@ export const HomePage = () => {
         <div className="home-content">
           <section className="home-card">
             <h2>Din progress</h2> {loading && <p>Laddar progress...</p>}
-            {error && <p>{error}</p>}
+            {error}
             {progress && (
               <>
                 <p>Level {progress.currentLevel}</p>

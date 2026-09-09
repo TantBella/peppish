@@ -1,11 +1,5 @@
-import {
-  progressServiceApi,
-  AvatarProgress,
-  DailyProgress,
-} from "./progressService.api";
+import { progressServiceApi, UserProgress } from "./progressService.api";
 
-export type { AvatarProgress, DailyProgress };
+export type { UserProgress };
 
-export const progressService = import.meta.env.VITE_API_URL
-  ? progressServiceApi
-  : null;
+export const progressService = progressServiceApi;
