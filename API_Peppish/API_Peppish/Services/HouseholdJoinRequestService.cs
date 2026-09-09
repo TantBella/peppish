@@ -107,7 +107,7 @@ namespace API_Peppish.Services
                     UserId = request.UserId,
                     DisplayName = request.User.DisplayName,
                     Email = request.User.Email ?? string.Empty,
-                    Role = roles.FirstOrDefault() ?? "Adult",
+                    Role = roles.FirstOrDefault() ?? "ADULT",
                     HouseholdId = request.HouseholdId,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status.ToString()

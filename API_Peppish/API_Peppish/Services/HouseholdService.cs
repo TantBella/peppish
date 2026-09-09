@@ -123,7 +123,7 @@ namespace API_Peppish.Services
                     Id = user.Id,
                     Name = user.DisplayName,
                     Email = user.Email ?? string.Empty,
-                    Role = roles.FirstOrDefault() ?? "Adult",
+                    Role = roles.FirstOrDefault() ?? "ADULT",
                     HouseholdId = user.HouseholdId
                 });
             }

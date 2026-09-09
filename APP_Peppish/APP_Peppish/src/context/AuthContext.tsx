@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { Role, User } from "../types";
+import { User } from "../types";
 import { authService } from "../services/authService";
 import { setAuthToken } from "../services/apiClient";
 

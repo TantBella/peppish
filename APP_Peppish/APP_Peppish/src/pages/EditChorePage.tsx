@@ -66,7 +66,7 @@ export const EditChorePage = () => {
       </div>
     );
 
-  if (user?.role !== "Adult") {
+  if (user?.role !== "ADULT") {
     return (
       <div className="error-message">
         Du har inte behörighet att redigera uppgifter.

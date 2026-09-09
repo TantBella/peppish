@@ -36,7 +36,7 @@ namespace API_Peppish.Services
         public string GetCurrentUserRole()
         {
             return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
-                ?? "Adult";
+                ?? "ADULT";
         }
     }
 }

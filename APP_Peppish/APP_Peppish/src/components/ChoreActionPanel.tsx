@@ -27,12 +27,12 @@ export const ChoreActionPanel = ({
 
   const canComplete =
     chore.uiStatus === "Pending" && chore.assignedToUserId === user?.id;
-  const canApprove = chore.uiStatus === "Completed" && user?.role === "Adult";
-  const canEditOrDelete = allowAdminActions && user?.role === "Adult";
+  const canApprove = chore.uiStatus === "Completed" && user?.role === "ADULT";
+  const canEditOrDelete = allowAdminActions && user?.role === "ADULT";
   const canPick =
-    allowPicking && user?.role === "Child" && !chore.assignedToUserId;
+    allowPicking && user?.role === "CHILD" && !chore.assignedToUserId;
   const canSchedule =
-    allowPicking && (user?.role === "Child" || user?.role === "Adult");
+    allowPicking && (user?.role === "CHILD" || user?.role === "ADULT");
 
   const completeMutation = useMutation({
     mutationFn: () => choreInstanceApi.complete(chore.id),
@@ -152,10 +152,10 @@ export const ChoreActionPanel = ({
         {!canComplete && !canApprove && chore.uiStatus !== "Approved" && (
           <div className="status-info">
             Awaiting{" "}
-            {chore.uiStatus === "Completed" ? "adult approval" : "assignment"}
+            {chore.uiStatus === "Completed" ? "ADULT approval" : "assignment"}
           </div>
         )}
-        {allowAdminActions && user?.role === "Adult" && (
+        {allowAdminActions && user?.role === "ADULT" && (
           <div className="assign-section">
             <label>Assign to user ID:</label>
             <input
