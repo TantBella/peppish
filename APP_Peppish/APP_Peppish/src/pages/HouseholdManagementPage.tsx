@@ -89,18 +89,24 @@ export const HouseholdManagementPage = () => {
 
   const approveRequest = async (requestId: string) => {
     await householdJoinRequestServiceApi.approveRequest(requestId);
+
+    const request = requests.find((request) => request.id === requestId);
     setRequests((prev) => prev.filter((request) => request.id !== requestId));
+
     showToast(
-      `Förfrågan för ${user?.name} att gå med i ${householdName} godkänd.`,
+      `Förfrågan för ${request?.displayName} att gå med i ${householdName} godkänd.`,
       "success",
     );
   };
 
   const rejectRequest = async (requestId: string) => {
     await householdJoinRequestServiceApi.rejectRequest(requestId);
+
+    const request = requests.find((request) => request.id === requestId);
     setRequests((prev) => prev.filter((request) => request.id !== requestId));
+
     showToast(
-      `Förfrågan för ${user?.name} att gå med i ${householdName} avvisad.`,
+      `Förfrågan för ${request?.displayName} att gå med i ${householdName} avvisad.`,
       "error",
     );
   };

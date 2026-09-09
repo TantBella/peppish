@@ -159,7 +159,7 @@ export const NoHouseholdPage = () => {
                   setHouseholdName(e.target.value);
                   setError("");
                 }}
-                placeholder="Till exempel Familjen Andersson"
+                placeholder="Till exempel Tatabebes hem"
               />
             </div>
 
