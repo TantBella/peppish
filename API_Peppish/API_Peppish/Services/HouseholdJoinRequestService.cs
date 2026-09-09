@@ -95,7 +95,7 @@ foreach (var householdUser in householdUsers)
             UserId = householdUser.Id,
             HouseholdId = joinCode.HouseholdId,
             Type = "HOUSEHOLD_JOIN_REQUEST",
-            Payload = $"{displayName} vill gå med i hushållet."
+            Payload = $"{displayName} vill gå med i ditt hushåll."
         },
         cancellationToken);
 }
