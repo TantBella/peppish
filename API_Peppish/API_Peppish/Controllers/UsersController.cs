@@ -23,7 +23,7 @@ public class UsersController(
     {
         var userId = userContextService.GetCurrentUserId();
         var user = await userManager.FindByIdAsync(userId);
-        
+
         if (user == null)
             return NotFound(new { error = "User not found" });
 
@@ -33,7 +33,7 @@ public class UsersController(
             Id = user.Id,
             Name = user.DisplayName,
             Email = user.Email ?? string.Empty,
-            Role = roles.FirstOrDefault() ?? "Adult",
+            Role = roles.FirstOrDefault() ?? "ADULT",
             HouseholdId = user.HouseholdId
         });
     }

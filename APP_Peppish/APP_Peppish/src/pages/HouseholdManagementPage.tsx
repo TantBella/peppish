@@ -8,6 +8,7 @@ import {
 import logoImg from "../assets/logo_img.png";
 import { useToast } from "../context/ToastContext";
 import Loading from "../components/Loading";
+import NotificationPanel from "../components/NotificationPanel";
 
 interface JoinRequest {
   id: string;
@@ -113,103 +114,113 @@ export const HouseholdManagementPage = () => {
   }
 
   return (
-    <div className="household-page-container">
-      <h1 className="logo-icon">
-        <img src={logoImg} alt="App logo" />
-        {householdName || "Hushåll"}
-      </h1>
+    <>
+      <header className="header">
+        <h1 className="logo-icon">
+          <img src={logoImg} alt="App logo" />
+          {householdName || "Hushåll"}
+        </h1>
+        <div style={{ position: "absolute", right: 16, top: 16 }}>
+          <NotificationPanel />
+        </div>
+      </header>
+      <div className="household-page-container">
+        <section id="invite-member">
+          <h2>Bjud in en medlem till ditt hushåll: </h2>
+          <button
+            type="button"
+            onClick={createJoinCode}
+            disabled={creatingCode}
+          >
+            {creatingCode ? "Skapar kod..." : "Inbjudningskod"}
+          </button>
+        </section>
 
-      <section id="invite-member">
-        <h2>Bjud in en medlem till ditt hushåll: </h2>
-        <button type="button" onClick={createJoinCode} disabled={creatingCode}>
-          {creatingCode ? "Skapar kod..." : "Inbjudningskod"}
-        </button>
-      </section>
+        <section>
+          <h2>Medlemmar</h2>
 
-      <section>
-        <h2>Medlemmar</h2>
+          {members.length === 0 ? (
+            <p>Det finns inga medlemmar i hushållet.</p>
+          ) : (
+            <div className="household-members">
+              {members.map((member) => (
+                <div className="household-member" key={member.id}>
+                  <div className="household-member-info">
+                    <strong>{member.name}</strong>
+                    <span>{member.email}</span>
+                  </div>
 
-        {members.length === 0 ? (
-          <p>Det finns inga medlemmar i hushållet.</p>
-        ) : (
-          <div className="household-members">
-            {members.map((member) => (
-              <div className="household-member" key={member.id}>
-                <div className="household-member-info">
-                  <strong>{member.name}</strong>
-                  <span>{member.email}</span>
+                  <span className="household-member-role">
+                    {member.role === "ADULT" ? "Vuxen" : "Barn"}
+                  </span>
                 </div>
+              ))}
+            </div>
+          )}
+        </section>
 
-                <span className="household-member-role">
-                  {member.role === "ADULT" ? "Vuxen" : "Barn"}
-                </span>
+        <section>
+          <h2>Förfrågningar att hantera: </h2>
+
+          {requests.length === 0 ? (
+            <p>Det finns inga väntande förfrågningar.</p>
+          ) : (
+            <ul>
+              {requests.map((request) => (
+                <li key={request.id}>
+                  <div>
+                    <strong>{request.displayName}</strong>
+                    <div>{request.email}</div>
+                    <div>Roll: {request.role}</div>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => approveRequest(request.id)}
+                    >
+                      Godkänn
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => rejectRequest(request.id)}
+                    >
+                      Neka
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {joinCode && (
+          <div className="modal-backdrop">
+            <div className="modal">
+              <h2>Bjud in medlem</h2>
+
+              <p>Ge den här koden till personen som ska gå med:</p>
+
+              <div>
+                <strong>{joinCode.code}</strong>
+
+                <button type="button" onClick={copyJoinCode}>
+                  {copied ? "Kopierad!" : "Kopiera"}
+                </button>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
 
-      <section>
-        <h2>Förfrågningar att hantera: </h2>
+              <p>
+                Koden gäller till:{" "}
+                {new Date(joinCode.expiresAt).toLocaleString("sv-SE")}
+              </p>
 
-        {requests.length === 0 ? (
-          <p>Det finns inga väntande förfrågningar.</p>
-        ) : (
-          <ul>
-            {requests.map((request) => (
-              <li key={request.id}>
-                <div>
-                  <strong>{request.displayName}</strong>
-                  <div>{request.email}</div>
-                  <div>Roll: {request.role}</div>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => approveRequest(request.id)}
-                  >
-                    Godkänn
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => rejectRequest(request.id)}
-                  >
-                    Neka
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {joinCode && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h2>Bjud in medlem</h2>
-
-            <p>Ge den här koden till personen som ska gå med:</p>
-
-            <div>
-              <strong>{joinCode.code}</strong>
-
-              <button type="button" onClick={copyJoinCode}>
-                {copied ? "Kopierad!" : "Kopiera"}
+              <button type="button" onClick={() => setJoinCode(null)}>
+                Stäng
               </button>
             </div>
-
-            <p>
-              Koden gäller till:{" "}
-              {new Date(joinCode.expiresAt).toLocaleString("sv-SE")}
-            </p>
-
-            <button type="button" onClick={() => setJoinCode(null)}>
-              Stäng
-            </button>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };

@@ -73,12 +73,12 @@ export const NotificationPanel: React.FC = () => {
           aria-label="Notifications panel"
         >
           <div className="notification-panel-header">
-            <strong>Notifications</strong>
+            <strong>Notiser</strong>
           </div>
           <div className="notification-list">
             {isLoading && <div className="notification-empty">Loading...</div>}
             {!isLoading && notifications.length === 0 && (
-              <div className="notification-empty">No notifications</div>
+              <div className="notification-empty">Inga notiser just nu</div>
             )}
             {!isLoading &&
               notifications.map((n) => (
@@ -96,10 +96,10 @@ export const NotificationPanel: React.FC = () => {
                   <div className="notification-actions">
                     {!n.isRead && (
                       <button onClick={() => markRead.mutate(n.id)}>
-                        Mark read
+                        Markera som läst
                       </button>
                     )}
-                    <button onClick={() => remove.mutate(n.id)}>Delete</button>
+                    <button onClick={() => remove.mutate(n.id)}>Radera</button>
                   </div>
                 </div>
               ))}

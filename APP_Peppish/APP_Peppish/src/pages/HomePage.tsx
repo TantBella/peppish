@@ -20,7 +20,7 @@ export const HomePage = () => {
 
         <p className="home-motto">{randomMotto}</p>
 
-        <div style={{ position: 'absolute', right: 16, top: 16 }}>
+        <div style={{ position: "absolute", right: 16, top: 16 }}>
           <NotificationPanel />
         </div>
       </header>
@@ -29,8 +29,8 @@ export const HomePage = () => {
         <h1>Välkommen, {user?.name}!</h1>
         <div className="user-info">
           <p>
-            <strong>Hushållsroll:</strong>
-            {user?.role === "adult" ? "Adult" : "Child"}
+            <strong>Hushållsroll: </strong>
+            {user?.role === "ADULT" ? "vuxen" : "barn"}
           </p>
           <p>
             nån mer typ text här och kanske en bild på sin avatar och så kan man
@@ -54,7 +54,7 @@ export const HomePage = () => {
         <div className="home-content">
           <Link to="/chores">Uppgifter & Sysslor</Link>
         </div>
-        {user?.role === "adult" && (
+        {user?.role === "ADULT" && (
           <div className="home-content">
             <Link to="/chores/new">Skapa ny uppgift</Link>
           </div>

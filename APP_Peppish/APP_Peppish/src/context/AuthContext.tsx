@@ -1,22 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { Role, User } from "../types";
+import { User } from "../types";
 import { authService } from "../services/authService";
 import { setAuthToken } from "../services/apiClient";
-import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
-}
-
-interface JwtPayload {
-  nameid: string;
-  email: string;
-  unique_name: string;
-  role: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,23 +46,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadUser();
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<User> => {
     const response = await authService?.login(email, password);
-    if (!response?.token) throw new Error("No token returned from login");
 
-    const decoded = jwtDecode<JwtPayload>(response.token);
-
-    const user: User = {
-      id: decoded.nameid,
-      name: decoded.unique_name,
-      email: decoded.email,
-      role: decoded.role as Role,
-    };
+    if (!response?.token) {
+      throw new Error("No token returned from login");
+    }
 
     setToken(response.token);
     setAuthToken(response.token);
-    setUser(user);
     localStorage.setItem("token", response.token);
+
+    const currentUser = await authService?.getCurrentUser();
+    if (!currentUser) {
+      throw new Error("Kunde inte hämta användaren efter inloggning");
+    }
+
+    setUser(currentUser);
+    return currentUser;
   };
 
   const logout = (): void => {
@@ -80,7 +73,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     localStorage.removeItem("token");
   };
-
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}

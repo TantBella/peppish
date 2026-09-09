@@ -7,6 +7,7 @@
 @import "./styling/rewards.css";
 @import "./styling/toast.css";
 @import "./styling/householdmanagement.css";
+@import "./styling/notifications.css";
 
 * {
   margin: 0;
@@ -55,19 +56,16 @@ body {
   font-size: 1.2rem;
   color: #777;
 }
-h1 {
-  text-transform: capitalize;
-}
 
 .logo-icon {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .logo-icon img {
   max-height: 3.5rem;
-  margin-right: 1.5rem;
+  margin-right: 0.5rem;
 }
 /* Alerts */
 .alert {
@@ -80,4 +78,48 @@ h1 {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+h1 {
+  text-transform: capitalize;
+}
+
+/* buttons */
+button {
+  flex: 1;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 30px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  max-width: 350px;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+button:hover {
+  transform: scale(1.08);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem 3rem 0 3rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  width: 100vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

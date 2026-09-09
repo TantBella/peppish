@@ -24,12 +24,14 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default);
     }
 
-    public class HouseholdJoinRequestService(
+public class HouseholdJoinRequestService(
     IHouseholdJoinRequestRepository joinRequestRepository,
     IJoinCodeRepository joinCodeRepository,
-    IUserContextService userContextService,
+    IHouseholdRepository householdRepository,
     UserManager<ApplicationUser> userManager,
-    INotificationService notificationService) : IHouseholdJoinRequestService
+    IUserContextService userContextService,
+    INotificationService notificationService)
+        : IHouseholdJoinRequestService
     {
         public async Task CreateJoinRequestAsync(
             string userId,
@@ -67,20 +69,38 @@ namespace API_Peppish.Services
                     "Du har redan en väntande förfrågan till detta hushåll.");
             }
 
-            var request = new HouseholdJoinRequest
-            {
-                UserId = userId,
-                HouseholdId = joinCode.HouseholdId,
-                JoinCodeId = joinCode.Id,
-                Status = JoinRequestStatus.Pending
-            };
+          var request = new HouseholdJoinRequest
+{
+    UserId = userId,
+    HouseholdId = joinCode.HouseholdId,
+    JoinCodeId = joinCode.Id,
+    Status = JoinRequestStatus.Pending
+};
 
-            await joinRequestRepository.AddAsync(
-                request,
-                cancellationToken);
+await joinRequestRepository.AddAsync(request, cancellationToken);
 
-            await joinRequestRepository.SaveChangesAsync(
-                cancellationToken);
+var householdUsers = await householdRepository.GetUsersAsync(
+    joinCode.HouseholdId,
+    cancellationToken);
+
+var requestingUser = await userManager.FindByIdAsync(userId);
+
+var displayName = requestingUser?.DisplayName ?? "En användare";
+
+foreach (var householdUser in householdUsers)
+{
+    await notificationService.CreateNotificationAsync(
+        new CreateNotificationRequest
+        {
+            UserId = householdUser.Id,
+            HouseholdId = joinCode.HouseholdId,
+            Type = "HOUSEHOLD_JOIN_REQUEST",
+            Payload = $"{displayName} vill gå med i hushållet."
+        },
+        cancellationToken);
+}
+
+await joinRequestRepository.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
@@ -107,7 +127,7 @@ namespace API_Peppish.Services
                     UserId = request.UserId,
                     DisplayName = request.User.DisplayName,
                     Email = request.User.Email ?? string.Empty,
-                    Role = roles.FirstOrDefault() ?? "Adult",
+                    Role = roles.FirstOrDefault() ?? "ADULT",
                     HouseholdId = request.HouseholdId,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status.ToString()

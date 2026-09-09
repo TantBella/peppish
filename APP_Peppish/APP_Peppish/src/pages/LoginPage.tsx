@@ -46,8 +46,13 @@ export const LoginPage = () => {
     setErrors({});
 
     try {
-      await login(email, password);
-      navigate("/");
+      const currentUser = await login(email, password);
+
+      if (currentUser.householdId) {
+        navigate("/");
+      } else {
+        navigate("/no-household");
+      }
     } catch (err: any) {
       const msg = err?.message || "Inloggning misslyckades. Försök igen.";
       setErrors({ submit: msg });
