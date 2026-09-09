@@ -32,9 +32,7 @@ export const RewardComponent = () => {
   return (
     <>
       <div className="rewards-container">
-        <h1 className="logo-icon">
-          <img src={logoImg} alt="App logo" /> Belöningar{" "}
-        </h1>
+        <h1>Belöningar </h1>
         {balance && (
           <div className="balance-section">
             <div className="balance-cards">
@@ -42,7 +40,7 @@ export const RewardComponent = () => {
                 <div className="balance-label">Intjänat: </div>
                 <div className="balance-value">🤑 </div>{" "}
                 <div className="balance-value">
-                  {balance.totalMoney.toFixed(2)}
+                  {/* {balance.totalMoney.toFixed(2)} */}
                 </div>
               </div>
               <div className="balance-card progress">

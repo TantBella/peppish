@@ -179,7 +179,7 @@ export const HouseholdManagementPage = () => {
                     <div>
                       <strong>{request.displayName}</strong>
                       <div>{request.email}</div>
-                      <div>Roll: {request.role}</div>
+                      <div> {request.role === "ADULT" ? "Vuxen" : "Barn"}</div>
                     </div>
 
                     <div>

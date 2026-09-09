@@ -5,6 +5,8 @@ import { choreTemplateApi } from "../services/choreService.api";
 import { useAuth } from "../context/AuthContext";
 import { useChore } from "../hooks/useChores";
 import Loading from "../components/Loading";
+import { NotificationPanel } from "../components/NotificationPanel";
+import logoImg from "../assets/logo_img.png";
 
 export const EditChorePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -75,82 +77,94 @@ export const EditChorePage = () => {
   }
 
   return (
-    <div className="edit-chore-page">
-      <h1>Ändra uppgift</h1>
-      {formError && <div className="error-message">{formError}</div>}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          updateMutation.mutate();
-        }}
-      >
-        <div className="form-group">
-          <label htmlFor="title">Titel</label>
-          <input
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+    <>
+      <header className="header">
+        <h1 className="logo-icon">
+          <img src={logoImg} alt="App logo" />
+          Dina quests
+        </h1>
+        <div style={{ position: "absolute", right: 16, top: 16 }}>
+          <NotificationPanel />
         </div>
-        <div className="form-group">
-          <label htmlFor="description">Beskrivning</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div className="form-row">
+      </header>
+      <h1>Skapa uppgiftsmall</h1>
+      <div className="edit-chore-page">
+        <h1>Ändra uppgift</h1>
+        {formError && <div className="error-message">{formError}</div>}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateMutation.mutate();
+          }}
+        >
           <div className="form-group">
-            <label htmlFor="recurrence">Upprepning</label>
-            <select
-              id="recurrence"
-              value={recurrence}
-              onChange={(e) => setRecurrence(e.target.value)}
+            <label htmlFor="title">Titel</label>
+            <input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Beskrivning</label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="recurrence">Upprepning</label>
+              <select
+                id="recurrence"
+                value={recurrence}
+                onChange={(e) => setRecurrence(e.target.value)}
+              >
+                <option value="Daily">Dagligen</option>
+                <option value="Weekly">Veckovis</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="rewardAmount">Belöning (kr)</label>
+              <input
+                id="rewardAmount"
+                type="number"
+                value={rewardAmount}
+                onChange={(e) => setRewardAmount(Number(e.target.value))}
+                min={0}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="rewardPoints">Poäng</label>
+              <input
+                id="rewardPoints"
+                type="number"
+                value={rewardPoints}
+                onChange={(e) => setRewardPoints(Number(e.target.value))}
+                min={0}
+              />
+            </div>
+          </div>
+          <div className="form-actions">
+            <button
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="btn-primary"
             >
-              <option value="Daily">Dagligen</option>
-              <option value="Weekly">Veckovis</option>
-            </select>
+              {updateMutation.isPending ? "Sparar..." : "Spara ändringar"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => navigate("/chores")}
+            >
+              Avbryt
+            </button>
           </div>
-          <div className="form-group">
-            <label htmlFor="rewardAmount">Belöning (kr)</label>
-            <input
-              id="rewardAmount"
-              type="number"
-              value={rewardAmount}
-              onChange={(e) => setRewardAmount(Number(e.target.value))}
-              min={0}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="rewardPoints">Poäng</label>
-            <input
-              id="rewardPoints"
-              type="number"
-              value={rewardPoints}
-              onChange={(e) => setRewardPoints(Number(e.target.value))}
-              min={0}
-            />
-          </div>
-        </div>
-        <div className="form-actions">
-          <button
-            type="submit"
-            disabled={updateMutation.isPending}
-            className="btn-primary"
-          >
-            {updateMutation.isPending ? "Sparar..." : "Spara ändringar"}
-          </button>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => navigate("/chores")}
-          >
-            Avbryt
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 };

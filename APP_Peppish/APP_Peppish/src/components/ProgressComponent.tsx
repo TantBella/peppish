@@ -31,9 +31,7 @@ export const ProgressComponent = () => {
 
   return (
     <div className="progress-container">
-      <h1 className="logo-icon">
-        <img src={logoImg} alt="App logo" /> Din XP
-      </h1>
+      <h1>Din XP</h1>
 
       {avatar && (
         <div className="avatar-section">
