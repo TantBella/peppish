@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { householdServiceApi } from "../services/householdService.api";
+import { notificationService } from "../services/notificationService";
 import { useAuth } from "../context/AuthContext";
 
 export const NoHouseholdPage = () => {
@@ -14,8 +15,36 @@ export const NoHouseholdPage = () => {
 
   const [householdName, setHouseholdName] = useState("");
   const [householdCode, setHouseholdCode] = useState("");
+  const [rejectedMessage, setRejectedMessage] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadRejectedNotification = async () => {
+      if (!user) return;
+
+      try {
+        const notifications = await notificationService?.getNotifications();
+
+        const rejectedNotification = notifications?.find(
+          (notification) =>
+            notification.type === "HOUSEHOLD_JOIN_REJECTED" &&
+            !notification.isRead,
+        );
+
+        if (rejectedNotification) {
+          setRejectedMessage(
+            "Din förfrågan om att gå med i hushållet har nekats. Be om en ny hushållskod och skicka en ny förfrågan.",
+          );
+        }
+      } catch (error) {
+        console.error("Kunde inte hämta notiser:", error);
+      }
+    };
+
+    loadRejectedNotification();
+  }, [user]);
 
   const createHousehold = async () => {
     if (!householdName.trim()) {
@@ -81,7 +110,7 @@ export const NoHouseholdPage = () => {
     <div className="login-container">
       <div className="login-card">
         <h1>Ditt hushåll</h1>
-
+        {rejectedMessage && <div className="error-text">{rejectedMessage}</div>}
         {user?.role === "CHILD" ? (
           <>
             <p>Fyll i koden för ditt hushåll.</p>

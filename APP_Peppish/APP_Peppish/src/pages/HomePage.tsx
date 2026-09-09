@@ -29,7 +29,7 @@ export const HomePage = () => {
         <h1>Välkommen, {user?.name}!</h1>
         <div className="user-info">
           <p>
-            <strong>Hushållsroll:</strong>
+            <strong>Hushållsroll: </strong>
             {user?.role === "ADULT" ? "vuxen" : "barn"}
           </p>
           <p>

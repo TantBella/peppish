@@ -5,25 +5,29 @@ using Microsoft.EntityFrameworkCore;
 namespace API_Peppish.Repositories
 {
     public interface IHouseholdRepository
-    {
-        Task<Household?> GetByIdAsync(
-            Guid householdId,
-            CancellationToken cancellationToken = default);
+{
+    Task<Household?> GetByIdAsync(
+        Guid householdId,
+        CancellationToken cancellationToken = default);
 
-        Task<List<Household>> GetAllAsync(
-            CancellationToken cancellationToken = default);
+    Task<List<Household>> GetAllAsync(
+        CancellationToken cancellationToken = default);
 
-        Task<Household?> GetByNameAsync(
-            string name,
-            CancellationToken cancellationToken = default);
+    Task<List<ApplicationUser>> GetUsersAsync(
+        Guid householdId,
+        CancellationToken cancellationToken = default);
 
-        Task<Household> CreateAsync(
-            Household household,
-            CancellationToken cancellationToken = default);
+    Task<Household?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken = default);
 
-        Task SaveChangesAsync(
-            CancellationToken cancellationToken = default);
-    }
+    Task<Household> CreateAsync(
+        Household household,
+        CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(
+        CancellationToken cancellationToken = default);
+}
 
     public class HouseholdRepository(AppDbContext context)
         : IHouseholdRepository
@@ -37,12 +41,21 @@ namespace API_Peppish.Repositories
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<List<Household>> GetAllAsync(
-            CancellationToken cancellationToken = default)
-        {
-            return await context.Households
-                .ToListAsync(cancellationToken);
-        }
+    public async Task<List<Household>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+      return await context.Households
+          .ToListAsync(cancellationToken);
+    }
+
+        public async Task<List<ApplicationUser>> GetUsersAsync(
+    Guid householdId,
+    CancellationToken cancellationToken = default)
+{
+    return await context.Users
+        .Where(u => u.HouseholdId == householdId)
+        .ToListAsync(cancellationToken);
+}
 
         public async Task<Household?> GetByNameAsync(
             string name,

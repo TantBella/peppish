@@ -17,6 +17,7 @@
   background: var(--surface);
   border: 1px solid var(--accent-1);
   border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .household-page-container section h2 {
