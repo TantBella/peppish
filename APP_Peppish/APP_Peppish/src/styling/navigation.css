@@ -2,10 +2,11 @@
 .main-nav {
   position: fixed;
   bottom: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
+  justify-content: space-around;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; */
   width: 100vw;
-
 }
 
 .nav-button {
@@ -14,7 +15,6 @@
   cursor: pointer;
   transition: all 0.2s;
   border: none;
-
 }
 
 .nav-button > img {

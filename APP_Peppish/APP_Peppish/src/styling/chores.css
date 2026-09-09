@@ -1,166 +1,367 @@
-/* Chore List Page */
+/* =========================================================
+   PEPPISH - HOMEPAGE
+   Mobile first
+   ========================================================= */
 
-.chore-card {
+.home-page {
+  min-height: 100vh;
+  padding-bottom: 2rem;
+  color: var(--text);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.home-header {
+  position: relative;
+  width: 100%;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.Peppish-logo {
+  display: block;
+  width: auto;
+  height: 100px;
+  margin: 0 auto 0.75rem;
+}
+
+.home-motto {
+  max-width: 500px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.notification-container {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+/* =========================================================
+   GENERELLA KORT
+   ========================================================= */
+
+.home-card {
   background: white;
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 0.9rem;
   box-shadow: none;
-  transition: all 0.2s ease;
-  margin-bottom: 1rem;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.chore-card:hover {
+.home-card:hover {
   transform: translateY(-2px);
   border-color: #ddd;
 }
 
-
-.chore-card.status-available {
-     background: linear-gradient(
-    135deg,
-    var(--accent-5),
-    var(--accent-2)
-  );
-  border-left: 4px solid #073d7f;
+.home-card h2 {
+  margin-bottom: 1rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-.chore-card.status-pending {
-  /* background: #fff7ed6b; */
-    background: linear-gradient(
-    135deg,
-    var(--accent-2),
-    var(--accent-1)
-  );
-  border-left: 4px solid #c2410c;
+.home-card p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
-.chore-card.status-completed {
-      background: linear-gradient(
-    135deg,
-    var(--accent-1),
-    var(--accent-4)
-  );
+/* =========================================================
+   VÄLKOMSTSEKTION
+   ========================================================= */
+
+.user-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin: 1rem;
+  padding: 1.25rem;
+
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.user-summary-text {
+  flex: 1;
+}
+
+.user-summary-text h1 {
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.user-summary-text p {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.user-summary-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   AVATAR PLACEHOLDER
+   ========================================================= */
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 75px;
+  height: 75px;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, var(--accent-3), var(--accent-4));
+
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   HUVUDINNEHÅLL
+   ========================================================= */
+
+.home-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  margin: 0 1rem;
+}
+
+.home-content {
+  width: 100%;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress-card {
+  background: linear-gradient(135deg, var(--accent-5), var(--accent-2));
+
   border-left: 4px solid #9d82ed;
 }
 
-.chore-card.status-approved {
-     background: linear-gradient(
-    135deg,
-    var(--accent-3),
-    var(--accent-4)
-  );
-  border-left: 4px solid #16a34a;
-}
+.progress-card > p:first-child {
+  margin-bottom: 0.5rem;
 
-.status-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  margin: 0.5rem 0;
-  border-radius: 999px;
-
-  font-weight: 500;
-
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-
-.status-pending .status-badge {
-  background: #fff7ed;
-  color: #c2410c;
-  border-color: #fed7aa;
-  padding: 0.5rem;
-}
-
-.status-completed .status-badge {
-  background: #ecfeff;
-  color: #0891b2;
-  border-color: #a5f3fc;
-  padding: 0.5rem;
-}
-
-.status-approved .status-badge {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #16a34a;
-  padding: 0.5rem;
-}
-
-.chore-header h3 {
-  font-size: 0.95rem;
+  color: var(--text);
+  font-size: 0.7rem;
   font-weight: 600;
-margin-bottom: 1rem;
+  letter-spacing: 1.5px;
+}
+
+.progress-card h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.3rem;
+}
+
+.progress-card > p {
   color: var(--text);
 }
 
-.chore-description {
-  font-size: 0.85rem;
-  color: var(--muted);
-margin: 1rem 0;
+.progress-bar {
+  width: 100%;
+  height: 12px;
 
+  margin: 1rem 0 0.5rem;
+
+  background-color: rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  overflow: hidden;
 }
 
-.reward-badge,
-.assigned-badge {
+.progress-bar-fill {
+  height: 100%;
+
+  background: var(--accent-3);
+  border-radius: 999px;
+
+  transition: width 0.3s ease;
+}
+
+/* =========================================================
+   DAGENS UPPGIFTER
+   ========================================================= */
+
+.home-content:nth-child(2) .home-card {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent-1));
+
+  border-left: 4px solid #c2410c;
+}
+
+.home-content:nth-child(2) .home-card p + p {
+  margin-top: 0.75rem;
+}
+
+/* =========================================================
+   NÄSTA BELÖNING
+   ========================================================= */
+
+.home-content:nth-child(3) .home-card {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-4));
+
+  border-left: 4px solid #9d82ed;
+}
+
+.home-content:nth-child(3) .home-card p + p {
+  margin-top: 0.75rem;
+}
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.home-content:nth-child(4) .home-card {
+  background: linear-gradient(135deg, var(--accent-3), var(--accent-4));
+
+  border-left: 4px solid #16a34a;
+}
+
+.home-content:nth-child(4) .home-card p + p {
+  margin-top: 0.75rem;
+}
+
+.home-content:nth-child(4) .home-card a {
+  display: inline-block;
+
+  margin-top: 1rem;
+  padding: 0.55rem 1rem;
+
   background: var(--surface);
   border: 1px solid var(--border);
-  color: var(--muted);
   border-radius: 999px;
-}
 
-.reward-badge {
-  font-size: 1.25rem;
-  padding: 0.25rem 0.5rem;
-  
-}
-
-.assigned-badge {
-  margin: 1rem;
-  padding: 0.4rem 0.5rem;
-}
-
-.btn-complete,
-.btn-approve {
-  padding: 0.5rem 0.9rem;
-
-  border-radius: 10px;
-  border: 1px solid var(--border);
-
-  font-size: 0.85rem;
+  color: var(--text);
+  font-size: 0.8rem;
   font-weight: 500;
+  text-decoration: none;
 
-  cursor: pointer;
-
-  transition: all 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.btn-complete {
-  background: #ecfeff;
-  color: #0891b2;
+.home-content:nth-child(4) .home-card a:hover {
+  transform: translateY(-1px);
+  border-color: #ddd;
 }
 
-.btn-complete:hover:not(:disabled) {
-  background: #cffafe;
+/* =========================================================
+   HUSHÅLL
+   ========================================================= */
+
+.home-content:nth-child(5) .home-card {
+  background: var(--surface);
+  border-left: 4px solid var(--accent-3);
 }
 
-.btn-approve {
-  background: #f0fdf4;
-  color: #16a34a;
+/* =========================================================
+   TABLET / DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+  .home-page {
+    padding-bottom: 3rem;
+  }
+
+  .home-header {
+    padding: 2rem;
+  }
+
+  .Peppish-logo {
+    height: 120px;
+  }
+
+  .home-motto {
+    font-size: 0.9rem;
+  }
+
+  .user-summary {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+
+  .user-summary-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .avatar-placeholder {
+    width: 90px;
+    height: 90px;
+  }
+
+  .home-container {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .home-content {
+    margin: 0;
+  }
+
+  /*
+    Progress får större plats
+  */
+  .home-content:first-child {
+    grid-column: span 2;
+  }
+
+  /*
+    Hushållskortet får hela bredden
+    när det finns för vuxna
+  */
+  .home-content:nth-child(5) {
+    grid-column: span 2;
+  }
 }
 
-.btn-approve:hover:not(:disabled) {
-  background: #dcfce7;
-}
+/* =========================================================
+   STÖRRE SKÄRM
+   ========================================================= */
 
-.no-chores{
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  padding: 1rem;
-}
+@media (min-width: 1100px) {
+  .user-summary {
+    max-width: 1100px;
+  }
 
-.no-chores p{
-  font-size: 1.25rem;
+  .home-container {
+    max-width: 1100px;
+  }
 
+  .home-card {
+    padding: 1.1rem;
+  }
+
+  .home-card h2 {
+    font-size: 1.05rem;
+  }
 }
