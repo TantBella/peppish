@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadUser();
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<User> => {
     const response = await authService?.login(email, password);
 
     if (!response?.token) {
@@ -58,10 +58,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("token", response.token);
 
     const currentUser = await authService?.getCurrentUser();
-    console.log("CURRENT USER AFTER LOGIN:", currentUser);
-    if (currentUser) {
-      setUser(currentUser);
+    if (!currentUser) {
+      throw new Error("Kunde inte hämta användaren efter inloggning");
     }
+
+    setUser(currentUser);
+    return currentUser;
   };
 
   const logout = (): void => {
@@ -71,7 +73,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     localStorage.removeItem("token");
   };
-  console.log("AUTH STATE:", { user, token, isLoading });
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}
