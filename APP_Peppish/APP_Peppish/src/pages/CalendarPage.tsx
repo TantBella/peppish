@@ -14,6 +14,7 @@ import Loading from "../components/Loading";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useChoreCalendar, ViewMode } from "../hooks/useChoreCalendar";
+import { NotificationPanel } from "../components/NotificationPanel";
 
 export const CalendarPage = () => {
   const { user } = useAuth();
@@ -55,73 +56,79 @@ export const CalendarPage = () => {
   const expandedChore = chores.find((c) => c.id === expandedChoreId) || null;
 
   return (
-    <div className="calendar-list-container">
-      <h1 className="logo-icon">
-        <img src={logoImg} alt="App logo" />
-        Dina quests
-      </h1>
-
-      <CalendarTabs
-        viewMode={viewMode}
-        selectedDate={selectedDate}
-        setViewMode={setViewMode}
-        weekOffset={0}
-        setSelectedDate={setSelectedDate}
-      />
-
-      {viewMode === "week" && (
-        <WeekCalendarGrid
-          weekDates={weekDates}
-          choresByDay={choresByWeekDay}
-          expandedChoreId={expandedChoreId}
-          setExpandedChoreId={setExpandedChoreId}
-          setSelectedDate={setSelectedDate}
-          weekOffset={weekOffset}
-          setWeekOffset={setWeekOffset}
-        />
-      )}
-
-      {viewMode === "day" && (
-        <DayView
-          chores={choresBySelectedDate(activeDate)}
-          userId={user?.id}
-          selectedDate={activeDate}
-          expandedChoreId={expandedChoreId}
-          setExpandedChoreId={setExpandedChoreId}
-        />
-      )}
-
-      {viewMode === "month" && (
-        <MonthView
-          chores={monthChores}
-          setSelectedDate={setSelectedDate}
+    <>
+      <header className="header">
+        <h1 className="logo-icon">
+          <img src={logoImg} alt="App logo" />
+          Dina quests
+        </h1>
+        <div style={{ position: "absolute", right: 16, top: 16 }}>
+          <NotificationPanel />
+        </div>
+      </header>
+      <div className="calendar-list-container">
+        <CalendarTabs
+          viewMode={viewMode}
+          selectedDate={selectedDate}
           setViewMode={setViewMode}
-          setWeekOffset={setWeekOffset}
-          userId={user?.id}
-          expandedChoreId={expandedChoreId}
-          setExpandedChoreId={setExpandedChoreId}
+          weekOffset={0}
+          setSelectedDate={setSelectedDate}
         />
-      )}
 
-      {/* Modal for calendar views when a chore is selected */}
-      {expandedChore && (
-        <Modal onClose={() => setExpandedChoreId(null)} full>
-          <div className="modal-chore-full">
-            <ChoreCard
-              chore={expandedChore}
-              currentUserId={user?.id}
-              isExpanded={true}
-              onToggle={() => {}}
-            />
-            <ChoreActionPanel
-              chore={expandedChore}
-              onSuccess={() => setExpandedChoreId(null)}
-              allowAdminActions={false}
-              allowPicking={true}
-            />
-          </div>
-        </Modal>
-      )}
-    </div>
+        {viewMode === "week" && (
+          <WeekCalendarGrid
+            weekDates={weekDates}
+            choresByDay={choresByWeekDay}
+            expandedChoreId={expandedChoreId}
+            setExpandedChoreId={setExpandedChoreId}
+            setSelectedDate={setSelectedDate}
+            weekOffset={weekOffset}
+            setWeekOffset={setWeekOffset}
+          />
+        )}
+
+        {viewMode === "day" && (
+          <DayView
+            chores={choresBySelectedDate(activeDate)}
+            userId={user?.id}
+            selectedDate={activeDate}
+            expandedChoreId={expandedChoreId}
+            setExpandedChoreId={setExpandedChoreId}
+          />
+        )}
+
+        {viewMode === "month" && (
+          <MonthView
+            chores={monthChores}
+            setSelectedDate={setSelectedDate}
+            setViewMode={setViewMode}
+            setWeekOffset={setWeekOffset}
+            userId={user?.id}
+            expandedChoreId={expandedChoreId}
+            setExpandedChoreId={setExpandedChoreId}
+          />
+        )}
+
+        {/* Modal for calendar views when a chore is selected */}
+        {expandedChore && (
+          <Modal onClose={() => setExpandedChoreId(null)} full>
+            <div className="modal-chore-full">
+              <ChoreCard
+                chore={expandedChore}
+                currentUserId={user?.id}
+                isExpanded={true}
+                onToggle={() => {}}
+              />
+              <ChoreActionPanel
+                chore={expandedChore}
+                onSuccess={() => setExpandedChoreId(null)}
+                allowAdminActions={false}
+                allowPicking={true}
+              />
+            </div>
+          </Modal>
+        )}
+      </div>
+    </>
   );
 };

@@ -3,6 +3,7 @@ import home from "../assets/icons/home.png";
 import calender from "../assets/icons/calender.png";
 import rewards from "../assets/icons/rewards.png";
 // import progress from "../assets/icons/progress.png";
+import household_icon from "../assets/icons/household_icon.png";
 
 import task from "../assets/icons/task.png";
 import log_out from "../assets/icons/log_out.png";
@@ -40,7 +41,7 @@ const Navbar = () => {
           }
           className="nav-button"
         >
-          Hushåll
+          <img src={household_icon} alt="Household" className="Peppish-logo" />
         </button>
       )}
       <button onClick={handleLogout} className="nav-button">
