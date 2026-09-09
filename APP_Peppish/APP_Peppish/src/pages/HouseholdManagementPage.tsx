@@ -130,23 +130,25 @@ export const HouseholdManagementPage = () => {
           <NotificationPanel />
         </div>
       </header>
+
       <div className="household-page-container">
-        <section id="invite-member">
-          <h2>Bjud in en medlem till ditt hushåll: </h2>
-          <button
-            type="button"
-            onClick={createJoinCode}
-            disabled={creatingCode}
-          >
-            {creatingCode ? "Skapar kod..." : "Inbjudningskod"}
-          </button>
-        </section>
+        {user.role === "ADULT" && (
+          <section id="invite-member">
+            <h2>Bjud in en medlem till ditt hushåll:</h2>
+            <button
+              type="button"
+              onClick={createJoinCode}
+              disabled={creatingCode}
+            >
+              {creatingCode ? "Skapar kod..." : "Inbjudningskod"}
+            </button>
+          </section>
+        )}
 
         <section>
-          <h2>Medlemmar</h2>
-
+          <h2>Medlemmar i {householdName}</h2>
           {members.length === 0 ? (
-            <p>Det finns inga medlemmar i hushållet.</p>
+            <p>Det finns inga medlemmar i ditt hushåll.</p>
           ) : (
             <div className="household-members">
               {members.map((member) => (
@@ -165,40 +167,41 @@ export const HouseholdManagementPage = () => {
           )}
         </section>
 
-        <section>
-          <h2>Förfrågningar att hantera: </h2>
+        {user.role === "ADULT" && (
+          <section>
+            <h2>Förfrågningar att hantera:</h2>
+            {requests.length === 0 ? (
+              <p>Det finns inga väntande förfrågningar.</p>
+            ) : (
+              <ul>
+                {requests.map((request) => (
+                  <li key={request.id}>
+                    <div>
+                      <strong>{request.displayName}</strong>
+                      <div>{request.email}</div>
+                      <div>Roll: {request.role}</div>
+                    </div>
 
-          {requests.length === 0 ? (
-            <p>Det finns inga väntande förfrågningar.</p>
-          ) : (
-            <ul>
-              {requests.map((request) => (
-                <li key={request.id}>
-                  <div>
-                    <strong>{request.displayName}</strong>
-                    <div>{request.email}</div>
-                    <div>Roll: {request.role}</div>
-                  </div>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => approveRequest(request.id)}
-                    >
-                      Godkänn
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => rejectRequest(request.id)}
-                    >
-                      Neka
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => approveRequest(request.id)}
+                      >
+                        Godkänn
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => rejectRequest(request.id)}
+                      >
+                        Neka
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
 
         {joinCode && (
           <div className="modal-backdrop">
@@ -219,7 +222,6 @@ export const HouseholdManagementPage = () => {
                 Koden gäller till:{" "}
                 {new Date(joinCode.expiresAt).toLocaleString("sv-SE")}
               </p>
-
               <button type="button" onClick={() => setJoinCode(null)}>
                 Stäng
               </button>
