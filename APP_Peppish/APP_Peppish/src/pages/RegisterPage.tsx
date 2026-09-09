@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useAuth } from "../context/AuthContext";
+
 interface FormErrors {
   name?: string;
   email?: string;
@@ -13,6 +15,7 @@ type Role = "ADULT" | "CHILD";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [step, setStep] = useState<RegisterStep>("account");
 
   const [name, setName] = useState("");
@@ -225,10 +228,6 @@ export const RegisterPage = () => {
 
     if (joined) {
       setStep("confirmation");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 5000);
     }
   };
 
@@ -504,44 +503,31 @@ export const RegisterPage = () => {
             {role === "ADULT" && householdOption === "create" && (
               <>
                 <h1>Välkommen till Peppish!</h1>
-
                 <p>Ditt konto och ditt hushåll har skapats.</p>
-
                 <p>Hushåll: {householdName}</p>
               </>
             )}
 
             {householdOption === "join" && (
               <>
-                <h1>Förfrågan skickad</h1>
-
-                <p>Din förfrågan om att gå med i hushållet har skickats.</p>
-
+                <h1>Ansökan skickad</h1>
+                <p>Din ansökan om att gå med i hushållet har skickats.</p>
                 <p>
                   Du kommer att tillhöra hushållet när en vuxen medlem har
                   godkänt dig.
                 </p>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => {
+                    logout();
+                    navigate("/login");
+                  }}
+                >
+                  Logga in
+                </button>
               </>
             )}
-
-            {role === "CHILD" && (
-              <>
-                <h1>Förfrågan skickad</h1>
-
-                <p>Din förfrågan om att gå med i hushållet har skickats.</p>
-
-                <p>
-                  En vuxen i hushållet måste godkänna dig innan du blir medlem.
-                </p>
-              </>
-            )}
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => navigate("/")}
-            >
-              Till startsidan
-            </button>
           </>
         )}
       </div>
