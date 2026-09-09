@@ -4,9 +4,11 @@ import logoName from "../assets/logo.png";
 import mottos from "../data/mottos.json";
 import { Link } from "react-router-dom";
 import NotificationPanel from "../components/NotificationPanel";
+import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const randomMotto = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * mottos.motto.length);
@@ -46,7 +48,10 @@ export const HomePage = () => {
           <p>something something</p>
         </div>
         <div className="home-content">
-          <Link to="/households">Inställningar</Link>
+          <button
+            onClick={() => navigate("/households")}>
+            Mitt hushåll
+          </button>
         </div>
         <div className="home-content">
           <p>nånting här</p>
@@ -59,6 +64,9 @@ export const HomePage = () => {
             <Link to="/chores/new">Skapa ny uppgift</Link>
           </div>
         )}
+        <div className="home-content">
+          <p>nånting här</p>
+        </div>
       </div>
     </div>
   );
