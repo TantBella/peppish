@@ -70,10 +70,7 @@ export const ChoreListPage = () => {
           <NotificationPanel />
         </div>
       </header>
-      <h1 className="logo-icon">
-        <img src={logoImg} alt="App logo" />
-        Dina quests
-      </h1>
+
       <div className="chore-list-page">
         <div className="chore-list-header">
           <Link to="/chores/new" className="btn-primary btn-small">
