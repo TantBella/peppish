@@ -25,7 +25,7 @@ public class UsersController(
     var user = await userManager.FindByIdAsync(userId);
 
     if (user == null)
-      return NotFound(new { error = "User not found" });
+      return NotFound(new { error = "Användare hittas ej" });
 
     var roles = await userManager.GetRolesAsync(user);
     return Ok(new UserDto
