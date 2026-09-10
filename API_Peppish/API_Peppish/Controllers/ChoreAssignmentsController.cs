@@ -25,7 +25,7 @@ namespace API_Peppish.Controllers
                 : await userManager.FindByIdAsync(
                     assignment.AssignedToUserId);
 
-            return CreatedAtAction(nameof(AssignChore), new ChoreAssignmentDto
+          return Created("", new ChoreAssignmentDto
             {
                 Id = assignment.Id,
                 ChoreTemplateId = assignment.ChoreTemplateId,
