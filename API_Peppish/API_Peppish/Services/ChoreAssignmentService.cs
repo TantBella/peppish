@@ -58,20 +58,23 @@ namespace API_Peppish.Services
                 }
             }
 
-            var assignment = new ChoreAssignment
-            {
-                HouseholdId = householdId,
-                ChoreTemplateId = request.ChoreTemplateId,
-                AssignedToUserId = request.AssignedToUserId,
-                AssignedByUserId = userId,
-                StartDate = request.StartDate,
-                DueDate = request.DueDate
-            };
+           var assignment = new ChoreAssignment
+{
+    HouseholdId = householdId,
+    ChoreTemplateId = request.ChoreTemplateId,
+    AssignedToUserId = request.AssignedToUserId,
+    AssignedByUserId = userId,
+    StartDate = request.StartDate.HasValue
+        ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+        : null,
+    DueDate = request.DueDate.HasValue
+        ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
+        : null
+};
 
             await repository.CreateAsync(
                 assignment,
                 cancellationToken);
-
             await repository.SaveChangesAsync(
                 cancellationToken);
 
