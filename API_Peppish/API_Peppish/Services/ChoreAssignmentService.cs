@@ -12,6 +12,10 @@ namespace API_Peppish.Services
             AssignChoreRequestDto request,
             CancellationToken cancellationToken = default);
 
+        Task<ChoreAssignment> TakeFreeQuestAsync(
+Guid assignmentId,
+CancellationToken cancellationToken = default);
+
         Task<List<ChoreAssignment>> GetUserAssignmentsAsync(
             string userId,
             CancellationToken cancellationToken = default);
@@ -58,19 +62,19 @@ namespace API_Peppish.Services
                 }
             }
 
-           var assignment = new ChoreAssignment
-{
-    HouseholdId = householdId,
-    ChoreTemplateId = request.ChoreTemplateId,
-    AssignedToUserId = request.AssignedToUserId,
-    AssignedByUserId = userId,
-    StartDate = request.StartDate.HasValue
-        ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
-        : null,
-    DueDate = request.DueDate.HasValue
-        ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
-        : null
-};
+            var assignment = new ChoreAssignment
+            {
+                HouseholdId = householdId,
+                ChoreTemplateId = request.ChoreTemplateId,
+                AssignedToUserId = request.AssignedToUserId,
+                AssignedByUserId = userId,
+                StartDate = request.StartDate.HasValue
+         ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+         : null,
+                DueDate = request.DueDate.HasValue
+         ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
+         : null
+            };
 
             await repository.CreateAsync(
                 assignment,
@@ -110,6 +114,39 @@ namespace API_Peppish.Services
             return assignment;
         }
 
+        public async Task<ChoreAssignment> TakeFreeQuestAsync(
+            Guid assignmentId,
+            CancellationToken cancellationToken = default)
+        {
+            var householdId = userContextService.GetCurrentHouseholdId()
+                ?? throw new InvalidOperationException(
+                    "Användaren tillhör inget hushåll.");
+
+            var userId = userContextService.GetCurrentUserId();
+
+            var assignment = await repository.GetByIdAsync(
+                assignmentId,
+                householdId,
+                cancellationToken);
+
+            if (assignment == null)
+            {
+                throw new InvalidOperationException(
+                    "Questen kunde inte hittas.");
+            }
+
+            if (assignment.AssignedToUserId != null)
+            {
+                throw new InvalidOperationException(
+                    "Questen är redan tilldelad.");
+            }
+
+            assignment.AssignedToUserId = userId;
+
+            await repository.SaveChangesAsync(cancellationToken);
+
+            return assignment;
+        }
         public async Task<List<ChoreAssignment>> GetUserAssignmentsAsync(
             string userId,
             CancellationToken cancellationToken = default)
