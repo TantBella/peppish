@@ -49,14 +49,6 @@ export const CreateChorePage = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!assignedToUserId) {
-        throw new Error("Välj vem uppgiften ska tilldelas.");
-      }
-
-      if (!startDate) {
-        throw new Error("Välj ett startdatum.");
-      }
-
       const template = await choreTemplateService?.createTemplate({
         title,
         description,
