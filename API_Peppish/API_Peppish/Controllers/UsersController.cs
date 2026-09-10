@@ -18,80 +18,80 @@ public class UsersController(
     IChoreAssignmentService choreAssignmentService,
     INotificationService notificationService) : ControllerBase
 {
-    [HttpGet("me")]
-    public async Task<ActionResult<UserDto>> GetCurrentUser()
+  [HttpGet("me")]
+  public async Task<ActionResult<UserDto>> GetCurrentUser()
+  {
+    var userId = userContextService.GetCurrentUserId();
+    var user = await userManager.FindByIdAsync(userId);
+
+    if (user == null)
+      return NotFound(new { error = "User not found" });
+
+    var roles = await userManager.GetRolesAsync(user);
+    return Ok(new UserDto
     {
-        var userId = userContextService.GetCurrentUserId();
-        var user = await userManager.FindByIdAsync(userId);
+      Id = user.Id,
+      Name = user.DisplayName,
+      Email = user.Email ?? string.Empty,
+      Role = roles.FirstOrDefault() ?? "ADULT",
+      HouseholdId = user.HouseholdId
+    });
+  }
 
-        if (user == null)
-            return NotFound(new { error = "User not found" });
+  [HttpGet("{userId}/assignments")]
+  public async Task<ActionResult<List<ChoreAssignmentDto>>> GetUserAssignments(string userId)
+  {
+    var assignments = await choreAssignmentService.GetUserAssignmentsAsync(userId);
+    var dtos = new List<ChoreAssignmentDto>();
 
-        var roles = await userManager.GetRolesAsync(user);
-        return Ok(new UserDto
-        {
-            Id = user.Id,
-            Name = user.DisplayName,
-            Email = user.Email ?? string.Empty,
-            Role = roles.FirstOrDefault() ?? "ADULT",
-            HouseholdId = user.HouseholdId
-        });
+    foreach (var assignment in assignments)
+    {
+      var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
+      dtos.Add(new ChoreAssignmentDto
+      {
+        Id = assignment.Id,
+        ChoreTemplateId = assignment.ChoreTemplateId,
+        AssignedToUserId = assignment.AssignedToUserId,
+        AssignedToUserName = user?.DisplayName ?? string.Empty,
+        StartDate = assignment.StartDate
+      });
     }
 
-    [HttpGet("{userId}/assignments")]
-    public async Task<ActionResult<List<ChoreAssignmentDto>>> GetUserAssignments(string userId)
+    return Ok(dtos);
+  }
+
+  [HttpGet("{userId}/rewards")]
+  public async Task<ActionResult<List<RewardDto>>> GetUserRewards(string userId)
+  {
+    var rewards = await rewardService.GetUserRewardsAsync(userId);
+    return Ok(rewards);
+  }
+
+  [HttpGet("{userId}/balance")]
+  public async Task<ActionResult<BalanceDto>> GetUserBalance(string userId)
+  {
+    var result = await rewardService.GetUserBalanceAsync(userId);
+
+    return Ok(new BalanceDto
     {
-        var assignments = await choreAssignmentService.GetUserAssignmentsAsync(userId);
-        var dtos = new List<ChoreAssignmentDto>();
+      UserId = userId,
+      MoneyBalance = result.MoneyBalance,
+      TotalXp = result.TotalXp,
+      Level = result.Level
+    });
+  }
 
-        foreach (var assignment in assignments)
-        {
-            var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
-            dtos.Add(new ChoreAssignmentDto
-            {
-                Id = assignment.Id,
-                ChoreTemplateId = assignment.ChoreTemplateId,
-                AssignedToUserId = assignment.AssignedToUserId,
-                AssignedToUserName = user?.DisplayName ?? string.Empty,
-                StartDate = assignment.StartDate
-            });
-        }
+  [HttpGet("{userId}/progress")]
+  public async Task<ActionResult<ProgressDto>> GetUserProgress(string userId)
+  {
+    var progress = await progressService.GetUserProgressAsync(userId);
+    return Ok(progress);
+  }
 
-        return Ok(dtos);
-    }
-
-    [HttpGet("{userId}/rewards")]
-    public async Task<ActionResult<List<RewardDto>>> GetUserRewards(string userId)
-    {
-        var rewards = await rewardService.GetUserRewardsAsync(userId);
-        return Ok(rewards);
-    }
-
-    [HttpGet("{userId}/balance")]
-    public async Task<ActionResult<BalanceDto>> GetUserBalance(string userId)
-    {
-        var result = await rewardService.GetUserBalanceAsync(userId);
-
-        return Ok(new BalanceDto
-        {
-            UserId = userId,
-            MoneyBalance = result.MoneyBalance,
-            TotalXp = result.TotalXp,
-            Level = result.Level
-        });
-    }
-
-    [HttpGet("{userId}/progress")]
-    public async Task<ActionResult<ProgressDto>> GetUserProgress(string userId)
-    {
-        var progress = await progressService.GetUserProgressAsync(userId);
-        return Ok(progress);
-    }
-
-    [HttpGet("{userId}/notifications")]
-    public async Task<ActionResult<List<NotificationDto>>> GetUserNotifications(string userId)
-    {
-        var list = await notificationService.GetUserNotificationsAsync(userId);
-        return Ok(list);
-    }
+  [HttpGet("{userId}/notifications")]
+  public async Task<ActionResult<List<NotificationDto>>> GetUserNotifications(string userId)
+  {
+    var list = await notificationService.GetUserNotificationsAsync(userId);
+    return Ok(list);
+  }
 }

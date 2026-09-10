@@ -1,9 +1,9 @@
 ﻿namespace API_Peppish.Entities
 {
 
-    public enum RewardType
-    {
-        Money,
-        Xp
-    }
+  public enum RewardType
+  {
+    Money,
+    Xp
+  }
 }

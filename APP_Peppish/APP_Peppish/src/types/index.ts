@@ -24,9 +24,9 @@ export interface ChoreTemplate {
   id: string;
   title: string;
   description?: string;
-  rewardAmount?: number;
-  rewardPoints?: number;
-  recurrence?: string;
+  rewardValue: number;
+  rewardType: string;
+  recurrence: string;
 }
 
 export interface ChoreAssignment {

@@ -4,76 +4,76 @@ using System.Security.Cryptography;
 
 namespace API_Peppish.Services
 {
-    public interface IJoinCodeService
+  public interface IJoinCodeService
+  {
+    Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
+        string userId,
+        CancellationToken cancellationToken = default);
+  }
+
+  public class JoinCodeService(
+      IJoinCodeRepository joinCodeRepository,
+      IUserContextService userContextService) : IJoinCodeService
+  {
+    public async Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
+        string userId,
+        CancellationToken cancellationToken = default)
     {
-        Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
-            string userId,
-            CancellationToken cancellationToken = default);
+      var householdId = userContextService.GetCurrentHouseholdId();
+
+      if (householdId == null)
+      {
+        return (
+            false,
+            string.Empty,
+            default,
+            "Du tillhör inget hushåll.");
+      }
+
+      var code = GenerateCode();
+
+      while (await joinCodeRepository.GetByCodeAsync(
+          code,
+          cancellationToken) != null)
+      {
+        code = GenerateCode();
+      }
+
+      var createdAt = DateTime.UtcNow;
+      var expiresAt = createdAt.AddMinutes(30);
+
+      var joinCode = new JoinCode
+      {
+        Code = code,
+        HouseholdId = householdId.Value,
+        CreatedByUserId = userId,
+        CreatedAt = createdAt,
+        ExpiresAt = expiresAt,
+        IsUsed = false
+      };
+
+      await joinCodeRepository.CreateAsync(
+          joinCode,
+          cancellationToken);
+
+      await joinCodeRepository.SaveChangesAsync(
+          cancellationToken);
+
+      return (
+          true,
+          code,
+          expiresAt,
+          string.Empty);
     }
 
-    public class JoinCodeService(
-        IJoinCodeRepository joinCodeRepository,
-        IUserContextService userContextService) : IJoinCodeService
+    private static string GenerateCode()
     {
-        public async Task<(bool Success, string Code, DateTime ExpiresAt, string Error)> CreateJoinCodeAsync(
-            string userId,
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId();
+      const string characters =
+          "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-            if (householdId == null)
-            {
-                return (
-                    false,
-                    string.Empty,
-                    default,
-                    "Du tillhör inget hushåll.");
-            }
-
-            var code = GenerateCode();
-
-            while (await joinCodeRepository.GetByCodeAsync(
-                code,
-                cancellationToken) != null)
-            {
-                code = GenerateCode();
-            }
-
-            var createdAt = DateTime.UtcNow;
-            var expiresAt = createdAt.AddMinutes(30);
-
-            var joinCode = new JoinCode
-            {
-                Code = code,
-                HouseholdId = householdId.Value,
-                CreatedByUserId = userId,
-                CreatedAt = createdAt,
-                ExpiresAt = expiresAt,
-                IsUsed = false
-            };
-
-            await joinCodeRepository.CreateAsync(
-                joinCode,
-                cancellationToken);
-
-            await joinCodeRepository.SaveChangesAsync(
-                cancellationToken);
-
-            return (
-                true,
-                code,
-                expiresAt,
-                string.Empty);
-        }
-
-        private static string GenerateCode()
-        {
-            const string characters =
-                "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-            return RandomNumberGenerator.GetString(
-                characters,
-                6);
-        }
+      return RandomNumberGenerator.GetString(
+          characters,
+          6);
     }
+  }
 }

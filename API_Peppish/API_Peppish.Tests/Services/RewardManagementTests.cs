@@ -14,73 +14,73 @@ namespace API_Peppish.Tests.Services;
 /// </summary>
 public class RewardManagementTests
 {
-    private readonly Mock<IRewardRepository> _mockRewardRepository;
-    private readonly Mock<IUserContextService> _mockUserContextService;
-    private readonly RewardService _rewardService;
+  private readonly Mock<IRewardRepository> _mockRewardRepository;
+  private readonly Mock<IUserContextService> _mockUserContextService;
+  private readonly RewardService _rewardService;
 
-    private readonly Guid _householdId = Guid.NewGuid();
-    private readonly string _childUserId = "child-123";
+  private readonly Guid _householdId = Guid.NewGuid();
+  private readonly string _childUserId = "child-123";
 
-    public RewardManagementTests()
-    {
-        _mockRewardRepository = new Mock<IRewardRepository>();
-        _mockUserContextService = new Mock<IUserContextService>();
-        _rewardService = new RewardService(_mockRewardRepository.Object, _mockUserContextService.Object);
+  public RewardManagementTests()
+  {
+    _mockRewardRepository = new Mock<IRewardRepository>();
+    _mockUserContextService = new Mock<IUserContextService>();
+    _rewardService = new RewardService(_mockRewardRepository.Object, _mockUserContextService.Object);
 
-        _mockUserContextService.Setup(x => x.GetCurrentHouseholdId()).Returns(_householdId);
-    }
+    _mockUserContextService.Setup(x => x.GetCurrentHouseholdId()).Returns(_householdId);
+  }
 
-    [Fact]
-    public async Task GetUserBalance_ReturnsZero_WhenUserHasNoRewards()
-    {
-        // Arrange
-        _mockRewardRepository
-            .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(0m);
+  [Fact]
+  public async Task GetUserBalance_ReturnsZero_WhenUserHasNoRewards()
+  {
+    // Arrange
+    _mockRewardRepository
+        .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(0m);
 
-        // Act
-        var balance = await _rewardService.GetUserBalanceAsync(_childUserId);
+    // Act
+    var balance = await _rewardService.GetUserBalanceAsync(_childUserId);
 
-        // Assert
-        Assert.Equal(0m, balance);
-    }
+    // Assert
+    Assert.Equal(0m, balance);
+  }
 
-    [Fact]
-    public async Task GetUserBalance_ReturnsSumOfAllRewards()
-    {
-        // Arrange
-        decimal expectedBalance = 250m; // Multiple rewards combined
-        _mockRewardRepository
-            .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedBalance);
+  [Fact]
+  public async Task GetUserBalance_ReturnsSumOfAllRewards()
+  {
+    // Arrange
+    decimal expectedBalance = 250m; // Multiple rewards combined
+    _mockRewardRepository
+        .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(expectedBalance);
 
-        // Act
-        var balance = await _rewardService.GetUserBalanceAsync(_childUserId);
+    // Act
+    var balance = await _rewardService.GetUserBalanceAsync(_childUserId);
 
-        // Assert
-        Assert.Equal(expectedBalance, balance);
-    }
+    // Assert
+    Assert.Equal(expectedBalance, balance);
+  }
 
-    [Fact]
-    public async Task GetUserRewards_ReturnsEmptyList_WhenUserHasNoRewards()
-    {
-        // Arrange
-        _mockRewardRepository
-            .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<RewardLedger>());
+  [Fact]
+  public async Task GetUserRewards_ReturnsEmptyList_WhenUserHasNoRewards()
+  {
+    // Arrange
+    _mockRewardRepository
+        .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(new List<RewardLedger>());
 
-        // Act
-        var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
+    // Act
+    var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
 
-        // Assert
-        Assert.Empty(rewards);
-    }
+    // Assert
+    Assert.Empty(rewards);
+  }
 
-    [Fact]
-    public async Task GetUserRewards_ReturnsAllRewardsForUser()
-    {
-        // Arrange
-        var rewardList = new List<RewardLedger>
+  [Fact]
+  public async Task GetUserRewards_ReturnsAllRewardsForUser()
+  {
+    // Arrange
+    var rewardList = new List<RewardLedger>
         {
             new()
             {
@@ -100,61 +100,61 @@ public class RewardManagementTests
             }
         };
 
-        _mockRewardRepository
-            .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(rewardList);
+    _mockRewardRepository
+        .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(rewardList);
 
-        // Act
-        var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
+    // Act
+    var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
 
-        // Assert
-        Assert.NotEmpty(rewards);
-        Assert.Equal(2, rewards.Count);
-        Assert.Equal(50m, rewards[0].Amount);
-        Assert.Equal("Completed chore: Clean room", rewards[0].Reason);
-        Assert.Equal(100m, rewards[1].Amount);
-    }
+    // Assert
+    Assert.NotEmpty(rewards);
+    Assert.Equal(2, rewards.Count);
+    Assert.Equal(50m, rewards[0].Amount);
+    Assert.Equal("Completed chore: Clean room", rewards[0].Reason);
+    Assert.Equal(100m, rewards[1].Amount);
+  }
 
-    [Fact]
-    public async Task GetUserRewards_FiltersByHouseholdId_ForDataIsolation()
-    {
-        // Arrange
-        var childInHousehold1 = new List<RewardLedger>
+  [Fact]
+  public async Task GetUserRewards_FiltersByHouseholdId_ForDataIsolation()
+  {
+    // Arrange
+    var childInHousehold1 = new List<RewardLedger>
         {
             new() { Amount = 50m, UserId = _childUserId, HouseholdId = _householdId }
         };
 
-        _mockRewardRepository
-            .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(childInHousehold1);
+    _mockRewardRepository
+        .Setup(x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(childInHousehold1);
 
-        // Act
-        var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
+    // Act
+    var rewards = await _rewardService.GetUserRewardsAsync(_childUserId);
 
-        // Assert
-        Assert.Single(rewards);
-        // Verify household filtering was used
-        _mockRewardRepository.Verify(
-            x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()),
-            Times.Once
-        );
-    }
+    // Assert
+    Assert.Single(rewards);
+    // Verify household filtering was used
+    _mockRewardRepository.Verify(
+        x => x.GetByUserAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()),
+        Times.Once
+    );
+  }
 
-    [Fact]
-    public async Task GetUserBalance_FiltersByHouseholdId_ForDataIsolation()
-    {
-        // Arrange
-        _mockRewardRepository
-            .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(150m);
+  [Fact]
+  public async Task GetUserBalance_FiltersByHouseholdId_ForDataIsolation()
+  {
+    // Arrange
+    _mockRewardRepository
+        .Setup(x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(150m);
 
-        // Act
-        await _rewardService.GetUserBalanceAsync(_childUserId);
+    // Act
+    await _rewardService.GetUserBalanceAsync(_childUserId);
 
-        // Assert
-        _mockRewardRepository.Verify(
-            x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()),
-            Times.Once
-        );
-    }
+    // Assert
+    _mockRewardRepository.Verify(
+        x => x.GetUserBalanceAsync(_childUserId, _householdId, It.IsAny<CancellationToken>()),
+        Times.Once
+    );
+  }
 }

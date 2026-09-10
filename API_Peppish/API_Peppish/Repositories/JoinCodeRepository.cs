@@ -4,47 +4,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories
 {
-    public interface IJoinCodeRepository
+  public interface IJoinCodeRepository
+  {
+    Task<JoinCode?> GetByCodeAsync(
+        string code,
+        CancellationToken cancellationToken = default);
+
+    Task<JoinCode> CreateAsync(
+        JoinCode joinCode,
+        CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(
+        CancellationToken cancellationToken = default);
+  }
+
+  public class JoinCodeRepository(AppDbContext context) : IJoinCodeRepository
+  {
+    public async Task<JoinCode?> GetByCodeAsync(
+        string code,
+        CancellationToken cancellationToken = default)
     {
-        Task<JoinCode?> GetByCodeAsync(
-            string code,
-            CancellationToken cancellationToken = default);
-
-        Task<JoinCode> CreateAsync(
-            JoinCode joinCode,
-            CancellationToken cancellationToken = default);
-
-        Task SaveChangesAsync(
-            CancellationToken cancellationToken = default);
+      return await context.JoinCodes
+          .FirstOrDefaultAsync(
+              j => j.Code == code,
+              cancellationToken);
     }
 
-    public class JoinCodeRepository(AppDbContext context) : IJoinCodeRepository
+    public async Task<JoinCode> CreateAsync(
+        JoinCode joinCode,
+        CancellationToken cancellationToken = default)
     {
-        public async Task<JoinCode?> GetByCodeAsync(
-            string code,
-            CancellationToken cancellationToken = default)
-        {
-            return await context.JoinCodes
-                .FirstOrDefaultAsync(
-                    j => j.Code == code,
-                    cancellationToken);
-        }
+      await context.JoinCodes.AddAsync(
+          joinCode,
+          cancellationToken);
 
-        public async Task<JoinCode> CreateAsync(
-            JoinCode joinCode,
-            CancellationToken cancellationToken = default)
-        {
-            await context.JoinCodes.AddAsync(
-                joinCode,
-                cancellationToken);
-
-            return joinCode;
-        }
-
-        public async Task SaveChangesAsync(
-            CancellationToken cancellationToken = default)
-        {
-            await context.SaveChangesAsync(cancellationToken);
-        }
+      return joinCode;
     }
+
+    public async Task SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+    {
+      await context.SaveChangesAsync(cancellationToken);
+    }
+  }
 }

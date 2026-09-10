@@ -9,38 +9,38 @@ namespace API_Peppish.Controllers;
 public class AuthController(
     IAuthService authService) : ControllerBase
 {
-    [HttpPost("register")]
-    public async Task<ActionResult<RegisterResponse>> Register(
-        [FromBody] RegisterDto dto)
+  [HttpPost("register")]
+  public async Task<ActionResult<RegisterResponse>> Register(
+      [FromBody] RegisterDto dto)
+  {
+    var (success, userId, token, error) =
+        await authService.RegisterAsync(dto);
+
+    if (!success)
+      return BadRequest(new { error });
+
+    return Ok(new RegisterResponse
     {
-        var (success, userId, token, error) =
-            await authService.RegisterAsync(dto);
+      UserId = userId,
+      Token = token
+    });
+  }
 
-        if (!success)
-            return BadRequest(new { error });
+  [HttpPost("login")]
+  public async Task<ActionResult<LoginResponse>> Login(
+      [FromBody] LoginRequest request)
+  {
+    var (success, token, error) =
+        await authService.LoginAsync(
+            request.Email,
+            request.Password);
 
-        return Ok(new RegisterResponse
-        {
-            UserId = userId,
-            Token = token
-        });
-    }
+    if (!success)
+      return Unauthorized(new { error });
 
-    [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login(
-        [FromBody] LoginRequest request)
+    return Ok(new LoginResponse
     {
-        var (success, token, error) =
-            await authService.LoginAsync(
-                request.Email,
-                request.Password);
-
-        if (!success)
-            return Unauthorized(new { error });
-
-        return Ok(new LoginResponse
-        {
-            Token = token
-        });
-    }
+      Token = token
+    });
+  }
 }

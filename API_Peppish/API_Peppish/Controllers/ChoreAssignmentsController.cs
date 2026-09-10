@@ -5,35 +5,35 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API_Peppish.Controllers;
-
-[ApiController]
-[Route("api/chore-assignments")]
-[Authorize]
-public class ChoreAssignmentsController(
-    IChoreAssignmentService service,
-    UserManager<ApplicationUser> userManager) : ControllerBase
+namespace API_Peppish.Controllers
 {
-    [HttpPost]
-    public async Task<ActionResult<ChoreAssignmentDto>> AssignChore([FromBody] DTOs.AssignChoreRequest request)
+    [ApiController]
+    [Route("api/chore-assignments")]
+    [Authorize]
+    public class ChoreAssignmentsController(
+        IChoreAssignmentService service,
+        UserManager<ApplicationUser> userManager) : ControllerBase
     {
-        var serviceRequest = new Services.AssignChoreRequest
+        [HttpPost]
+        public async Task<ActionResult<ChoreAssignmentDto>> AssignChore(
+            [FromBody] AssignChoreRequestDto request)
         {
-            ChoreTemplateId = request.ChoreTemplateId,
-            AssignedToUserId = request.AssignedToUserId,
-            StartDate = request.StartDate
-        };
+            var assignment = await service.AssignAsync(request);
 
-        var assignment = await service.AssignAsync(serviceRequest);
-        var assignedUser = await userManager.FindByIdAsync(assignment.AssignedToUserId);
+            var assignedUser = assignment.AssignedToUserId == null
+                ? null
+                : await userManager.FindByIdAsync(
+                    assignment.AssignedToUserId);
 
-        return CreatedAtAction(nameof(AssignChore), new ChoreAssignmentDto
-        {
-            Id = assignment.Id,
-            ChoreTemplateId = assignment.ChoreTemplateId,
-            AssignedToUserId = assignment.AssignedToUserId,
-            AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
-            StartDate = assignment.StartDate
-        });
+            return CreatedAtAction(nameof(AssignChore), new ChoreAssignmentDto
+            {
+                Id = assignment.Id,
+                ChoreTemplateId = assignment.ChoreTemplateId,
+                AssignedToUserId = assignment.AssignedToUserId,
+                AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
+                StartDate = assignment.StartDate,
+                DueDate = assignment.DueDate
+            });
+        }
     }
 }

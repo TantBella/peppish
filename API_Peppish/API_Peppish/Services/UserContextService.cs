@@ -4,39 +4,39 @@ using System.Security.Claims;
 namespace API_Peppish.Services
 {
 
-    public interface IUserContextService
+  public interface IUserContextService
+  {
+    string GetCurrentUserId();
+    Guid? GetCurrentHouseholdId();
+    string GetCurrentUserRole();
+  }
+
+  public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserContextService
+  {
+    public string GetCurrentUserId()
     {
-        string GetCurrentUserId();
-        Guid? GetCurrentHouseholdId();
-        string GetCurrentUserRole();
+      return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+          ?? throw new InvalidOperationException("Användar-ID kunde inte hittas");
     }
 
-    public class UserContextService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserContextService
+    public Guid? GetCurrentHouseholdId()
     {
-        public string GetCurrentUserId()
-        {
-            return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new InvalidOperationException("Användar-ID kunde inte hittas");
-        }
+      var userId = GetCurrentUserId();
 
-        public Guid? GetCurrentHouseholdId()
-        {
-            var userId = GetCurrentUserId();
+      var user = dbContext.Users
+          .FirstOrDefault(u => u.Id == userId);
 
-            var user = dbContext.Users
-                .FirstOrDefault(u => u.Id == userId);
+      if (user == null)
+        throw new InvalidOperationException(
+            "Användaren kunde inte hittas");
 
-            if (user == null)
-                throw new InvalidOperationException(
-                    "Användaren kunde inte hittas");
-
-            return user.HouseholdId;
-        }
-
-        public string GetCurrentUserRole()
-        {
-            return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
-                ?? "ADULT";
-        }
+      return user.HouseholdId;
     }
+
+    public string GetCurrentUserRole()
+    {
+      return httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value
+          ?? "ADULT";
+    }
+  }
 }

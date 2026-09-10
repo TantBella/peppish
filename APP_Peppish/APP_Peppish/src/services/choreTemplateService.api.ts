@@ -4,9 +4,9 @@ export const choreTemplateServiceApi = {
   createTemplate: async (payload: {
     title: string;
     description?: string;
-    rewardAmount?: number;
-    rewardPoints?: number;
-    recurrence?: string;
+    rewardValue: number;
+    rewardType: string;
+    recurrence: string;
   }) => {
     const res = await apiClient.post("/chore-templates", payload);
     return res.data;
