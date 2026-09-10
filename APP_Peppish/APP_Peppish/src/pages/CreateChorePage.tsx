@@ -164,7 +164,6 @@ export const CreateChorePage = () => {
               id="assignedToUserId"
               value={assignedToUserId}
               onChange={(e) => setAssignedToUserId(e.target.value)}
-              required
             >
               <option value="">Välj person</option>
 
@@ -183,7 +182,6 @@ export const CreateChorePage = () => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              required
             />
           </div>
 
