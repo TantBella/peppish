@@ -43,7 +43,7 @@ export const CreateChorePage = () => {
     <>
       <h1 className="logo-icon">
         <img src={logoImg} alt="App logo" />
-        Skapa uppgifter
+        Skapa quests
       </h1>
       <div className="create-chore-page">
         {error && <div className="error-message">{error}</div>}

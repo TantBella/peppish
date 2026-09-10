@@ -69,16 +69,16 @@ export const HomePage = () => {
               </div>
 
               <div className="progress-card-footer">
-                <p>{progress.dailyProgressPercent}% av dagens uppgifter</p>
+                <p>{progress.dailyProgressPercent}% av dagens quests</p>
               </div>
             </>
           )}
         </div>
 
         <div className="home-content">
-          <h2>Dagens uppgifter</h2>
+          <h2>Dagens quests</h2>
           <p>Här ser du vad som behöver göras idag.</p>
-          <p>Du har inga uppgifter ännu.</p>
+          <p>Du har inga quests ännu.</p>
         </div>
 
         <div className="home-content">
@@ -93,11 +93,16 @@ export const HomePage = () => {
         </div>
         {user?.role === "ADULT" && (
           <div className="home-content">
-            <Link to="/chores/new">Skapa ny uppgift</Link>
+            <Link to="/chores/new">Skapa ny quest</Link>
           </div>
         )}
         <div className="home-content">
-          <button className="home-content-button" onClick={() => navigate("/households")}>Mitt hushåll</button>
+          <button
+            className="home-content-button"
+            onClick={() => navigate("/households")}
+          >
+            Mitt hushåll
+          </button>
         </div>
       </div>
     </div>

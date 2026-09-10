@@ -49,7 +49,7 @@ namespace API_Peppish.Services
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                    "AnvÃ¤ndaren tillhÃ¶r inget hushÃ¥ll.");
 
             await GenerateMissingInstancesAsync(
                 from,
@@ -114,7 +114,7 @@ namespace API_Peppish.Services
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                    "AnvÃ¤ndaren tillhÃ¶r inget hushÃ¥ll.");
 
             return await instanceRepository.GetByIdAsync(
                 id,
@@ -128,7 +128,7 @@ namespace API_Peppish.Services
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                    "AnvÃ¤ndaren tillhÃ¶r inget hushÃ¥ll.");
 
             var userId = userContextService.GetCurrentUserId();
 
@@ -147,11 +147,11 @@ namespace API_Peppish.Services
 
             if (assignment.AssignedToUserId != userId)
                 throw new UnauthorizedAccessException(
-                    "Denna uppgiften är inte din");
+                    "Denna questen Ã¤r inte din");
 
             if (instance.Status != ChoreStatus.Pending)
                 throw new InvalidOperationException(
-                    $"Kan inte slutföra en syssla med denna status {instance.Status}");
+                    $"Kan inte slutfÃ¶ra en syssla med denna status {instance.Status}");
 
             instance.Status = ChoreStatus.Completed;
             instance.CompletedAt = DateTime.UtcNow;
@@ -161,7 +161,7 @@ namespace API_Peppish.Services
                 cancellationToken);
 
             logger.LogInformation(
-                "{choreId} är markerad som färdig av {userId}",
+                "{choreId} ï¿½r markerad som fÃ¤rdig av {userId}",
                 id,
                 userId);
 
@@ -203,7 +203,7 @@ namespace API_Peppish.Services
             }
             catch
             {
-                // Notificationer ska inte göra att sysslan misslyckas.
+                // Notificationer ska inte gï¿½ra att sysslan misslyckas.
             }
 
             return instance;
@@ -215,14 +215,14 @@ namespace API_Peppish.Services
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                    "AnvÃ¤ndaren tillhÃ¶r inget hushÃ¥ll.");
 
             var userId = userContextService.GetCurrentUserId();
             var role = userContextService.GetCurrentUserRole();
 
             if (role != "ADULT")
                 throw new UnauthorizedAccessException(
-                    "Endast vuxna kan godkänna att en syssla är slutförd");
+                    "Endast vuxna kan godkÃ¤nna att en syssla Ã¤r slutfÃ¶rd");
 
             var instance = await instanceRepository.GetByIdAsync(
                 id,
@@ -233,8 +233,8 @@ namespace API_Peppish.Services
 
             if (instance.Status != ChoreStatus.Completed)
                 throw new InvalidOperationException(
-                    $"Kan inte godkänna en syssla med denna status {instance.Status}. " +
-                    "Den måste bli klarmarkerad först.");
+                    $"Kan inte godkÃ¤nna en syssla med denna status {instance.Status}. " +
+                    "Den mÃ¥ste bli klarmarkerad fÃ¶rst.");
 
             using var transaction =
                 await dbContext.Database.BeginTransactionAsync(
@@ -349,7 +349,7 @@ namespace API_Peppish.Services
                 }
                 catch
                 {
-                    // Notificationer ska inte påverka godkännandet.
+                    // Notificationer ska inte pÃ¥verka godkÃ¤nnandet.
                 }
             }
             catch

@@ -71,7 +71,7 @@ export const EditChorePage = () => {
   if (user?.role !== "ADULT") {
     return (
       <div className="error-message">
-        Du har inte behörighet att redigera uppgifter.
+        Du har inte behörighet att redigera quests.
       </div>
     );
   }
@@ -87,9 +87,9 @@ export const EditChorePage = () => {
           <NotificationPanel />
         </div>
       </header>
-      <h1>Skapa uppgiftsmall</h1>
+      <h1>Skapa questsmall</h1>
       <div className="edit-chore-page">
-        <h1>Ändra uppgift</h1>
+        <h1>Ändra quest</h1>
         {formError && <div className="error-message">{formError}</div>}
         <form
           onSubmit={(e) => {
