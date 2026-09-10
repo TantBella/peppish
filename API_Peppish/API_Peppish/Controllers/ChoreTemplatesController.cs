@@ -11,37 +11,29 @@ namespace API_Peppish.Controllers;
 [Authorize]
 public class ChoreTemplatesController(IChoreTemplateService service) : ControllerBase
 {
-  [HttpPost]
-  public async Task<ActionResult<ChoreTemplateDto>> CreateTemplate([FromBody] DTOs.CreateChoreTemplateRequest request)
-  {
-    if (string.IsNullOrEmpty(request.Title))
-      return BadRequest(new { error = "Title is required" });
-
-        var serviceRequest = new Services.CreateChoreTemplateRequest
-        {
-            Title = request.Title,
-            Description = request.Description,
-            RewardValue = request.RewardValue,
-            RewardType = Enum.Parse<RewardType>(request.RewardType, true),
-            Recurrence = Enum.Parse<RecurrenceType>(request.Recurrence, true)
-        };
-
-        var template = await service.CreateAsync(serviceRequest);
-    return CreatedAtAction(nameof(GetAllTemplates), new ChoreTemplateDto
+    [HttpPost]
+    public async Task<ActionResult<ChoreTemplateDto>> CreateTemplate([FromBody] DTOs.CreateChoreTemplateRequestDto request)
     {
-      Id = template.Id,
-      Title = template.Title,
-      Description = template.Description,
-        RewardValue = template.RewardValue,
-        RewardType = template.RewardType.ToString(),
-      Recurrence = template.Recurrence.ToString()
-    });
-  }
+        if (string.IsNullOrEmpty(request.Title))
+            return BadRequest(new { error = "Title is required" });
 
-  [HttpGet]
-  public async Task<ActionResult<List<ChoreTemplateDto>>> GetAllTemplates()
-  {
-    var templates = await service.GetAllAsync();
+        var template = await service.CreateAsync(request);
+
+        return CreatedAtAction(nameof(GetAllTemplates), new ChoreTemplateDto
+        {
+            Id = template.Id,
+            Title = template.Title,
+            Description = template.Description,
+            RewardValue = template.RewardValue,
+            RewardType = template.RewardType.ToString(),
+            Recurrence = template.Recurrence.ToString()
+        });
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<ChoreTemplateDto>>> GetAllTemplates()
+    {
+        var templates = await service.GetAllAsync();
         return Ok(templates.Select(t => new ChoreTemplateDto
         {
             Id = t.Id,
@@ -54,7 +46,7 @@ public class ChoreTemplatesController(IChoreTemplateService service) : Controlle
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTemplate(Guid id, [FromBody] UpdateChoreTemplateRequest request)
+    public async Task<IActionResult> UpdateTemplate(Guid id, [FromBody] UpdateChoreTemplateRequestDto request)
     {
         if (string.IsNullOrEmpty(request.Title))
             return BadRequest(new { error = "Title is required" });

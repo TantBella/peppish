@@ -13,143 +13,143 @@ public class HouseholdsController(
     IUserContextService userContextService,
     IHouseholdJoinRequestService joinRequestService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionResult<List<HouseholdDto>>> GetAllHouseholds(
-        CancellationToken cancellationToken)
+  [HttpGet]
+  public async Task<ActionResult<List<HouseholdDto>>> GetAllHouseholds(
+      CancellationToken cancellationToken)
+  {
+    var households =
+        await householdService.GetAllHouseholdsAsync(
+            cancellationToken);
+
+    return Ok(households);
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<HouseholdDto>> GetHousehold(
+      Guid id,
+      CancellationToken cancellationToken)
+  {
+    try
     {
-        var households =
-            await householdService.GetAllHouseholdsAsync(
-                cancellationToken);
+      var household =
+          await householdService.GetHouseholdAsync(
+              id,
+              cancellationToken);
 
-        return Ok(households);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<HouseholdDto>> GetHousehold(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var household =
-                await householdService.GetHouseholdAsync(
-                    id,
-                    cancellationToken);
-
-            if (household == null)
+      if (household == null)
+      {
+        return NotFound(
+            new
             {
-                return NotFound(
-                    new
-                    {
-                        error = "Inget hushåll med det id:t finns."
-                    });
-            }
+              error = "Inget hushåll med det id:t finns."
+            });
+      }
 
-            return Ok(household);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Forbid();
-        }
+      return Ok(household);
     }
-
-    [HttpPut("{id}")]
-    public async Task<ActionResult<HouseholdDto>> UpdateHousehold(
-        Guid id,
-        UpdateHouseholdDto dto,
-        CancellationToken cancellationToken)
+    catch (UnauthorizedAccessException)
     {
-        try
-        {
-            var household =
-                await householdService.UpdateHouseholdAsync(
-                    id,
-                    dto,
-                    cancellationToken);
+      return Forbid();
+    }
+  }
 
-            if (household == null)
+  [HttpPut("{id}")]
+  public async Task<ActionResult<HouseholdDto>> UpdateHousehold(
+      Guid id,
+      UpdateHouseholdDto dto,
+      CancellationToken cancellationToken)
+  {
+    try
+    {
+      var household =
+          await householdService.UpdateHouseholdAsync(
+              id,
+              dto,
+              cancellationToken);
+
+      if (household == null)
+      {
+        return NotFound(
+            new
             {
-                return NotFound(
-                    new
-                    {
-                        error = "Inget hushåll med det id:t finns."
-                    });
-            }
+              error = "Inget hushåll med det id:t finns."
+            });
+      }
 
-            return Ok(household);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Forbid();
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(
-                new
-                {
-                    error = ex.Message
-                });
-        }
+      return Ok(household);
     }
-
-    [HttpPost("join")]
-    public async Task<IActionResult> JoinHousehold(
-        CreateHouseholdJoinRequestDto dto,
-        CancellationToken cancellationToken)
+    catch (UnauthorizedAccessException)
     {
-        var userId = userContextService.GetCurrentUserId();
+      return Forbid();
+    }
+    catch (InvalidOperationException ex)
+    {
+      return BadRequest(
+          new
+          {
+            error = ex.Message
+          });
+    }
+  }
 
-        await joinRequestService.CreateJoinRequestAsync(
-            userId,
-            dto,
+  [HttpPost("join")]
+  public async Task<IActionResult> JoinHousehold(
+      CreateHouseholdJoinRequestDto dto,
+      CancellationToken cancellationToken)
+  {
+    var userId = userContextService.GetCurrentUserId();
+
+    await joinRequestService.CreateJoinRequestAsync(
+        userId,
+        dto,
+        cancellationToken);
+
+    return Ok(new
+    {
+      message =
+            "Din förfrågan om att gå med i hushållet har skickats."
+    });
+  }
+
+  [HttpGet("join-requests")]
+  public async Task<ActionResult<List<HouseholdJoinRequestDto>>>
+      GetPendingJoinRequests(
+          CancellationToken cancellationToken)
+  {
+    var requests =
+        await joinRequestService.GetPendingRequestsAsync(
             cancellationToken);
 
-        return Ok(new
-        {
-            message =
-                "Din förfrågan om att gå med i hushållet har skickats."
-        });
-    }
+    return Ok(requests);
+  }
 
-    [HttpGet("join-requests")]
-    public async Task<ActionResult<List<HouseholdJoinRequestDto>>>
-        GetPendingJoinRequests(
-            CancellationToken cancellationToken)
+  [HttpPost("join-requests/{requestId}/approve")]
+  public async Task<IActionResult> ApproveJoinRequest(
+      Guid requestId,
+      CancellationToken cancellationToken)
+  {
+    await joinRequestService.ApproveJoinRequestAsync(
+        requestId,
+        cancellationToken);
+
+    return Ok(new
     {
-        var requests =
-            await joinRequestService.GetPendingRequestsAsync(
-                cancellationToken);
+      message = "Förfrågan har godkänts."
+    });
+  }
 
-        return Ok(requests);
-    }
+  [HttpPost("join-requests/{requestId}/reject")]
+  public async Task<IActionResult> RejectJoinRequest(
+      Guid requestId,
+      CancellationToken cancellationToken)
+  {
+    await joinRequestService.RejectJoinRequestAsync(
+        requestId,
+        cancellationToken);
 
-    [HttpPost("join-requests/{requestId}/approve")]
-    public async Task<IActionResult> ApproveJoinRequest(
-        Guid requestId,
-        CancellationToken cancellationToken)
+    return Ok(new
     {
-        await joinRequestService.ApproveJoinRequestAsync(
-            requestId,
-            cancellationToken);
-
-        return Ok(new
-        {
-            message = "Förfrågan har godkänts."
-        });
-    }
-
-    [HttpPost("join-requests/{requestId}/reject")]
-    public async Task<IActionResult> RejectJoinRequest(
-        Guid requestId,
-        CancellationToken cancellationToken)
-    {
-        await joinRequestService.RejectJoinRequestAsync(
-            requestId,
-            cancellationToken);
-
-        return Ok(new
-        {
-            message = "Förfrågan har nekats."
-        });
-    }
+      message = "Förfrågan har nekats."
+    });
+  }
 }
