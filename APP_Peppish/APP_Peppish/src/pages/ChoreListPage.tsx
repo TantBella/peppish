@@ -77,13 +77,13 @@ export const ChoreListPage = () => {
       <div className="chore-list-page">
         <div className="chore-list-header">
           <Link to="/chores/new" className="btn-primary btn-small">
-            Skapa uppgift
+            Skapa quest
           </Link>
         </div>
 
         {templateChores.length === 0 ? (
           <div className="empty">
-            Inga quests ännu. Lägg till en uppgift för att komma igång.
+            Inga quests ännu. Lägg till en quest för att komma igång.
           </div>
         ) : (
           <div className="chore-list">
