@@ -33,10 +33,16 @@ export const choreTemplateApi = {
 export const choreAssignmentApi = {
   assign: async (payload: {
     choreTemplateId: string;
-    assignedToUserId: string;
-    startDate: string;
+    assignedToUserId?: string | null;
+    startDate?: string;
+    dueDate?: string;
   }) => {
     const res = await apiClient.post("/chore-assignments", payload);
+    return res.data;
+  },
+
+  take: async (assignmentId: string) => {
+    const res = await apiClient.post(`/chore-assignments/${assignmentId}/take`);
     return res.data;
   },
 };

@@ -21,12 +21,17 @@ public class ChoreAssignmentRepository(AppDbContext context) : IChoreAssignmentR
         .FirstOrDefaultAsync(a => a.Id == id && a.HouseholdId == householdId, cancellationToken);
   }
 
-  public async Task<List<ChoreAssignment>> GetByUserAsync(string userId, Guid householdId, CancellationToken cancellationToken = default)
-  {
+ public async Task<List<ChoreAssignment>> GetByUserAsync(
+    string userId,
+    Guid householdId,
+    CancellationToken cancellationToken = default)
+{
     return await context.ChoreAssignments
-        .Where(a => a.AssignedToUserId == userId && a.HouseholdId == householdId)
+        .Where(a =>
+            a.HouseholdId == householdId &&
+            (a.AssignedToUserId == userId || a.AssignedToUserId == null))
         .ToListAsync(cancellationToken);
-  }
+}
 
   public async Task<List<ChoreAssignment>> GetByTemplateAsync(Guid templateId, Guid householdId, CancellationToken cancellationToken = default)
   {

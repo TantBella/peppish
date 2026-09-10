@@ -25,7 +25,7 @@ namespace API_Peppish.Controllers
                 : await userManager.FindByIdAsync(
                     assignment.AssignedToUserId);
 
-          return Created("", new ChoreAssignmentDto
+            return Created("", new ChoreAssignmentDto
             {
                 Id = assignment.Id,
                 ChoreTemplateId = assignment.ChoreTemplateId,
@@ -34,6 +34,35 @@ namespace API_Peppish.Controllers
                 StartDate = assignment.StartDate,
                 DueDate = assignment.DueDate
             });
+        }
+
+        [HttpPost("{assignmentId}/take")]
+        public async Task<ActionResult<ChoreAssignmentDto>> TakeFreeQuest(
+         Guid assignmentId)
+        {
+            try
+            {
+                var assignment = await service.TakeFreeQuestAsync(assignmentId);
+
+                var assignedUser = assignment.AssignedToUserId == null
+                    ? null
+                    : await userManager.FindByIdAsync(
+                        assignment.AssignedToUserId);
+
+                return Ok(new ChoreAssignmentDto
+                {
+                    Id = assignment.Id,
+                    ChoreTemplateId = assignment.ChoreTemplateId,
+                    AssignedToUserId = assignment.AssignedToUserId,
+                    AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
+                    StartDate = assignment.StartDate,
+                    DueDate = assignment.DueDate
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
 }

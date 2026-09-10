@@ -44,18 +44,22 @@ public class UsersController(
     var assignments = await choreAssignmentService.GetUserAssignmentsAsync(userId);
     var dtos = new List<ChoreAssignmentDto>();
 
-    foreach (var assignment in assignments)
+   foreach (var assignment in assignments)
+{
+    var user = assignment.AssignedToUserId == null
+        ? null
+        : await userManager.FindByIdAsync(assignment.AssignedToUserId);
+
+    dtos.Add(new ChoreAssignmentDto
     {
-      var user = await userManager.FindByIdAsync(assignment.AssignedToUserId);
-      dtos.Add(new ChoreAssignmentDto
-      {
         Id = assignment.Id,
         ChoreTemplateId = assignment.ChoreTemplateId,
         AssignedToUserId = assignment.AssignedToUserId,
         AssignedToUserName = user?.DisplayName ?? string.Empty,
-        StartDate = assignment.StartDate
-      });
-    }
+        StartDate = assignment.StartDate,
+        DueDate = assignment.DueDate
+    });
+}
 
     return Ok(dtos);
   }
