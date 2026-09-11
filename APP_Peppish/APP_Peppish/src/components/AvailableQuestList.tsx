@@ -5,8 +5,19 @@ import { ChoreWithUIStatus } from "../hooks/useChores";
 import { ChoreCard } from "./ChoreCard";
 import { ChoreActionPanel } from "./ChoreActionPanel";
 import { useState } from "react";
+import { HouseholdMember } from "../services/householdService.api";
 
-export const AvailableQuestList = () => {
+interface AvailableQuestListProps {
+  householdMembers: HouseholdMember[];
+}
+
+interface AvailableChore extends ChoreWithUIStatus {
+  choreTemplateId: string;
+}
+
+export const AvailableQuestList = ({
+  householdMembers,
+}: AvailableQuestListProps) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { data: templates = [] } = useQuery({
@@ -18,8 +29,6 @@ export const AvailableQuestList = () => {
     queryKey: ["available-chore-assignments"],
     queryFn: () => choreAssignmentApi.getAvailable(),
   });
-
-  console.log("availableAssignments:", availableAssignments);
 
   const availableChores = availableAssignments
     .map((assignment: any) => {
@@ -40,9 +49,9 @@ export const AvailableQuestList = () => {
         availableAssignmentId: assignment.id,
         assignedToUserId: undefined,
         assignedToUserName: undefined,
-      } as ChoreWithUIStatus;
+      } as AvailableChore;
     })
-    .filter(Boolean) as ChoreWithUIStatus[];
+    .filter(Boolean) as AvailableChore[];
 
   const toggle = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -70,8 +79,10 @@ export const AvailableQuestList = () => {
               <div className="chore-expanded">
                 <ChoreActionPanel
                   chore={chore}
+                  choreTemplateId={chore.choreTemplateId}
                   allowAdminActions={false}
                   allowPicking
+                  householdMembers={householdMembers}
                   onSuccess={() => setExpandedId(null)}
                 />
               </div>

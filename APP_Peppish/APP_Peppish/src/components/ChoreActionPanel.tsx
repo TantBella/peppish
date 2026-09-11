@@ -4,12 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { choreInstanceApi, choreAssignmentApi } from "../services/choreService";
 import { ChoreWithUIStatus } from "../hooks/useChores";
 import { useAuth } from "../context/AuthContext";
+import { HouseholdMember } from "../services/householdService.api";
 
 interface ChoreActionPanelProps {
   chore: ChoreWithUIStatus;
   onSuccess?: () => void;
   allowAdminActions?: boolean;
   allowPicking?: boolean;
+  householdMembers?: HouseholdMember[];
+  choreTemplateId?: string;
 }
 
 export const ChoreActionPanel = ({
@@ -17,6 +20,8 @@ export const ChoreActionPanel = ({
   onSuccess,
   allowAdminActions = true,
   allowPicking = true,
+  householdMembers = [],
+  choreTemplateId,
 }: ChoreActionPanelProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -24,13 +29,22 @@ export const ChoreActionPanel = ({
   const [error, setError] = useState<string | null>(null);
   const [scheduling, setScheduling] = useState(false);
   const [scheduleDate, setScheduleDate] = useState<string>("");
+  const [showMembers, setShowMembers] = useState(false);
 
   const canComplete =
     chore.uiStatus === "Pending" && chore.assignedToUserId === user?.id;
   const canApprove = chore.uiStatus === "Completed" && user?.role === "ADULT";
   const canEditOrDelete = allowAdminActions && user?.role === "ADULT";
   const canPick =
-    allowPicking && !chore.assignedToUserId && chore.availableAssignmentId;
+    allowPicking &&
+    user?.role === "CHILD" &&
+    !chore.assignedToUserId &&
+    chore.availableAssignmentId;
+  const canAssign =
+    allowPicking &&
+    user?.role === "ADULT" &&
+    !chore.assignedToUserId &&
+    chore.availableAssignmentId;
   const canSchedule =
     allowPicking && (user?.role === "CHILD" || user?.role === "ADULT");
 
@@ -97,13 +111,17 @@ export const ChoreActionPanel = ({
   const assignMutation = useMutation({
     mutationFn: (assignedToUserId: string) =>
       choreAssignmentApi.assign({
-        choreTemplateId: chore.id,
+        choreTemplateId: choreTemplateId!,
         assignedToUserId,
         startDate: new Date().toISOString(),
       }),
     onSuccess: () => {
       setError(null);
+      setShowMembers(false);
       queryClient.invalidateQueries({ queryKey: ["chores"] });
+      queryClient.invalidateQueries({
+        queryKey: ["available-chore-assignments"],
+      });
       onSuccess?.();
     },
     onError: (err) =>
@@ -177,14 +195,31 @@ export const ChoreActionPanel = ({
             {chore.uiStatus === "Completed" ? "godkännande" : "tilldelning"}
           </div>
         )}
-        {allowAdminActions && user?.role === "ADULT" && (
+        {canAssign && (
           <div className="assign-section">
-            <label>Tilldela till användar-ID:</label>
-            <input
-              type="text"
-              placeholder="Användar-ID"
-              onChange={(e) => assignMutation.mutate(e.target.value)}
-            />
+            <button
+              className="btn-assign"
+              onClick={() => setShowMembers((prev) => !prev)}
+            >
+              Tilldela
+            </button>
+
+            {showMembers && (
+              <div className="member-list">
+                <p>Välj vem som ska få questen:</p>
+
+                {householdMembers.map((member) => (
+                  <button
+                    key={member.id}
+                    className="member-option"
+                    onClick={() => assignMutation.mutate(member.id)}
+                    disabled={assignMutation.isPending}
+                  >
+                    {member.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
         {canPick && (
