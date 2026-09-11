@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories
 {
-public interface IChoreInstanceRepository
-{
+  public interface IChoreInstanceRepository
+  {
     Task<ChoreInstance?> GetByIdAsync(
         Guid id,
         Guid householdId,
@@ -170,5 +170,5 @@ public class ChoreInstanceRepository(AppDbContext context)
     {
         await context.SaveChangesAsync(cancellationToken);
     }
-}
+  }
 }

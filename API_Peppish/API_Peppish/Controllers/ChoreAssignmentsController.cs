@@ -102,5 +102,34 @@ public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAssignments(
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpPost("{assignmentId}/take")]
+        public async Task<ActionResult<ChoreAssignmentDto>> TakeFreeQuest(
+         Guid assignmentId)
+        {
+            try
+            {
+                var assignment = await service.TakeFreeQuestAsync(assignmentId);
+
+                var assignedUser = assignment.AssignedToUserId == null
+                    ? null
+                    : await userManager.FindByIdAsync(
+                        assignment.AssignedToUserId);
+
+                return Ok(new ChoreAssignmentDto
+                {
+                    Id = assignment.Id,
+                    ChoreTemplateId = assignment.ChoreTemplateId,
+                    AssignedToUserId = assignment.AssignedToUserId,
+                    AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
+                    StartDate = assignment.StartDate,
+                    DueDate = assignment.DueDate
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }
