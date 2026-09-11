@@ -12,6 +12,9 @@ namespace API_Peppish.Services
             AssignChoreRequestDto request,
             CancellationToken cancellationToken = default);
 
+        Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
+    CancellationToken cancellationToken = default);
+
         Task<ChoreAssignment> TakeFreeQuestAsync(
 Guid assignmentId,
 CancellationToken cancellationToken = default);
@@ -112,6 +115,18 @@ CancellationToken cancellationToken = default);
             }
 
             return assignment;
+        }
+
+        public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
+    CancellationToken cancellationToken = default)
+        {
+            var householdId = userContextService.GetCurrentHouseholdId()
+                ?? throw new InvalidOperationException(
+                    "Användaren tillhör inget hushåll.");
+
+            return await repository.GetAvailableAsync(
+                householdId,
+                cancellationToken);
         }
 
         public async Task<ChoreAssignment> TakeFreeQuestAsync(

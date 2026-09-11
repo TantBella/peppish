@@ -1,53 +1,84 @@
-using API_Peppish.Entities;
 using API_Peppish.Data;
+using API_Peppish.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories;
 
 public interface IChoreAssignmentRepository
 {
-  Task<ChoreAssignment?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
-  Task<List<ChoreAssignment>> GetByUserAsync(string userId, Guid householdId, CancellationToken cancellationToken = default);
-  Task<List<ChoreAssignment>> GetByTemplateAsync(Guid templateId, Guid householdId, CancellationToken cancellationToken = default);
-  Task<ChoreAssignment> CreateAsync(ChoreAssignment assignment, CancellationToken cancellationToken = default);
-  Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<ChoreAssignment?> GetByIdAsync(
+        Guid id,
+        Guid householdId,
+        CancellationToken cancellationToken = default);
+
+    Task<List<ChoreAssignment>> GetByUserAsync(
+        string userId,
+        Guid householdId,
+        CancellationToken cancellationToken = default);
+
+    Task<List<ChoreAssignment>> GetAvailableAsync(
+        Guid householdId,
+        CancellationToken cancellationToken = default);
+
+    Task<List<ChoreAssignment>> GetByTemplateAsync(
+        Guid templateId,
+        Guid householdId,
+        CancellationToken cancellationToken = default);
+
+    Task<ChoreAssignment> CreateAsync(
+        ChoreAssignment assignment,
+        CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(
+        CancellationToken cancellationToken = default);
 }
 
 public class ChoreAssignmentRepository(AppDbContext context) : IChoreAssignmentRepository
 {
-  public async Task<ChoreAssignment?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
-  {
-    return await context.ChoreAssignments
-        .FirstOrDefaultAsync(a => a.Id == id && a.HouseholdId == householdId, cancellationToken);
-  }
+    public async Task<ChoreAssignment?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
+    {
+        return await context.ChoreAssignments
+            .FirstOrDefaultAsync(a => a.Id == id && a.HouseholdId == householdId, cancellationToken);
+    }
 
- public async Task<List<ChoreAssignment>> GetByUserAsync(
-    string userId,
+    public async Task<List<ChoreAssignment>> GetByUserAsync(
+       string userId,
+       Guid householdId,
+       CancellationToken cancellationToken = default)
+    {
+        return await context.ChoreAssignments
+            .Where(a =>
+                a.HouseholdId == householdId &&
+                (a.AssignedToUserId == userId || a.AssignedToUserId == null))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<ChoreAssignment>> GetAvailableAsync(
     Guid householdId,
     CancellationToken cancellationToken = default)
-{
-    return await context.ChoreAssignments
-        .Where(a =>
-            a.HouseholdId == householdId &&
-            (a.AssignedToUserId == userId || a.AssignedToUserId == null))
-        .ToListAsync(cancellationToken);
-}
+    {
+        return await context.ChoreAssignments
+            .Where(a =>
+                a.HouseholdId == householdId &&
+                a.AssignedToUserId == null)
+            .ToListAsync(cancellationToken);
+    }
 
-  public async Task<List<ChoreAssignment>> GetByTemplateAsync(Guid templateId, Guid householdId, CancellationToken cancellationToken = default)
-  {
-    return await context.ChoreAssignments
-        .Where(a => a.ChoreTemplateId == templateId && a.HouseholdId == householdId)
-        .ToListAsync(cancellationToken);
-  }
+    public async Task<List<ChoreAssignment>> GetByTemplateAsync(Guid templateId, Guid householdId, CancellationToken cancellationToken = default)
+    {
+        return await context.ChoreAssignments
+            .Where(a => a.ChoreTemplateId == templateId && a.HouseholdId == householdId)
+            .ToListAsync(cancellationToken);
+    }
 
-  public async Task<ChoreAssignment> CreateAsync(ChoreAssignment assignment, CancellationToken cancellationToken = default)
-  {
-    await context.ChoreAssignments.AddAsync(assignment, cancellationToken);
-    return assignment;
-  }
+    public async Task<ChoreAssignment> CreateAsync(ChoreAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        await context.ChoreAssignments.AddAsync(assignment, cancellationToken);
+        return assignment;
+    }
 
-  public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-  {
-    await context.SaveChangesAsync(cancellationToken);
-  }
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }

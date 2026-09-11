@@ -74,6 +74,31 @@ namespace API_Peppish.Controllers
             return Ok(result);
         }
 
+        [HttpGet("available")]
+        public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAvailableAssignments(
+            CancellationToken cancellationToken)
+        {
+            var assignments = await service.GetAvailableAssignmentsAsync(
+                cancellationToken);
+
+            var result = new List<ChoreAssignmentDto>();
+
+            foreach (var assignment in assignments)
+            {
+                result.Add(new ChoreAssignmentDto
+                {
+                    Id = assignment.Id,
+                    ChoreTemplateId = assignment.ChoreTemplateId,
+                    AssignedToUserId = assignment.AssignedToUserId,
+                    AssignedToUserName = string.Empty,
+                    StartDate = assignment.StartDate,
+                    DueDate = assignment.DueDate
+                });
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost("{assignmentId}/take")]
         public async Task<ActionResult<ChoreAssignmentDto>> TakeFreeQuest(
             Guid assignmentId)
