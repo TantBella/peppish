@@ -48,7 +48,7 @@ export const ProgressComponent = () => {
         <h2>Dagens progress</h2>
 
         <div className="daily-card">
-          <div className="progress-label">Klarade uppgifter</div>
+          <div className="progress-label">Klarade quests</div>
 
           <div className="progress-bar-container">
             <div
