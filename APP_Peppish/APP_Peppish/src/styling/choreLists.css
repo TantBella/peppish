@@ -1,0 +1,184 @@
+.chore-list-page {
+  padding: 1rem;
+  margin: 0 auto;
+  color: var(--text);
+}
+
+/* Page header */
+.chore-list-page .chore-list-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.chore-list-page .chore-list-header .btn-primary {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, var(--accent-3), var(--accent-5));
+  color: white;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.chore-list-page .chore-list-header .btn-primary:hover {
+  transform: scale(1.05);
+}
+
+/* Main sections */
+.chore-list-page > section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--accent-1);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chore-list-page > section > h2 {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.child-quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.child-quest-card {
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--accent-3);
+  border-radius: 12px;
+}
+
+/* Child header */
+
+.child-quest-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.child-name {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.child-quest-chevron {
+  margin-left: 0.75rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* Approval indicator */
+
+.approval-indicator {
+  width: 8px;
+  height: 8px;
+  margin-left: 0.75rem;
+  border-radius: 50%;
+  background: var(--accent-5);
+}
+
+/* Expanded child content */
+
+.child-quest-content {
+  padding: 0 1rem 1rem;
+}
+
+.child-quest-content > h3 {
+  margin: 0.5rem 0 0.75rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.empty-child-quests {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Individual quests */
+
+.child-quest-item {
+  margin-bottom: 0.75rem;
+}
+
+.child-quest-item:last-child {
+  margin-bottom: 0;
+}
+
+.pending-approval-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.pending-approval-section h3 {
+  margin: 0 0 0.75rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.chore-list-page > section:last-child {
+  margin-bottom: 0;
+}
+
+.chore-list-page > section:last-child > p {
+  margin: -0.5rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.chore-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chore-item {
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.chore-expanded {
+  padding: 0 1rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .chore-list-page {
+    max-width: 800px;
+    padding: 2rem;
+  }
+
+  .chore-list-page > section {
+    padding: 1.5rem;
+  }
+
+  .child-quest-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .child-quest-content {
+    padding: 0 1.25rem 1.25rem;
+  }
+}

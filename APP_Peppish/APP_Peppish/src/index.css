@@ -3,6 +3,7 @@
 @import "./styling/homepage.css";
 @import "./styling/calendar.css";
 @import "./styling/chores.css";
+@import "./styling/choreLists.css";
 @import "./styling/progress.css";
 @import "./styling/rewards.css";
 @import "./styling/toast.css";
