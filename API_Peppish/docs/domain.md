@@ -4,9 +4,9 @@
 
 The system is designed to help families and households organize daily life by combining:
 
-* Task planning
-* Responsibility distribution
-* Motivation through rewards and progression
+- Task planning
+- Responsibility distribution
+- Motivation through rewards and progression
 
 A **Household** acts as the primary unit, containing multiple users with different roles and permissions.
 
@@ -18,9 +18,9 @@ A **Household** acts as the primary unit, containing multiple users with differe
 
 A household represents a family or group of users.
 
-* A household contains multiple users
-* All data is scoped to a household
-* Users cannot access data from other households
+- A household contains multiple users
+- All data is scoped to a household
+- Users cannot access data from other households
 
 ---
 
@@ -30,16 +30,16 @@ Represents a person in a household.
 
 #### Properties
 
-* Id (Guid)
-* Name (string)
-* Role (enum: Adult, Child)
-* HouseholdId (Guid)
+- Id (Guid)
+- Name (string)
+- Role (enum: Adult, Child)
+- HouseholdId (Guid)
 
 #### Rules
 
-* Every user belongs to exactly one household
-* Adults have full permissions within the household
-* Children have restricted permissions and require approval for completed tasks
+- Every user belongs to exactly one household
+- Adults have full permissions within the household
+- Children have restricted permissions and require approval for completed tasks
 
 ---
 
@@ -55,19 +55,19 @@ Defines what a task is.
 
 #### Properties
 
-* Id (Guid)
-* HouseholdId (Guid)
-* Title (string)
-* Description (string)
-* RewardAmount (decimal) — monetary reward
-* RewardPoints (int) — optional gamification points
-* Recurrence (enum: None, Daily, Weekly)
-* CreatedByUserId (Guid)
+- Id (Guid)
+- HouseholdId (Guid)
+- Title (string)
+- Description (string)
+- RewardAmount (decimal) — monetary reward
+- RewardPoints (int) — optional gamification points
+- Recurrence (enum: None, Daily, Weekly)
+- CreatedByUserId (Guid)
 
 #### Rules
 
-* Templates are reusable across time
-* Templates do NOT represent actual scheduled work
+- Templates are reusable across time
+- Templates do NOT represent actual scheduled work
 
 ---
 
@@ -77,17 +77,17 @@ Defines who is responsible for a task.
 
 #### Properties
 
-* Id (Guid)
-* ChoreTemplateId (Guid)
-* AssignedToUserId (Guid)
-* AssignedByUserId (Guid)
-* StartDate (DateTime)
+- Id (Guid)
+- ChoreTemplateId (Guid)
+- AssignedToUserId (Guid)
+- AssignedByUserId (Guid)
+- StartDate (DateTime)
 
 #### Rules
 
-* A template can have multiple assignments
-* Assignments define responsibility, not execution
-* Assignments are used to generate actual task instances
+- A template can have multiple assignments
+- Assignments define responsibility, not execution
+- Assignments are used to generate actual task instances
 
 ---
 
@@ -97,19 +97,19 @@ Represents a specific occurrence of a task at a given time.
 
 #### Properties
 
-* Id (Guid)
-* ChoreAssignmentId (Guid)
-* DueDate (DateTime)
-* Status (enum: Pending, Completed, Approved)
-* CompletedAt (DateTime, nullable)
-* ApprovedAt (DateTime, nullable)
-* ApprovedByUserId (Guid, nullable)
+- Id (Guid)
+- ChoreAssignmentId (Guid)
+- DueDate (DateTime)
+- Status (enum: available, assigned, completed, approved)
+- CompletedAt (DateTime, nullable)
+- ApprovedAt (DateTime, nullable)
+- ApprovedByUserId (Guid, nullable)
 
 #### Rules
 
-* Instances are generated from assignments
-* Instances are what the UI displays (calendar/week view)
-* History is stored at the instance level
+- Instances are generated from assignments
+- Instances are what the UI displays (calendar/week view)
+- History is stored at the instance level
 
 ---
 
@@ -117,19 +117,21 @@ Represents a specific occurrence of a task at a given time.
 
 Allowed transitions:
 
-* Pending → Completed
-* Completed → Approved
+- available → assigned
+- assigned → completed
+- assigned → available
+- completed → approved
 
 Forbidden transitions:
 
-* Pending → Approved
-* Approved → Completed
-* Completed → Pending
+- available → completed
+- assigned → approved
+- completed → assigned
 
 #### Rules
 
-* A chore MUST be Completed before it can be Approved
-* Approved chores are final and cannot be modified
+- A chore MUST be `completed` before it can be `approved`
+- `approved` chores are final and cannot be modified
 
 ---
 
@@ -148,20 +150,19 @@ Forbidden transitions:
 #### For Children
 
 1. Child marks task as completed
-   → Status = `Completed`
+   → Status = `completed`
 
 2. Task must be approved by an adult
-   → Status = `Approved`
+   → Status = `approved`
 
 3. After approval:
-
-   * Reward is granted
-   * Progress is updated
+   - Reward is granted
+   - Progress is updated
 
 #### For Adults
 
-* Adults may complete tasks directly
-* Approval step may be skipped depending on business rules
+- Adults may complete tasks directly
+- Approval step may be skipped depending on business rules
 
 ---
 
@@ -177,18 +178,18 @@ Tracks all rewards (money or points).
 
 #### Properties
 
-* Id (Guid)
-* UserId (Guid)
-* Amount (decimal)
-* Reason (string)
-* CreatedAt (DateTime)
+- Id (Guid)
+- UserId (Guid)
+- Amount (decimal)
+- Reason (string)
+- CreatedAt (DateTime)
 
 #### Rules
 
-* A ledger entry is created ONLY when a task is approved
-* Each ChoreInstance can generate at most ONE RewardLedger entry
-* The ledger acts as the source of truth for balances
-* Rewards should never be calculated directly from tasks
+- A ledger entry is created ONLY when a task is approved
+- Each ChoreInstance can generate at most ONE RewardLedger entry
+- The ledger acts as the source of truth for balances
+- Rewards should never be calculated directly from tasks
 
 ---
 
@@ -214,17 +215,17 @@ Tracks user progression and visual feedback.
 
 #### Properties
 
-* UserId (Guid)
-* CurrentLevel (int)
-* CurrentXp (int)
-* DailyProgressPercent (int: 0–100)
+- UserId (Guid)
+- CurrentLevel (int)
+- CurrentXp (int)
+- DailyProgressPercent (int: 0–100)
 
 #### Rules
 
-* Progress increases when tasks are approved
-* DailyProgressPercent reflects completion of assigned tasks for the day
-* DailyProgressPercent must be recalculated, not incremented blindly
-* Progress logic must be independent from reward logic
+- Progress increases when tasks are approved
+- DailyProgressPercent reflects completion of assigned tasks for the day
+- DailyProgressPercent must be recalculated, not incremented blindly
+- Progress logic must be independent from reward logic
 
 ---
 
@@ -238,29 +239,29 @@ The system must generate ChoreInstances from assignments.
 
 #### Option A: On-Demand (MVP)
 
-* Instances are generated when requested by the API
-* No persistence required for future instances
+- Instances are generated when requested by the API
+- No persistence required for future instances
 
 #### Option B: Background Job (Recommended)
 
-* A scheduled job generates upcoming instances (e.g., 7 days ahead)
-* Improves performance and consistency
+- A scheduled job generates upcoming instances (e.g., 7 days ahead)
+- Improves performance and consistency
 
 ---
 
 ### Instance Generation Rules
 
-* Instances must NOT be duplicated for the same date
+- Instances must NOT be duplicated for the same date
 
-* Each (Assignment, DueDate) combination must be unique
+- Each (Assignment, DueDate) combination must be unique
 
-* For Daily recurrence:
+- For Daily recurrence:
   → create one instance per day
 
-* For Weekly recurrence:
+- For Weekly recurrence:
   → create one instance per week on the same weekday as StartDate
 
-* Instances must not be generated before Assignment.StartDate
+- Instances must not be generated before Assignment.StartDate
 
 ---
 
@@ -268,34 +269,31 @@ The system must generate ChoreInstances from assignments.
 
 ### Adults
 
-* Full control over:
-
-  * Tasks
-  * Assignments
-  * Approvals
-  * Household management
+- Full control over:
+  - Tasks
+  - Assignments
+  - Approvals
+  - Household management
 
 ### Children
 
-* Can:
+- Can:
+  - View assigned tasks
+  - Mark tasks as completed
 
-  * View assigned tasks
-  * Mark tasks as completed
-
-* Cannot:
-
-  * Approve tasks
-  * Modify assignments or templates
+- Cannot:
+  - Approve tasks
+  - Modify assignments or templates
 
 ---
 
 ## 9. Data Integrity Rules
 
-* All entities must include HouseholdId where applicable
-* Cross-household access is strictly forbidden
-* Reward creation must only happen after approval
-* ChoreInstances must always reference a valid assignment
-* Deleting templates must not break historical instances
+- All entities must include HouseholdId where applicable
+- Cross-household access is strictly forbidden
+- Reward creation must only happen after approval
+- ChoreInstances must always reference a valid assignment
+- Deleting templates must not break historical instances
 
 ---
 
@@ -305,12 +303,11 @@ All related entities MUST belong to the same Household.
 
 Examples:
 
-* ChoreAssignment.HouseholdId must match:
+- ChoreAssignment.HouseholdId must match:
+  - ChoreTemplate.HouseholdId
+  - AssignedToUser.HouseholdId
 
-  * ChoreTemplate.HouseholdId
-  * AssignedToUser.HouseholdId
-
-* ChoreInstance must inherit HouseholdId from ChoreAssignment
+- ChoreInstance must inherit HouseholdId from ChoreAssignment
 
 Violations must result in errors.
 
@@ -318,18 +315,18 @@ Violations must result in errors.
 
 ### Deletion Rules
 
-* Deleting a ChoreAssignment must NOT delete historical ChoreInstances
-* Deleting a User must be restricted if related data exists
+- Deleting a ChoreAssignment must NOT delete historical ChoreInstances
+- Deleting a User must be restricted if related data exists
 
 ---
 
 ## 10. Design Principles
 
-* Separate definition, assignment, and execution
-* Keep rewards independent from task logic
-* Store history explicitly (do not derive it dynamically)
-* Prefer explicit state transitions over implicit logic
-* Ensure all business rules are enforced in the service layer (not controllers)
+- Separate definition, assignment, and execution
+- Keep rewards independent from task logic
+- Store history explicitly (do not derive it dynamically)
+- Prefer explicit state transitions over implicit logic
+- Ensure all business rules are enforced in the service layer (not controllers)
 
 ---
 
@@ -337,23 +334,23 @@ Violations must result in errors.
 
 ### UserRole
 
-* Adult
-* Child
+- Adult
+- Child
 
 ---
 
 ### ChoreStatus
 
-* Pending
-* Completed
-* Approved
+- Pending
+- Completed
+- Approved
 
 ---
 
 ### RecurrenceType
 
-* None
-* Daily
-* Weekly
+- None
+- Daily
+- Weekly
 
 ---

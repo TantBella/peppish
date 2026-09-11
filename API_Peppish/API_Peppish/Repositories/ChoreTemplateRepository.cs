@@ -15,6 +15,7 @@ public interface IChoreTemplateRepository
       CancellationToken cancellationToken = default);
   Task<ChoreTemplate> CreateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
   Task UpdateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
+  Task DeleteAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
   Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
@@ -91,6 +92,14 @@ public class ChoreTemplateRepository : IChoreTemplateRepository
       CancellationToken cancellationToken = default)
   {
     context.ChoreTemplates.Update(template);
+    return Task.CompletedTask;
+  }
+
+  public Task DeleteAsync(
+      ChoreTemplate template,
+      CancellationToken cancellationToken = default)
+  {
+    context.ChoreTemplates.Remove(template);
     return Task.CompletedTask;
   }
 

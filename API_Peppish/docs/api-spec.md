@@ -195,7 +195,7 @@ GET /chores?from=2026-04-01&to=2026-04-07
     "id": "guid",
     "title": "Städa rummet",
     "dueDate": "2026-04-30",
-    "status": "Pending | Completed | Approved",
+    "status": "available | assigned | completed | approved",
     "assignedToUserId": "guid",
     "rewardAmount": 10
   }
@@ -212,15 +212,15 @@ POST /chores/{id}/complete
 
 **Rules**
 
-* Allowed for assigned user only
-* Children require approval afterwards
+- Allowed for assigned user only
+- Children require approval afterwards
 
 **Response**
 
 ```json id="ci2"
 {
   "id": "guid",
-  "status": "Completed"
+  "status": "completed"
 }
 ```
 
@@ -234,15 +234,15 @@ POST /chores/{id}/approve
 
 **Rules**
 
-* Only Adults can approve
-* Triggers reward creation
+- Only Adults can approve
+- Triggers reward creation
 
 **Response**
 
 ```json id="ci3"
 {
   "id": "guid",
-  "status": "Approved"
+  "status": "approved"
 }
 ```
 
@@ -316,25 +316,25 @@ ChoreTemplate → ChoreAssignment → ChoreInstance
 
 Only **ChoreInstance** can:
 
-* be completed
-* be approved
-* generate rewards
+- be completed
+- be approved
+- generate rewards
 
 ---
 
 ### Reward Rules
 
-* Rewards are created ONLY after approval
-* Rewards are stored in RewardLedger
-* Balance is always calculated from ledger
+- Rewards are created ONLY after approval
+- Rewards are stored in RewardLedger
+- Balance is always calculated from ledger
 
 ---
 
 ### Authorization Rules
 
-* Adults: full access
-* Children: can complete but not approve tasks
-* All data is scoped by HouseholdId
+- Adults: full access
+- Children: can complete but not approve tasks
+- All data is scoped by HouseholdId
 
 ---
 
@@ -351,9 +351,9 @@ Only **ChoreInstance** can:
 
 ## Notes
 
-* All endpoints return JSON
-* All dates are ISO 8601
-* All APIs are versioned internally (v1 assumed)
-* Household isolation is enforced server-side
+- All endpoints return JSON
+- All dates are ISO 8601
+- All APIs are versioned internally (v1 assumed)
+- Household isolation is enforced server-side
 
 ---

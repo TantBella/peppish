@@ -3,9 +3,10 @@ namespace API_Peppish.Entities
   // Det som API:t skickar till frontend kopplas till denna entitet
   public enum ChoreStatus
   {
-    Pending = 0,
-    Completed = 1,
-    Approved = 2
+    available = 0,
+    completed = 1,
+    approved = 2,
+    assigned = 3
   }
 
   public class ChoreInstance
@@ -14,7 +15,7 @@ namespace API_Peppish.Entities
     public Guid HouseholdId { get; set; }
     public Guid ChoreAssignmentId { get; set; }
     public DateTime DueDate { get; set; }
-    public ChoreStatus Status { get; set; } = ChoreStatus.Pending;
+    public ChoreStatus Status { get; set; } = ChoreStatus.available;
     public Guid? RewardLedgerId { get; set; }
     public DateTime? CompletedAt { get; set; }
     public DateTime? ApprovedAt { get; set; }

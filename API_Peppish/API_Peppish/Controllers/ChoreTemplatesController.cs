@@ -85,4 +85,11 @@ public class ChoreTemplatesController(
             Recurrence = template.Recurrence.ToString()
         });
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTemplate(Guid id)
+    {
+        var deleted = await service.DeleteAsync(id);
+        return deleted ? NoContent() : NotFound();
+    }
 }

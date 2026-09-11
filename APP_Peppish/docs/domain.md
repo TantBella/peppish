@@ -39,28 +39,21 @@ API Status:
 
 ---
 
-## UI Status
+## Status Labels
 
-- Pending
-- Completed
-- Approved
-
----
-
-## Status Mapping (MANDATORY)
-
-Must happen in hooks ONLY:
-available / assigned → Pending
-completed → Completed
-approved → Approved
+- available → Tillgänglig
+- assigned → Tilldelad
+- completed → Klar
+- approved → Godkänd
 
 ---
 
 ## Status Rules
 
-- Pending = not started or assigned
-- Completed = waiting for approval
-- Approved = final state
+- available = available but not assigned
+- assigned = assigned to a user
+- completed = waiting for adult approval
+- approved = final state
 
 ---
 
@@ -85,6 +78,8 @@ Frontend MUST NOT:
 
 ## Transition Flow (STRICT)
 
-Pending → Completed → Approved
+available → assigned → completed → approved
+
+The only additional allowed transition is `assigned → available` when an assignment is released.
 
 No skipping allowed.

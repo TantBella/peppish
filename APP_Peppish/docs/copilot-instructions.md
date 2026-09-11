@@ -185,9 +185,10 @@ export const useChores = (filters) =>
 
 ### Status Mapping
 
-available / assigned → Pending
-completed → Completed
-approved → Approved
+available → Tillgänglig
+assigned → Tilldelad
+completed → Klar
+approved → Godkänd
 
 MUST happen in hooks only
 

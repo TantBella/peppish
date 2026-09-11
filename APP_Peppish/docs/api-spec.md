@@ -100,9 +100,10 @@ Frontend MUST map API status to UI status.
 Mapping MUST happen in hooks ONLY.
 
 ```
-available / assigned → Pending
-completed → Completed
-approved → Approved
+available → Tillgänglig
+assigned → Tilldelad
+completed → Klar
+approved → Godkänd
 ```
 
 - NEVER map in components

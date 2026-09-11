@@ -19,14 +19,14 @@ export const choreTemplateApi = {
     id: string,
     payload: {
       title: string;
-      description?: string;
-      rewardAmount: number;
-      rewardPoints: number;
-      recurrence: string;
+      rewardValue: number;
     },
   ) => {
     const res = await apiClient.put(`/chore-templates/${id}`, payload);
     return res.data;
+  },
+  delete: async (id: string) => {
+    await apiClient.delete(`/chore-templates/${id}`);
   },
 };
 

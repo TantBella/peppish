@@ -2,6 +2,7 @@ using API_Peppish.Data;
 using API_Peppish.DTOs;
 using API_Peppish.Entities;
 using API_Peppish.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Services;
 
@@ -22,11 +23,16 @@ public interface IChoreTemplateService
       Guid id,
       UpdateChoreTemplateRequestDto request,
       CancellationToken cancellationToken = default);
+
+  Task<bool> DeleteAsync(
+      Guid id,
+      CancellationToken cancellationToken = default);
 }
 
 public class ChoreTemplateService(
     IChoreTemplateRepository repository,
-    IUserContextService userContextService) : IChoreTemplateService
+    IUserContextService userContextService,
+    AppDbContext dbContext) : IChoreTemplateService
 {
   public async Task<ChoreTemplate> CreateAsync(
       CreateChoreTemplateRequestDto request,
@@ -97,7 +103,7 @@ public class ChoreTemplateService(
   public async Task<ChoreTemplate?> UpdateAsync(
       Guid id,
       UpdateChoreTemplateRequestDto request,
-      CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
   {
     var householdId = userContextService.GetCurrentHouseholdId()
         ?? throw new InvalidOperationException(
@@ -111,24 +117,18 @@ public class ChoreTemplateService(
     if (template == null)
       return null;
 
+    if (userContextService.GetCurrentUserRole() != "ADULT")
+      throw new UnauthorizedAccessException(
+          "Endast vuxna får ändra quests.");
+
     template.Title =
         request.Title ?? template.Title;
 
     template.Description =
         request.Description ?? template.Description;
 
-    template.RewardValue =
-        request.RewardValue;
-
-    template.RewardType =
-        Enum.Parse<RewardType>(
-            request.RewardType,
-            true);
-
-    template.Recurrence =
-        Enum.Parse<RecurrenceType>(
-            request.Recurrence,
-            true);
+    if (request.RewardValue.HasValue)
+      template.RewardValue = request.RewardValue.Value;
 
     await repository.UpdateAsync(
         template,
@@ -139,4 +139,35 @@ public class ChoreTemplateService(
 
     return template;
   }
+
+    public async Task<bool> DeleteAsync(
+            Guid id,
+            CancellationToken cancellationToken = default)
+    {
+        if (userContextService.GetCurrentUserRole() != "ADULT")
+            throw new UnauthorizedAccessException(
+                    "Endast vuxna får radera quests.");
+
+        var householdId = userContextService.GetCurrentHouseholdId()
+                ?? throw new InvalidOperationException(
+                        "Användaren tillhör inget hushåll.");
+
+        var template = await repository.GetByIdAsync(id, householdId, cancellationToken);
+        if (template == null)
+            return false;
+
+        var assignments = await dbContext.ChoreAssignments
+            .Where(a => a.ChoreTemplateId == id && a.HouseholdId == householdId)
+            .ToListAsync(cancellationToken);
+        var assignmentIds = assignments.Select(a => a.Id).ToList();
+        var instances = await dbContext.ChoreInstances
+                .Where(i => assignmentIds.Contains(i.ChoreAssignmentId))
+                .ToListAsync(cancellationToken);
+
+        dbContext.ChoreInstances.RemoveRange(instances);
+        dbContext.ChoreAssignments.RemoveRange(assignments);
+        await repository.DeleteAsync(template, cancellationToken);
+        await repository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

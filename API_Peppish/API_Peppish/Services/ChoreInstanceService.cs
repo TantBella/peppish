@@ -103,6 +103,7 @@ namespace API_Peppish.Services
                 {
                     Id = instance.Id,
                     ChoreAssignmentId = instance.ChoreAssignmentId,
+                    ChoreTemplateId = assignment.ChoreTemplateId,
                     Title = template?.Title ?? string.Empty,
                     DueDate = instance.DueDate,
                     Status = instance.Status.ToString(),
@@ -157,11 +158,11 @@ namespace API_Peppish.Services
                 throw new UnauthorizedAccessException(
                     "Den här questen är inte din.");
 
-            if (instance.Status != ChoreStatus.Pending)
+            if (instance.Status != ChoreStatus.assigned)
                 throw new InvalidOperationException(
                     $"Kan inte slutföra en syssla med denna status {instance.Status}.");
 
-            instance.Status = ChoreStatus.Completed;
+            instance.Status = ChoreStatus.completed;
             instance.CompletedAt = DateTime.UtcNow;
 
             await instanceRepository.UpdateAsync(
@@ -239,7 +240,7 @@ namespace API_Peppish.Services
                 ?? throw new InvalidOperationException(
                     "Sysslan kunde inte hittas.");
 
-            if (instance.Status != ChoreStatus.Completed)
+            if (instance.Status != ChoreStatus.completed)
                 throw new InvalidOperationException(
                     $"Kan inte godkänna en syssla med denna status {instance.Status}. " +
                     "Den måste klarmarkeras först.");
@@ -250,7 +251,7 @@ namespace API_Peppish.Services
 
             try
             {
-                instance.Status = ChoreStatus.Approved;
+                instance.Status = ChoreStatus.approved;
                 instance.ApprovedAt = DateTime.UtcNow;
                 instance.ApprovedByUserId = userId;
 
@@ -426,7 +427,9 @@ namespace API_Peppish.Services
                             HouseholdId = householdId,
                             ChoreAssignmentId = assignment.Id,
                             DueDate = currentDate,
-                            Status = ChoreStatus.Pending
+                            Status = assignment.AssignedToUserId == null
+                                ? ChoreStatus.available
+                                : ChoreStatus.assigned
                         };
 
                         await instanceRepository.CreateAsync(
