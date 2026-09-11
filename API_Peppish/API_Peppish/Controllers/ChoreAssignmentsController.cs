@@ -38,7 +38,7 @@ namespace API_Peppish.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAssignments(
-    CancellationToken cancellationToken)
+            CancellationToken cancellationToken)
         {
             var userId = userManager.GetUserId(User);
 
@@ -76,7 +76,7 @@ namespace API_Peppish.Controllers
 
         [HttpPost("{assignmentId}/take")]
         public async Task<ActionResult<ChoreAssignmentDto>> TakeFreeQuest(
-         Guid assignmentId)
+            Guid assignmentId)
         {
             try
             {
