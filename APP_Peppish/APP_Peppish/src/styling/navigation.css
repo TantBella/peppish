@@ -2,12 +2,11 @@
 .main-nav {
   position: fixed;
   bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: space-around;
-  justify-self: center;
-  width: 90vw;
-  border-radius: 20px;
-  background-color: #dddd61;
+  width: min(99vw, 720px);
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
 }
 
