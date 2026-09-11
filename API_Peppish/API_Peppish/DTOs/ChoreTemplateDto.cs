@@ -9,5 +9,7 @@ namespace API_Peppish.DTOs
     public decimal RewardValue { get; set; }
     public string RewardType { get; set; } = string.Empty;
     public string Recurrence { get; set; } = string.Empty;
+    public bool IsAvailable { get; set; }
+    public Guid? AvailableAssignmentId { get; set; }
   }
 }

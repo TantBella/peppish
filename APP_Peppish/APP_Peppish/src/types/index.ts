@@ -18,6 +18,8 @@ export interface Chore {
   assignedToUserId?: string;
   assignedToUserName?: string;
   rewardAmount?: number;
+  availableAssignmentId?: string;
+  isAvailable?: boolean;
 }
 
 export interface ChoreTemplate {

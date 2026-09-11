@@ -3,7 +3,7 @@ using API_Peppish.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories
-{ 
+{
 public interface IChoreInstanceRepository
 {
     Task<ChoreInstance?> GetByIdAsync(
@@ -77,16 +77,25 @@ public class ChoreInstanceRepository(AppDbContext context)
                 i.DueDate >= from &&
                 i.DueDate <= to);
 
-        // Vuxna kan se alla sysslor i hushållet.
-        // Barn kan se sina egna och öppna sysslor.
-        if (role != "ADULT")
+        if (role == "ADULT")
+        {
+            query = query.Where(i =>
+                context.ChoreAssignments.Any(a =>
+                    a.Id == i.ChoreAssignmentId &&
+                    a.HouseholdId == householdId &&
+                    (string.IsNullOrEmpty(a.AssignedToUserId) ||
+                     context.Users.Any(u =>
+                         u.Id == a.AssignedToUserId &&
+                         u.HouseholdId == householdId))));
+        }
+        else
         {
             query = query.Where(i =>
                 context.ChoreAssignments.Any(a =>
                     a.Id == i.ChoreAssignmentId &&
                     a.HouseholdId == householdId &&
                     (a.AssignedToUserId == userId ||
-                     a.AssignedToUserId == null)));
+                     string.IsNullOrEmpty(a.AssignedToUserId))));
         }
 
         return await query.ToListAsync(cancellationToken);

@@ -70,8 +70,13 @@ public class ChoreTemplateService(
         ?? throw new InvalidOperationException(
             "Anv�ndaren tillh�r inget hush�ll.");
 
-    return await repository.GetByHouseholdAsync(
+    var userId = userContextService.GetCurrentUserId();
+    var role = userContextService.GetCurrentUserRole();
+
+    return await repository.GetVisibleByUserAsync(
         householdId,
+        userId,
+        role,
         cancellationToken);
   }
 
