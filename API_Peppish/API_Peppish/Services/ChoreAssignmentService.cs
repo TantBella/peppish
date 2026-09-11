@@ -65,25 +65,49 @@ CancellationToken cancellationToken = default);
                 }
             }
 
-            var assignment = new ChoreAssignment
+            var assignment = request.AssignedToUserId == null
+                ? null
+                : await dbContext.ChoreAssignments.FirstOrDefaultAsync(
+                    a => a.HouseholdId == householdId &&
+                         a.ChoreTemplateId == request.ChoreTemplateId &&
+                         a.AssignedToUserId == null,
+                    cancellationToken);
+
+            var isNewAssignment = assignment == null;
+            assignment ??= new ChoreAssignment
             {
                 HouseholdId = householdId,
                 ChoreTemplateId = request.ChoreTemplateId,
-                AssignedToUserId = request.AssignedToUserId,
-                AssignedByUserId = userId,
-                StartDate = request.StartDate.HasValue
-         ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
-         : null,
-                DueDate = request.DueDate.HasValue
-         ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
-         : null
+                AssignedByUserId = userId
             };
 
-            await repository.CreateAsync(
-                assignment,
-                cancellationToken);
+            assignment.AssignedToUserId = request.AssignedToUserId;
+            assignment.AssignedByUserId = userId;
+            assignment.StartDate = request.StartDate.HasValue
+                ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+                : assignment.StartDate;
+            assignment.DueDate = request.DueDate.HasValue
+                ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
+                : assignment.DueDate;
+
+            if (isNewAssignment)
+                await repository.CreateAsync(assignment, cancellationToken);
+
             await repository.SaveChangesAsync(
                 cancellationToken);
+
+            if (assignment.AssignedToUserId != null)
+            {
+                await dbContext.ChoreInstances
+                    .Where(i =>
+                        i.ChoreAssignmentId == assignment.Id &&
+                        i.Status == ChoreStatus.available)
+                    .ExecuteUpdateAsync(
+                        setters => setters.SetProperty(
+                            i => i.Status,
+                            ChoreStatus.assigned),
+                        cancellationToken);
+            }
 
             if (assignment.AssignedToUserId != null)
             {
@@ -159,6 +183,16 @@ CancellationToken cancellationToken = default);
             assignment.AssignedToUserId = userId;
 
             await repository.SaveChangesAsync(cancellationToken);
+
+            await dbContext.ChoreInstances
+                .Where(i =>
+                    i.ChoreAssignmentId == assignment.Id &&
+                    i.Status == ChoreStatus.available)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(
+                        i => i.Status,
+                        ChoreStatus.assigned),
+                    cancellationToken);
 
             return assignment;
         }

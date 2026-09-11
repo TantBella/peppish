@@ -1,6 +1,6 @@
 export type Role = "ADULT" | "CHILD";
 
-export type ChoreStatus = "Pending" | "Completed" | "Approved";
+export type ChoreStatus = "available" | "assigned" | "completed" | "approved";
 
 export interface User {
   id: string;
@@ -12,11 +12,13 @@ export interface User {
 
 export interface Chore {
   id: string;
+  choreTemplateId?: string;
   title: string;
   dueDate: string;
   status: ChoreStatus;
   assignedToUserId?: string;
   assignedToUserName?: string;
+  rewardValue?: number;
   rewardAmount?: number;
   availableAssignmentId?: string;
   isAvailable?: boolean;
@@ -51,9 +53,20 @@ export interface ApiError {
   details?: any;
 }
 
-export type UIChoreStatus = "Pending" | "Completed" | "Approved";
+export type UIChoreStatus = ChoreStatus;
 
 export const mapApiStatusToUI = (status: ChoreStatus): UIChoreStatus => status;
 
-export const canTransition = (_from: ChoreStatus, _to: ChoreStatus): boolean =>
-  true;
+export const canTransition = (
+  from: ChoreStatus,
+  to: ChoreStatus,
+): boolean => {
+  const transitions: Record<ChoreStatus, ChoreStatus[]> = {
+    available: ["assigned"],
+    assigned: ["completed", "available"],
+    completed: ["approved"],
+    approved: [],
+  };
+
+  return transitions[from]?.includes(to) ?? false;
+};

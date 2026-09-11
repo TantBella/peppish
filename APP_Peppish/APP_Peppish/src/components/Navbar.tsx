@@ -20,19 +20,19 @@ const Navbar = () => {
   return (
     <nav className="main-nav">
       <button onClick={() => navigate("/")} className="nav-button">
-        <img src={home} alt="Home" className="Peppish-logo" />
+        <img src={home} alt="Home" />
       </button>
       <button onClick={() => navigate("/calendar")} className="nav-button">
-        <img src={calender} alt="Calendar" className="Peppish-logo" />
+        <img src={calender} alt="Calendar" />
       </button>
       <button onClick={() => navigate("/rewards")} className="nav-button">
-        <img src={rewards} alt="Rewards" className="Peppish-logo" />
+        <img src={rewards} alt="Rewards" />
       </button>
       {/* <button onClick={() => navigate("/progress")} className="nav-button">
-        <img src={progress} alt="App logo" className="Peppish-logo" />
+        <img src={progress} alt="App logo" />
       </button> */}
       <button onClick={() => navigate("/chores")} className="nav-button">
-        <img src={task} alt="Chores" className="Peppish-logo" />
+        <img src={task} alt="Chores" />
       </button>
       {user?.role === "ADULT" && (
         <button
@@ -41,11 +41,11 @@ const Navbar = () => {
           }
           className="nav-button"
         >
-          <img src={household_icon} alt="Household" className="Peppish-logo" />
+          <img src={household_icon} alt="Household" />
         </button>
       )}
       <button onClick={handleLogout} className="nav-button">
-        <img src={log_out} alt="App logo" className="Peppish-logo" />
+        <img src={log_out} alt="App logo" />
       </button>
     </nav>
   );

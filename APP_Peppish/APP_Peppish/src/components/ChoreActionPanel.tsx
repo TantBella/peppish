@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { choreInstanceApi, choreAssignmentApi } from "../services/choreService";
+import {
+  choreInstanceApi,
+  choreAssignmentApi,
+  choreTemplateApi,
+} from "../services/choreService";
 import { ChoreWithUIStatus } from "../hooks/useChores";
 import { useAuth } from "../context/AuthContext";
 import { HouseholdMember } from "../services/householdService.api";
@@ -32,17 +36,20 @@ export const ChoreActionPanel = ({
   const [showMembers, setShowMembers] = useState(false);
 
   const canComplete =
-    chore.uiStatus === "Pending" && chore.assignedToUserId === user?.id;
-  const canApprove = chore.uiStatus === "Completed" && user?.role === "ADULT";
+    chore.uiStatus === "assigned" && chore.assignedToUserId === user?.id;
+  const canApprove = chore.uiStatus === "completed" && user?.role === "ADULT";
   const canEditOrDelete = allowAdminActions && user?.role === "ADULT";
+  const templateId = chore.choreTemplateId ?? choreTemplateId;
   const canPick =
     allowPicking &&
     user?.role === "CHILD" &&
+    chore.uiStatus === "available" &&
     !chore.assignedToUserId &&
     chore.availableAssignmentId;
   const canAssign =
     allowPicking &&
     user?.role === "ADULT" &&
+    chore.uiStatus === "available" &&
     !chore.assignedToUserId &&
     chore.availableAssignmentId;
   const canSchedule =
@@ -56,7 +63,7 @@ export const ChoreActionPanel = ({
       queryClient.setQueryData(["chores"], (old: any[] | undefined) =>
         old
           ? old.map((c) =>
-              c.id === chore.id ? { ...c, status: "Completed" } : c,
+              c.id === chore.id ? { ...c, status: "completed" } : c,
             )
           : old,
       );
@@ -86,7 +93,7 @@ export const ChoreActionPanel = ({
       queryClient.setQueryData(["chores"], (old: any[] | undefined) =>
         old
           ? old.map((c) =>
-              c.id === chore.id ? { ...c, status: "Approved" } : c,
+              c.id === chore.id ? { ...c, status: "approved" } : c,
             )
           : old,
       );
@@ -144,6 +151,22 @@ export const ChoreActionPanel = ({
       ),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => choreTemplateApi.delete(templateId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chores"] });
+      queryClient.invalidateQueries({ queryKey: ["chore-templates"] });
+      queryClient.invalidateQueries({
+        queryKey: ["available-chore-assignments"],
+      });
+      onSuccess?.();
+    },
+    onError: (err) =>
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte raderas",
+      ),
+  });
+
   const scheduleMutation = useMutation({
     mutationFn: () =>
       choreAssignmentApi.assign({
@@ -186,13 +209,16 @@ export const ChoreActionPanel = ({
             {approveMutation.isPending ? "Godkänner..." : "Godkänn"}
           </button>
         )}
-        {chore.uiStatus === "Approved" && (
+        {chore.uiStatus === "approved" && (
           <div className="status-complete">✓ Godkänd och slutförd</div>
         )}
-        {!canComplete && !canApprove && chore.uiStatus !== "Approved" && (
+        {!canComplete && !canApprove && chore.uiStatus !== "approved" && (
           <div className="status-info">
-            Väntar på{" "}
-            {chore.uiStatus === "Completed" ? "godkännande" : "tilldelning"}
+            {chore.uiStatus === "completed"
+              ? "Väntar på godkännande"
+              : chore.uiStatus === "assigned"
+                ? "Tilldelad"
+                : "Väntar på tilldelning"}
           </div>
         )}
         {canAssign && (
@@ -267,9 +293,16 @@ export const ChoreActionPanel = ({
           <div className="admin-actions">
             <button
               className="btn-edit"
-              onClick={() => navigate(`/chores/${chore.id}/edit`)}
+              onClick={() => navigate(`/chores/${templateId}/edit`)}
             >
               Edit
+            </button>
+            <button
+              className="btn-delete"
+              onClick={() => deleteMutation.mutate()}
+              disabled={deleteMutation.isPending || !templateId}
+            >
+              {deleteMutation.isPending ? "Raderar..." : "Radera"}
             </button>
           </div>
         )}

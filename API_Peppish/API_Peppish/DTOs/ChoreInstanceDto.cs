@@ -5,6 +5,7 @@ namespace API_Peppish.DTOs
     {
         public Guid Id { get; set; }
         public Guid ChoreAssignmentId { get; set; }
+        public Guid ChoreTemplateId { get; set; }
         public string Title { get; set; } = string.Empty;
         public DateTime? DueDate { get; set; }
         public string Status { get; set; } = string.Empty;

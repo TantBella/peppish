@@ -36,12 +36,12 @@ export const ChildQuestCard = ({
     dueDate.setHours(0, 0, 0, 0);
 
     return (
-      chore.uiStatus === "Completed" && dueDate.getTime() < today.getTime()
+      chore.uiStatus === "completed" && dueDate.getTime() < today.getTime()
     );
   });
 
   const todayCompleted = todayChores.filter(
-    (chore) => chore.uiStatus === "Completed",
+    (chore) => chore.uiStatus === "completed",
   );
 
   const hasPendingApproval =
@@ -82,7 +82,7 @@ export const ChildQuestCard = ({
                   {expandedChoreId === chore.id && (
                     <ChoreActionPanel
                       chore={chore}
-                      allowAdminActions
+                      allowAdminActions={false}
                       allowPicking={false}
                     />
                   )}
@@ -108,7 +108,7 @@ export const ChildQuestCard = ({
                     {expandedChoreId === chore.id && (
                       <ChoreActionPanel
                         chore={chore}
-                        allowAdminActions
+                        allowAdminActions={false}
                         allowPicking={false}
                       />
                     )}

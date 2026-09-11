@@ -4,17 +4,20 @@
   bottom: 0;
   display: flex;
   justify-content: space-around;
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; */
-  width: 100vw;
+  justify-self: center;
+  width: 90vw;
+  border-radius: 20px;
+  background-color: #dddd61;
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-button {
-  background-color: #fff;
-  padding: 0.2rem;
+  background-color: #fefefa;
+  padding: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
+  border-radius: 0;
 }
 
 .nav-button > img {

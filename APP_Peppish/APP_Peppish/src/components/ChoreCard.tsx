@@ -15,9 +15,10 @@ export const ChoreCard = ({
   compact = false,
 }: ChoreCardProps) => {
   const statusLabels = {
-    Pending: "Ej påbörjad",
-    Completed: "Slutförd",
-    Approved: "Godkänd",
+    available: "Tillgänglig",
+    assigned: "Tilldelad",
+    completed: "Klar",
+    approved: "Godkänd",
   } as const;
 
   return (

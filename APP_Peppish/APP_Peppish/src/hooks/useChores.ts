@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { choreInstanceApi } from "../services/choreService";
 import { Chore, ChoreStatus, UIChoreStatus } from "../types";
 
-const mapChoreStatusToUI = (status: ChoreStatus): UIChoreStatus => {
-  if (status === "Pending") return "Pending";
-  if (status === "Completed") return "Completed";
-  return "Approved";
+const mapChoreStatusToUI = (chore: Chore): UIChoreStatus => {
+  const status = chore.status.toLowerCase() as ChoreStatus;
+
+  return status === "available" && chore.assignedToUserId ? "assigned" : status;
 };
 
 export interface ChoreWithUIStatus extends Chore {
@@ -19,7 +19,7 @@ export const useChores = (params?: { from?: string; to?: string }) => {
       const chores = await choreInstanceApi.getAll(params);
       return chores.map((chore: Chore) => ({
         ...chore,
-        uiStatus: mapChoreStatusToUI(chore.status),
+        uiStatus: mapChoreStatusToUI(chore),
       })) as ChoreWithUIStatus[];
     },
   });
@@ -34,7 +34,7 @@ export const useChore = (id: string) => {
       if (!chore) throw new Error("Questen hittas inte");
       return {
         ...chore,
-        uiStatus: mapChoreStatusToUI(chore.status),
+        uiStatus: mapChoreStatusToUI(chore),
       } as ChoreWithUIStatus;
     },
     enabled: !!id,
