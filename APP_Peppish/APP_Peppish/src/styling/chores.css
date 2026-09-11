@@ -204,9 +204,8 @@
   transition: width 0.3s ease;
 }
 
-/* =========================================================
-   DAGENS UPPGIFTER
-   ========================================================= */
+/*
+   DAGENS QUESTS*/
 
 .home-content:nth-child(2) .home-card {
   background: linear-gradient(135deg, var(--accent-2), var(--accent-1));
