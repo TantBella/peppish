@@ -8,6 +8,11 @@ public interface IChoreTemplateRepository
 {
   Task<ChoreTemplate?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
   Task<List<ChoreTemplate>> GetByHouseholdAsync(Guid householdId, CancellationToken cancellationToken = default);
+  Task<List<ChoreTemplate>> GetVisibleByUserAsync(
+      Guid householdId,
+      string userId,
+      string role,
+      CancellationToken cancellationToken = default);
   Task<ChoreTemplate> CreateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
   Task UpdateAsync(ChoreTemplate template, CancellationToken cancellationToken = default);
   Task SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -38,6 +43,39 @@ public class ChoreTemplateRepository : IChoreTemplateRepository
     return await context.ChoreTemplates
         .Where(t => t.HouseholdId == householdId)
         .ToListAsync(cancellationToken);
+  }
+
+  public async Task<List<ChoreTemplate>> GetVisibleByUserAsync(
+      Guid householdId,
+      string userId,
+      string role,
+      CancellationToken cancellationToken = default)
+  {
+    var query = context.ChoreTemplates
+        .Where(t => t.HouseholdId == householdId);
+
+    if (role == "ADULT")
+    {
+      query = query.Where(t =>
+          context.ChoreAssignments.Any(a =>
+              a.ChoreTemplateId == t.Id &&
+              a.HouseholdId == householdId &&
+          (string.IsNullOrEmpty(a.AssignedToUserId) ||
+           context.Users.Any(u =>
+             u.Id == a.AssignedToUserId &&
+             u.HouseholdId == householdId))));
+    }
+    else
+    {
+      query = query.Where(t =>
+          context.ChoreAssignments.Any(a =>
+              a.ChoreTemplateId == t.Id &&
+              a.HouseholdId == householdId &&
+          (a.AssignedToUserId == userId ||
+           string.IsNullOrEmpty(a.AssignedToUserId))));
+    }
+
+    return await query.ToListAsync(cancellationToken);
   }
 
   public Task<ChoreTemplate> CreateAsync(

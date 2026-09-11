@@ -30,7 +30,7 @@ export const ChoreActionPanel = ({
   const canApprove = chore.uiStatus === "Completed" && user?.role === "ADULT";
   const canEditOrDelete = allowAdminActions && user?.role === "ADULT";
   const canPick =
-    allowPicking && user?.role === "CHILD" && !chore.assignedToUserId;
+    allowPicking && !chore.assignedToUserId && chore.availableAssignmentId;
   const canSchedule =
     allowPicking && (user?.role === "CHILD" || user?.role === "ADULT");
 
@@ -57,7 +57,9 @@ export const ChoreActionPanel = ({
     onError: (err, _vars, context: any) => {
       if (context?.previous)
         queryClient.setQueryData(["chores"], context.previous);
-      setError(err instanceof Error ? err.message : "Failed to complete chore");
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte slutföras",
+      );
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
   });
@@ -85,7 +87,9 @@ export const ChoreActionPanel = ({
     onError: (err, _vars, context: any) => {
       if (context?.previous)
         queryClient.setQueryData(["chores"], context.previous);
-      setError(err instanceof Error ? err.message : "Failed to approve chore");
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte godkännas",
+      );
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
   });
@@ -103,7 +107,23 @@ export const ChoreActionPanel = ({
       onSuccess?.();
     },
     onError: (err) =>
-      setError(err instanceof Error ? err.message : "Failed to assign chore"),
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte tilldelas",
+      ),
+  });
+
+  const takeMutation = useMutation({
+    mutationFn: () => choreAssignmentApi.take(chore.availableAssignmentId!),
+    onSuccess: () => {
+      setError(null);
+      queryClient.invalidateQueries({ queryKey: ["chores"] });
+      queryClient.invalidateQueries({ queryKey: ["chore-templates"] });
+      onSuccess?.();
+    },
+    onError: (err) =>
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte väljas",
+      ),
   });
 
   const scheduleMutation = useMutation({
@@ -121,7 +141,9 @@ export const ChoreActionPanel = ({
       onSuccess?.();
     },
     onError: (err) =>
-      setError(err instanceof Error ? err.message : "Failed to schedule chore"),
+      setError(
+        err instanceof Error ? err.message : "Questen kunde inte schemaläggas",
+      ),
   });
 
   return (
@@ -134,7 +156,7 @@ export const ChoreActionPanel = ({
             disabled={completeMutation.isPending}
             className="btn-complete"
           >
-            {completeMutation.isPending ? "Completing..." : "Complete"}
+            {completeMutation.isPending ? "Slutför..." : "Slutförd"}
           </button>
         )}
         {canApprove && (
@@ -143,24 +165,24 @@ export const ChoreActionPanel = ({
             disabled={approveMutation.isPending}
             className="btn-approve"
           >
-            {approveMutation.isPending ? "Approving..." : "Approve"}
+            {approveMutation.isPending ? "Godkänner..." : "Godkänn"}
           </button>
         )}
         {chore.uiStatus === "Approved" && (
-          <div className="status-complete">✓ Approved and Completed</div>
+          <div className="status-complete">✓ Godkänd och slutförd</div>
         )}
         {!canComplete && !canApprove && chore.uiStatus !== "Approved" && (
           <div className="status-info">
-            Awaiting{" "}
-            {chore.uiStatus === "Completed" ? "ADULT approval" : "assignment"}
+            Väntar på{" "}
+            {chore.uiStatus === "Completed" ? "godkännande" : "tilldelning"}
           </div>
         )}
         {allowAdminActions && user?.role === "ADULT" && (
           <div className="assign-section">
-            <label>Assign to user ID:</label>
+            <label>Tilldela till användar-ID:</label>
             <input
               type="text"
-              placeholder="User ID"
+              placeholder="Användar-ID"
               onChange={(e) => assignMutation.mutate(e.target.value)}
             />
           </div>
@@ -169,22 +191,22 @@ export const ChoreActionPanel = ({
           <div className="pick-section">
             <button
               className="btn-pick"
-              onClick={() => assignMutation.mutate(user!.id)}
-              disabled={assignMutation.isPending}
+              onClick={() => takeMutation.mutate()}
+              disabled={takeMutation.isPending}
             >
-              {assignMutation.isPending ? "Picking..." : "Pick this chore"}
+              {takeMutation.isPending ? "Väljer..." : "Välj questen"}
             </button>
             <button
               className="btn-schedule"
               onClick={() => setScheduling(true)}
             >
-              Pick for a date
+              Välj datum
             </button>
           </div>
         )}
         {canSchedule && scheduling && (
           <div className="schedule-section">
-            <label>Choose date:</label>
+            <label>Välj datum:</label>
             <input
               type="date"
               value={scheduleDate}
@@ -194,7 +216,7 @@ export const ChoreActionPanel = ({
               onClick={() => scheduleMutation.mutate()}
               disabled={scheduleMutation.isPending || !scheduleDate}
             >
-              {scheduleMutation.isPending ? "Scheduling..." : "Schedule"}
+              {scheduleMutation.isPending ? "Schemalägger..." : "Schemalägg"}
             </button>
             <button
               onClick={() => {
@@ -202,7 +224,7 @@ export const ChoreActionPanel = ({
                 setScheduleDate("");
               }}
             >
-              Cancel
+              Avbryt
             </button>
           </div>
         )}

@@ -31,8 +31,11 @@ export const useChore = (id: string) => {
     queryFn: async () => {
       const chores = await choreInstanceApi.getAll();
       const chore = chores.find((c: Chore) => c.id === id);
-      if (!chore) throw new Error("Chore not found");
-      return { ...chore, uiStatus: mapChoreStatusToUI(chore.status) } as ChoreWithUIStatus;
+      if (!chore) throw new Error("Questen hittas inte");
+      return {
+        ...chore,
+        uiStatus: mapChoreStatusToUI(chore.status),
+      } as ChoreWithUIStatus;
     },
     enabled: !!id,
   });
