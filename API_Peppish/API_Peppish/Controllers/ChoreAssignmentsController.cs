@@ -14,80 +14,53 @@ namespace API_Peppish.Controllers
         IChoreAssignmentService service,
         UserManager<ApplicationUser> userManager) : ControllerBase
     {
-    [HttpPost]
-    public async Task<ActionResult<ChoreAssignmentDto>> AssignChore(
-        [FromBody] AssignChoreRequestDto request)
-    {
-      var assignment = await service.AssignAsync(request);
+        [HttpPost]
+        public async Task<ActionResult<ChoreAssignmentDto>> AssignChore(
+            [FromBody] AssignChoreRequestDto request)
+        {
+            var assignment = await service.AssignAsync(request);
 
-      var assignedUser = assignment.AssignedToUserId == null
-          ? null
-          : await userManager.FindByIdAsync(
-              assignment.AssignedToUserId);
+            var assignedUser = assignment.AssignedToUserId == null
+                ? null
+                : await userManager.FindByIdAsync(
+                    assignment.AssignedToUserId);
 
-      return Created("", new ChoreAssignmentDto
-      {
-        Id = assignment.Id,
-        ChoreTemplateId = assignment.ChoreTemplateId,
-        AssignedToUserId = assignment.AssignedToUserId,
-        AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
-        StartDate = assignment.StartDate,
-        DueDate = assignment.DueDate
-      });
-    }
+            return Created("", new ChoreAssignmentDto
+            {
+                Id = assignment.Id,
+                ChoreTemplateId = assignment.ChoreTemplateId,
+                AssignedToUserId = assignment.AssignedToUserId,
+                AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
+                StartDate = assignment.StartDate,
+                DueDate = assignment.DueDate
+            });
+        }
 
         [HttpGet]
-public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAssignments(
+        public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAssignments(
     CancellationToken cancellationToken)
-{
-    var userId = userManager.GetUserId(User);
-
-    if (string.IsNullOrEmpty(userId))
-    {
-        return Unauthorized();
-    }
-
-    var assignments = await service.GetUserAssignmentsAsync(
-        userId,
-        cancellationToken);
-
-    var result = new List<ChoreAssignmentDto>();
-
-    foreach (var assignment in assignments)
-    {
-        var assignedUser = assignment.AssignedToUserId == null
-            ? null
-            : await userManager.FindByIdAsync(
-                assignment.AssignedToUserId);
-
-        result.Add(new ChoreAssignmentDto
         {
-            Id = assignment.Id,
-            ChoreTemplateId = assignment.ChoreTemplateId,
-            AssignedToUserId = assignment.AssignedToUserId,
-            AssignedToUserName = assignedUser?.DisplayName ?? string.Empty,
-            StartDate = assignment.StartDate,
-            DueDate = assignment.DueDate
-        });
-    }
+            var userId = userManager.GetUserId(User);
 
-    return Ok(result);
-}
-
-        [HttpPost("{assignmentId}/take")]
-        public async Task<ActionResult<ChoreAssignmentDto>> TakeFreeQuest(
-         Guid assignmentId)
-        {
-            try
+            if (string.IsNullOrEmpty(userId))
             {
-                var assignment = await service.TakeFreeQuestAsync(assignmentId);
+                return Unauthorized();
+            }
 
+            var assignments = await service.GetUserAssignmentsAsync(
+                userId,
+                cancellationToken);
+
+            var result = new List<ChoreAssignmentDto>();
+
+            foreach (var assignment in assignments)
+            {
                 var assignedUser = assignment.AssignedToUserId == null
                     ? null
                     : await userManager.FindByIdAsync(
                         assignment.AssignedToUserId);
 
-                return Ok(new ChoreAssignmentDto
+                result.Add(new ChoreAssignmentDto
                 {
                     Id = assignment.Id,
                     ChoreTemplateId = assignment.ChoreTemplateId,
@@ -97,10 +70,8 @@ public async Task<ActionResult<List<ChoreAssignmentDto>>> GetAssignments(
                     DueDate = assignment.DueDate
                 });
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+
+            return Ok(result);
         }
 
         [HttpPost("{assignmentId}/take")]
