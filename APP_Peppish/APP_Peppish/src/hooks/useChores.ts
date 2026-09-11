@@ -3,7 +3,13 @@ import { choreInstanceApi } from "../services/choreService";
 import { Chore, ChoreStatus, UIChoreStatus } from "../types";
 
 const mapChoreStatusToUI = (chore: Chore): UIChoreStatus => {
-  const status = chore.status.toLowerCase() as ChoreStatus;
+  const normalizedStatus = chore.status.toLowerCase();
+
+  if (normalizedStatus === "pending") {
+    return chore.assignedToUserId ? "assigned" : "available";
+  }
+
+  const status = normalizedStatus as ChoreStatus;
 
   return status === "available" && chore.assignedToUserId ? "assigned" : status;
 };

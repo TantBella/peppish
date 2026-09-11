@@ -35,8 +35,11 @@ export const ChoreActionPanel = ({
   const [scheduleDate, setScheduleDate] = useState<string>("");
   const [showMembers, setShowMembers] = useState(false);
 
-  const canComplete =
-    chore.uiStatus === "assigned" && chore.assignedToUserId === user?.id;
+  const isAssignedToCurrentUser =
+    chore.assignedToUserId?.toLowerCase() === user?.id?.toLowerCase();
+  const canComplete = isAssignedToCurrentUser && chore.uiStatus === "assigned";
+  const showCompletionCheckbox =
+    isAssignedToCurrentUser && chore.uiStatus !== "available";
   const canApprove = chore.uiStatus === "completed" && user?.role === "ADULT";
   const canEditOrDelete = allowAdminActions && user?.role === "ADULT";
   const templateId = chore.choreTemplateId ?? choreTemplateId;
@@ -52,8 +55,7 @@ export const ChoreActionPanel = ({
     chore.uiStatus === "available" &&
     !chore.assignedToUserId &&
     chore.availableAssignmentId;
-  const canSchedule =
-    allowPicking && (user?.role === "CHILD" || user?.role === "ADULT");
+  const canSchedule = allowPicking && canAssign;
 
   const completeMutation = useMutation({
     mutationFn: () => choreInstanceApi.complete(chore.id),
@@ -120,11 +122,13 @@ export const ChoreActionPanel = ({
       choreAssignmentApi.assign({
         choreTemplateId: choreTemplateId!,
         assignedToUserId,
-        startDate: new Date().toISOString(),
+        startDate: scheduleDate || new Date().toISOString(),
       }),
     onSuccess: () => {
       setError(null);
       setShowMembers(false);
+      setScheduling(false);
+      setScheduleDate("");
       queryClient.invalidateQueries({ queryKey: ["chores"] });
       queryClient.invalidateQueries({
         queryKey: ["available-chore-assignments"],
@@ -167,38 +171,31 @@ export const ChoreActionPanel = ({
       ),
   });
 
-  const scheduleMutation = useMutation({
-    mutationFn: () =>
-      choreAssignmentApi.assign({
-        choreTemplateId: chore.id,
-        assignedToUserId: user!.id,
-        startDate: scheduleDate,
-      }),
-    onSuccess: () => {
-      setError(null);
-      setScheduling(false);
-      setScheduleDate("");
-      queryClient.invalidateQueries({ queryKey: ["chores"] });
-      onSuccess?.();
-    },
-    onError: (err) =>
-      setError(
-        err instanceof Error ? err.message : "Questen kunde inte schemaläggas",
-      ),
-  });
-
   return (
     <div className="chore-action-panel">
       {error && <div className="error-message alert alert-error">{error}</div>}
       <div className="action-buttons">
-        {canComplete && (
-          <button
-            onClick={() => completeMutation.mutate()}
-            disabled={completeMutation.isPending}
-            className="btn-complete"
-          >
-            {completeMutation.isPending ? "Slutför..." : "Slutförd"}
-          </button>
+        {showCompletionCheckbox && (
+          <label className="complete-toggle">
+            <input
+              type="checkbox"
+              checked={
+                completeMutation.isPending ||
+                chore.uiStatus === "completed" ||
+                chore.uiStatus === "approved"
+              }
+              onChange={() => completeMutation.mutate()}
+              disabled={!canComplete || completeMutation.isPending}
+              aria-label="Markera questen som gjord"
+            />
+            <span>
+              {completeMutation.isPending
+                ? "Skickar för godkännande..."
+                : chore.uiStatus === "assigned"
+                  ? "Markera som gjord"
+                  : "Quest markerad som gjord"}
+            </span>
+          </label>
         )}
         {canApprove && (
           <button
@@ -212,14 +209,8 @@ export const ChoreActionPanel = ({
         {chore.uiStatus === "approved" && (
           <div className="status-complete">✓ Godkänd och slutförd</div>
         )}
-        {!canComplete && !canApprove && chore.uiStatus !== "approved" && (
-          <div className="status-info">
-            {chore.uiStatus === "completed"
-              ? "Väntar på godkännande"
-              : chore.uiStatus === "assigned"
-                ? "Tilldelad"
-                : "Väntar på tilldelning"}
-          </div>
+        {!canComplete && !canApprove && chore.uiStatus === "completed" && (
+          <div className="status-info">Väntar på godkännande</div>
         )}
         {canAssign && (
           <div className="assign-section">
@@ -228,6 +219,12 @@ export const ChoreActionPanel = ({
               onClick={() => setShowMembers((prev) => !prev)}
             >
               Tilldela
+            </button>
+            <button
+              className="btn-schedule"
+              onClick={() => setScheduling((prev) => !prev)}
+            >
+              Välj datum
             </button>
 
             {showMembers && (
@@ -257,12 +254,6 @@ export const ChoreActionPanel = ({
             >
               {takeMutation.isPending ? "Väljer..." : "Välj questen"}
             </button>
-            <button
-              className="btn-schedule"
-              onClick={() => setScheduling(true)}
-            >
-              Välj datum
-            </button>
           </div>
         )}
         {canSchedule && scheduling && (
@@ -274,18 +265,11 @@ export const ChoreActionPanel = ({
               onChange={(e) => setScheduleDate(e.target.value)}
             />
             <button
-              onClick={() => scheduleMutation.mutate()}
-              disabled={scheduleMutation.isPending || !scheduleDate}
-            >
-              {scheduleMutation.isPending ? "Schemalägger..." : "Schemalägg"}
-            </button>
-            <button
               onClick={() => {
                 setScheduling(false);
-                setScheduleDate("");
               }}
             >
-              Avbryt
+              Klar
             </button>
           </div>
         )}
