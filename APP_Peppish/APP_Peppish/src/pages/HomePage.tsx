@@ -9,7 +9,7 @@ import { useChores } from "../hooks/useChores";
 
 const choreStatusLabels: Record<string, string> = {
   available: "Tillgänglig",
-  assigned: "Tilldelad",
+  assigned: "Ej påbörjad",
   completed: "Klar, väntar på godkännande",
   approved: "Godkänd",
 };
@@ -120,7 +120,7 @@ export const HomePage = () => {
             <div className="home-quest-list">
               {todaysChores.map((chore) => (
                 <div key={chore.id} className="home-quest-row">
-                  <span>• {chore.title} </span> 
+                  <span>• {chore.title} </span>
                   <span>
                     {choreStatusLabels[chore.status.toLowerCase()] ??
                       chore.status}
