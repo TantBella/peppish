@@ -22,7 +22,6 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background-color: #f5f5f5; */
   letter-spacing: 1.5px;
 }
 
@@ -36,7 +35,7 @@ body {
   --surface: #f2f2ffab;
   --border: #cdede192;
 
-  --text: #1f2937;
+  --text: #2f3337;
   --muted: #6b7280;
 
   --accent-1: #ff6bbf; /* röd/rosa */

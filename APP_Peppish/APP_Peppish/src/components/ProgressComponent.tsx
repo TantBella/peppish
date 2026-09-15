@@ -44,7 +44,7 @@ export const ProgressComponent = () => {
 
   return (
     <div className="progress-container">
-      <h1>Din XP</h1>
+      {/* <h1>Din XP</h1>
 
       <div className="avatar-section">
         <h2>Level {progress.currentLevel}</h2>
@@ -63,7 +63,7 @@ export const ProgressComponent = () => {
 
           <div className="experience-text">{progress.currentXp} XP</div>
         </div>
-      </div>
+      </div>*/}
 
       <div className="daily-section">
         <div className="daily-card">

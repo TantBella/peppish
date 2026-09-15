@@ -1,6 +1,6 @@
 import { useUserBalance, useRewardHistory } from "../hooks/useRewards";
-import logoImg from "../assets/logo_img.png";
 import Loading from "../components/Loading";
+import { useProgress } from "../hooks/useProgress";
 
 export const RewardComponent = () => {
   const {
@@ -8,6 +8,7 @@ export const RewardComponent = () => {
     isLoading: balanceLoading,
     error: balanceError,
   } = useUserBalance();
+  const { data: progress } = useProgress();
   const {
     data: history = [],
     isLoading: historyLoading,
@@ -32,7 +33,7 @@ export const RewardComponent = () => {
   return (
     <>
       <div className="rewards-container">
-        <h1>Belöningar </h1>
+        <h2>Belöningar </h2>
         {balance && (
           <div className="balance-section">
             <div className="balance-cards">
@@ -46,18 +47,18 @@ export const RewardComponent = () => {
               <div className="balance-card progress">
                 <div className="balance-label">Dina XP: </div>
                 <div className="balance-value">💎 </div>
-                <div className="balance-value">{balance.totalProgress} </div>
+                <div className="balance-value">{progress?.currentXp} </div>
               </div>
             </div>
           </div>
         )}
 
         <div className="history-section">
-          <h2>Tidigare belöningar:</h2>
+          <h2>istället för Tidigare belöningar: </h2>
           {history.length === 0 ? (
             <p className="no-rewards">
-              Du har tyvärr inte fått några belöningar ännu.. Genomför en quest
-              för att få XP eller pengar.{" "}
+              nånting annat men vad Du har tyvärr inte fått några belöningar
+              ännu.. Genomför en quest för att få XP eller pengar.{" "}
             </p>
           ) : (
             <div className="rewards-list">

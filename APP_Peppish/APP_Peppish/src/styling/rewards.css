@@ -2,12 +2,12 @@
 .rewards-container {
   padding: 2rem;
   margin: 0 auto;
-  color: var(--text);
 }
 
-.rewards-container h1 {
+.rewards-container > h2 {
   margin-bottom: 2rem;
-  color: #333;
+  text-align: center;
+  color: var(--text);
   font-weight: 400;
 }
 
@@ -22,7 +22,6 @@
 }
 
 .balance-card {
-  /* background: white; */
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
@@ -51,14 +50,9 @@
 }
 
 .history-section {
-  background: white;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
-}
-
-h2 {
-  font-weight: 450;
 }
 
 .no-rewards {
