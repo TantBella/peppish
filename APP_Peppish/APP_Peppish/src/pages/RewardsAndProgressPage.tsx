@@ -12,7 +12,7 @@ export const RewardsAndProgressPage = () => {
       <header className="header">
         <h1 className="logo-icon">
           <img src={logoImg} alt="App logo" />
-          Dina quests
+          Belöningar & Framsteg
         </h1>
         <div style={{ position: "absolute", right: 16, top: 16 }}>
           <NotificationPanel />

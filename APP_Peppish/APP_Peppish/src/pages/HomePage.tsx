@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import NotificationPanel from "../components/NotificationPanel";
 import { useProgress } from "../hooks/useProgress";
 import { useChores } from "../hooks/useChores";
+import { getDailyProgressPercent } from "../utils/dailyProgress";
 
 const choreStatusLabels: Record<string, string> = {
   available: "Tillgänglig",
@@ -37,6 +38,7 @@ export const HomePage = () => {
     dueDate.setHours(0, 0, 0, 0);
     return dueDate.getTime() === today.getTime();
   });
+  const dailyProgressPercent = getDailyProgressPercent(chores);
 
   return (
     <div className="home-page">
@@ -81,13 +83,13 @@ export const HomePage = () => {
                 <div
                   className="progress-bar-fill"
                   style={{
-                    width: `${progress.dailyProgressPercent}%`,
+                    width: `${dailyProgressPercent}%`,
                   }}
                 />
               </div>
 
               <div className="progress-card-footer">
-                <p>{progress.dailyProgressPercent}% av dagens quests</p>
+                <p>{dailyProgressPercent}% av dagens quests</p>
               </div>
             </>
           )}
