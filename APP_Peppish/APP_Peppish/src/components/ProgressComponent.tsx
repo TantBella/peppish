@@ -44,27 +44,6 @@ export const ProgressComponent = () => {
 
   return (
     <div className="progress-container">
-      {/* <h1>Din XP</h1>
-
-      <div className="avatar-section">
-        <h2>Level {progress.currentLevel}</h2>
-
-        <div className="experience-section">
-          <div className="experience-label">XP</div>
-
-          <div className="progress-bar-container">
-            <div
-              className="progress-bar-fill"
-              style={{
-                width: `${dailyProgressPercent}%`,
-              }}
-            />
-          </div>
-
-          <div className="experience-text">{progress.currentXp} XP</div>
-        </div>
-      </div>*/}
-
       <div className="daily-section">
         <div className="daily-card">
           <h2>Dagens progress</h2>

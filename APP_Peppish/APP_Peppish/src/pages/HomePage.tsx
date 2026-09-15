@@ -64,70 +64,60 @@ export const HomePage = () => {
         </section>
       </div>
 
+      <div
+        className="home-content todays-quests-card"
+        role="button"
+        tabIndex={0}
+        onClick={() => navigate("/calendar")}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            navigate("/calendar");
+          }
+        }}
+        aria-label="Öppna dagens quests i kalendern"
+      >
+        <h2>Dagens quests</h2>
+        {choresLoading && <p>Laddar dagens quests...</p>}
+        {choresError && <p>Kunde inte ladda dagens quests.</p>}
+        {!choresLoading && !choresError && todaysChores.length === 0 && (
+          <p>Du har inga quests idag.</p>
+        )}
+        {!choresLoading && !choresError && todaysChores.length > 0 && (
+          <div className="home-quest-list">
+            {todaysChores.map((chore) => (
+              <div key={chore.id} className="home-quest-row">
+                <span>• {chore.title} </span>
+                <span>
+                  {choreStatusLabels[chore.status.toLowerCase()] ??
+                    chore.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="home-container home-content-container">
         <div className="home-content">
           <div className="card-label">
-            <p>DIN PROGRESS</p>
-            <h2>Level {progress?.currentLevel ?? 1}</h2>
+            <p>Dagens framsteg: {dailyProgressPercent}% av dagens quests</p>
           </div>
 
-          <div className="xp-display">
-            <strong>{progress?.currentXp ?? 0}</strong>
-            <span>XP</span>
-          </div>
           {loading && <p>Laddar progress...</p>}
           {error && <p>Kunde inte ladda progress.</p>}
           {progress && (
-            <>
-              <div className="progress-bar">
-                <div
-                  className="progress-bar-fill"
-                  style={{
-                    width: `${dailyProgressPercent}%`,
-                  }}
-                />
-              </div>
-
-              <div className="progress-card-footer">
-                <p>{dailyProgressPercent}% av dagens quests</p>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div
-          className="home-content todays-quests-card"
-          role="button"
-          tabIndex={0}
-          onClick={() => navigate("/calendar")}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              navigate("/calendar");
-            }
-          }}
-          aria-label="Öppna dagens quests i kalendern"
-        >
-          <h2>Dagens quests</h2>
-          {choresLoading && <p>Laddar dagens quests...</p>}
-          {choresError && <p>Kunde inte ladda dagens quests.</p>}
-          {!choresLoading && !choresError && todaysChores.length === 0 && (
-            <p>Du har inga quests idag.</p>
-          )}
-          {!choresLoading && !choresError && todaysChores.length > 0 && (
-            <div className="home-quest-list">
-              {todaysChores.map((chore) => (
-                <div key={chore.id} className="home-quest-row">
-                  <span>• {chore.title} </span>
-                  <span>
-                    {choreStatusLabels[chore.status.toLowerCase()] ??
-                      chore.status}
-                  </span>
-                </div>
-              ))}
+            <div className="progress-bar">
+              <div
+                className="progress-bar-fill"
+                style={{
+                  width: `${dailyProgressPercent}%`,
+                }}
+              />
             </div>
           )}
         </div>
+
         <div className="home-content">
           <h2>Din avatar</h2>
           <p>Här kan du se och anpassa din avatar.</p>
