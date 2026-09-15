@@ -45,6 +45,44 @@ h1 {
   min-height: 2.5rem;
 }
 
+.todays-quests-card {
+  cursor: pointer;
+}
+
+.todays-quests-card:hover {
+  border-color: var(--accent-5);
+}
+
+.todays-quests-card h2 {
+  margin: 1rem;
+}
+
+.home-quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.home-quest-row {
+  display: grid;
+  grid-template-columns: 45% 10% 45%;
+  align-items: start;
+  padding: 0.5rem;
+}
+
+.home-quest-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-quest-row span:last-child {
+  grid-column: 3;
+  text-align: right;
+}
+
 .user-summary-content {
   display: flex;
   align-items: center;
@@ -62,16 +100,22 @@ h1 {
 }
 
 /* Avatar */
-/* .avatar-placeholder {
+.avatar-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: var(--bg);
-  border: 1px solid var(--accent-4);
+  background: linear-gradient(
+    50deg,
+    var(--accent-5),
+    var(--accent-2),
+    var(--accent-1)
+  );
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111);
   border-radius: 50%;
   color: var(--muted);
-} */
+  padding: 2rem;
+}
 
 /* Home Page */
 .user-info > p {
