@@ -1,16 +1,15 @@
-
 /* Rewards Page */
 .rewards-container {
   padding: 2rem;
   margin: 0 auto;
-  color: var(--text);
 }
 
-.rewards-container h1{
+.history-section > h2,
+.rewards-container > h2 {
   margin-bottom: 2rem;
-  color: #333;
-  font-weight: 400;
+  text-align: center;
   color: var(--text);
+  font-weight: 400;
 }
 
 .balance-section {
@@ -24,12 +23,11 @@
 }
 
 .balance-card {
-  background: white;
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
-  border-top: 6px solid ;
+  border-top: 6px solid;
 }
 
 .balance-card.money {
@@ -48,19 +46,18 @@
 
 .balance-value {
   font-size: 2.5rem;
-  font-weight: 400;
+  /* font-weight: 400; */
   color: #333;
 }
 
+.balance-value > p {
+  font-size: 1.5rem;
+}
+
 .history-section {
-  background: white;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
-}
-
-h2{
-  font-weight: 450;
 }
 
 .no-rewards {
@@ -123,130 +120,3 @@ h2{
   color: #667;
   margin-top: 0.25rem;
 }
-
-/* Progress Page */
-.progress-container {
-  padding: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.progress-container h1 {
-  margin-bottom: 2rem;
-  color: #333;
-}
-
-.progress-container h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.3rem;
-}
-
-.avatar-section,
-.daily-section {
-  margin-bottom: 2rem;
-}
-
-.avatar-card,
-.daily-card {
-  background: white;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.avatar-display {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.avatar-placeholder {
-  font-size: 5rem;
-  margin-bottom: 1rem;
-}
-
-.level-badge {
-  display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: bold;
-}
-
-.experience-section {
-  margin-top: 1.5rem;
-}
-
-.experience-label {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 0.75rem;
-}
-
-.progress-bar-container {
-  background-color: #e9ecef;
-  border-radius: 10px;
-  height: 24px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-bar-fill {
-  background: linear-gradient(90deg, #007bff, #0056b3);
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: 10px;
-}
-
-.progress-bar-fill.daily {
-  background: linear-gradient(90deg, #28a745, #218838);
-}
-
-.experience-text {
-  font-size: 0.9rem;
-  color: #666;
-  text-align: right;
-}
-
-.daily-card {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1.5rem;
-}
-
-.progress-stat {
-  text-align: center;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0.5rem;
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #007bff;
-}
-
-.daily-progress-wrapper {
-  grid-column: 1 / -1;
-  border-top: 1px solid #e9ecef;
-  padding-top: 1.5rem;
-}
-
-.progress-label {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 0.75rem;
-}
-
-.progress-percentage {
-  font-size: 0.9rem;
-  color: #666;
-  text-align: right;
-  margin-top: 0.5rem;
-}
-
