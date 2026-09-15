@@ -55,12 +55,24 @@ export const CalendarPage = () => {
 
   const expandedChore = chores.find((c) => c.id === expandedChoreId) || null;
 
+  const getViewTitle = () => {
+    switch (viewMode) {
+      case "week":
+        return "Veckans quests";
+      case "month":
+        return "Månadens quests";
+      case "day":
+      default:
+        return "Dagens quests";
+    }
+  };
+
   return (
     <>
       <header className="header">
         <h1 className="logo-icon">
           <img src={logoImg} alt="App logo" />
-          Dina quests
+          {getViewTitle()}
         </h1>
         <div style={{ position: "absolute", right: 16, top: 16 }}>
           <NotificationPanel />
@@ -109,7 +121,6 @@ export const CalendarPage = () => {
           />
         )}
 
-        {/* Modal for calendar views when a chore is selected */}
         {expandedChore && (
           <Modal onClose={() => setExpandedChoreId(null)} full>
             <div className="modal-chore-full">

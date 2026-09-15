@@ -54,11 +54,7 @@ export const HomePage = () => {
         <section className="home-content">
           <h1>Hej, {user?.name}!</h1>
           <div className="user-summary-content">
-            <p>
-              {user?.role === "ADULT"
-                ? "Ditt hushåll väntar på dig."
-                : "Dags att samla lite XP!"}
-            </p>
+            <p>Dags att samla lite XP!</p>
             <div className="avatar-placeholder">
               <p>Avatar</p>
             </div>
@@ -129,10 +125,6 @@ export const HomePage = () => {
               ))}
             </div>
           )}
-        </div>
-
-        <div className="home-content">
-          <h2>Nästa belöning</h2>
         </div>
         <div className="home-content">
           <h2>Din avatar</h2>
