@@ -17,9 +17,7 @@
   color: var(--text);
 }
 
-/* =========================
-   TABS
-========================= */
+/*TABS*/
 
 .tab-bar {
   position: sticky;

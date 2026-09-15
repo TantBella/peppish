@@ -186,14 +186,14 @@ export const ChoreActionPanel = ({
               }
               onChange={() => completeMutation.mutate()}
               disabled={!canComplete || completeMutation.isPending}
-              aria-label="Markera questen som gjord"
+              aria-label="Markera questen som klar"
             />
             <span>
               {completeMutation.isPending
                 ? "Skickar för godkännande..."
                 : chore.uiStatus === "assigned"
-                  ? "Markera som gjord"
-                  : "Quest markerad som gjord"}
+                  ? "Markera som klar"
+                  : "Quest markerad som klar"}
             </span>
           </label>
         )}
