@@ -33,9 +33,11 @@ export const ChoreCard = ({
 
       {!compact && (
         <div className="chore-meta">
-          <div className="due-date">
-            {new Date(chore.dueDate).toLocaleDateString()}
-          </div>
+          {chore.dueDate && (
+            <div className="due-date">
+              {new Date(chore.dueDate).toLocaleDateString()}
+            </div>
+          )}
           <span className="reward-badge">
             {chore.rewardValue
               ? chore.rewardType === "Money"

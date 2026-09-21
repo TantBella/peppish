@@ -1,4 +1,5 @@
 import { useProgress } from "../hooks/useProgress";
+import { useAuth } from "../context/AuthContext";
 import { useChores } from "../hooks/useChores";
 import {
   getDailyProgressPercent,
@@ -8,6 +9,7 @@ import {
 import Loading from "../components/Loading";
 
 export const ProgressComponent = () => {
+  const { user } = useAuth();
   const { data: progress, isLoading, error } = useProgress();
   const {
     data: chores = [],
@@ -31,8 +33,8 @@ export const ProgressComponent = () => {
     return null;
   }
 
-  const dailyProgressPercent = getDailyProgressPercent(chores);
-  const todaysChores = getTodaysChores(chores).sort((left, right) => {
+  const dailyProgressPercent = getDailyProgressPercent(chores, user?.id);
+  const todaysChores = getTodaysChores(chores, user?.id).sort((left, right) => {
     const statusOrder = {
       approved: 0,
       completed: 1,
