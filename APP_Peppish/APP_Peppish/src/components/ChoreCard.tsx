@@ -37,8 +37,13 @@ export const ChoreCard = ({
             {new Date(chore.dueDate).toLocaleDateString()}
           </div>
           <span className="reward-badge">
-            {chore.rewardAmount ? `🤑 ${chore.rewardAmount}` : ""}
+            {chore.rewardValue
+              ? chore.rewardType === "Money"
+                ? `🤑 ${chore.rewardValue} kr`
+                : `💎 ${chore.rewardValue} XP`
+              : ""}
           </span>
+
           {chore.assignedToUserName && (
             <div className="assigned-to">{chore.assignedToUserName}</div>
           )}

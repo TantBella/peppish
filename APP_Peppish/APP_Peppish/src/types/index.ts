@@ -20,6 +20,7 @@ export interface Chore {
   assignedToUserName?: string;
   rewardValue?: number;
   rewardAmount?: number;
+  rewardType?: string;
   availableAssignmentId?: string;
   isAvailable?: boolean;
 }
@@ -57,10 +58,7 @@ export type UIChoreStatus = ChoreStatus;
 
 export const mapApiStatusToUI = (status: ChoreStatus): UIChoreStatus => status;
 
-export const canTransition = (
-  from: ChoreStatus,
-  to: ChoreStatus,
-): boolean => {
+export const canTransition = (from: ChoreStatus, to: ChoreStatus): boolean => {
   const transitions: Record<ChoreStatus, ChoreStatus[]> = {
     available: ["assigned"],
     assigned: ["completed", "available"],
