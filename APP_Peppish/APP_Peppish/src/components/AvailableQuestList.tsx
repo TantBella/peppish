@@ -42,7 +42,7 @@ export const AvailableQuestList = ({
         ...template,
         id: assignment.id,
         choreTemplateId: template.id,
-        dueDate: assignment.dueDate,
+        dueDate: assignment.startDate ?? assignment.dueDate,
         status: "available",
         uiStatus: "available",
         rewardAmount: template.rewardValue,

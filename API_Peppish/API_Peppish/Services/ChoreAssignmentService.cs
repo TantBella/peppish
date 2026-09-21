@@ -13,11 +13,11 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default);
 
         Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-    CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default);
 
         Task<ChoreAssignment> TakeFreeQuestAsync(
-Guid assignmentId,
-CancellationToken cancellationToken = default);
+            Guid assignmentId,
+            CancellationToken cancellationToken = default);
 
         Task<List<ChoreAssignment>> GetUserAssignmentsAsync(
             string userId,
@@ -84,8 +84,8 @@ CancellationToken cancellationToken = default);
             assignment.AssignedToUserId = request.AssignedToUserId;
             assignment.AssignedByUserId = userId;
             assignment.StartDate = request.StartDate.HasValue
-                ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
-                : assignment.StartDate;
+            ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+            : assignment.StartDate ?? DateTime.UtcNow.Date;
             assignment.DueDate = request.DueDate.HasValue
                 ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
                 : assignment.DueDate;
@@ -142,7 +142,7 @@ CancellationToken cancellationToken = default);
         }
 
         public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-    CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
@@ -181,6 +181,11 @@ CancellationToken cancellationToken = default);
             }
 
             assignment.AssignedToUserId = userId;
+
+            if (!assignment.StartDate.HasValue)
+            {
+                assignment.StartDate = DateTime.UtcNow.Date;
+            }
 
             await repository.SaveChangesAsync(cancellationToken);
 
