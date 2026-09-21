@@ -394,6 +394,33 @@ namespace API_Peppish.Services
                 if (template == null)
                     continue;
 
+                if (!assignment.StartDate.HasValue && !assignment.DueDate.HasValue)
+                {
+                    var existing = await instanceRepository.GetByAssignmentAsync(
+                        assignment.Id,
+                        householdId,
+                        cancellationToken);
+
+                    if (!existing.Any())
+                    {
+                        var instance = new ChoreInstance
+                        {
+                            HouseholdId = householdId,
+                            ChoreAssignmentId = assignment.Id,
+                            DueDate = null,
+                            Status = assignment.AssignedToUserId == null
+                                ? ChoreStatus.available
+                                : ChoreStatus.assigned
+                        };
+
+                        await instanceRepository.CreateAsync(
+                            instance,
+                            cancellationToken);
+                    }
+
+                    continue;
+                }
+
                 var startDate =
                     assignment.StartDate.HasValue &&
                     assignment.StartDate.Value > from

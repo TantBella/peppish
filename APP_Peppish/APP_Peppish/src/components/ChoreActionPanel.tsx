@@ -122,7 +122,7 @@ export const ChoreActionPanel = ({
       choreAssignmentApi.assign({
         choreTemplateId: choreTemplateId!,
         assignedToUserId,
-        startDate: scheduleDate || new Date().toISOString(),
+        startDate: scheduleDate || undefined,
       }),
     onSuccess: () => {
       setError(null);

@@ -42,15 +42,13 @@ export const HomePage = () => {
       chore.assignedToUserId === user?.id
     );
   });
-  const dailyProgressPercent = getDailyProgressPercent(chores);
+  const dailyProgressPercent = getDailyProgressPercent(chores, user?.id);
 
   return (
     <div className="home-page">
       <header className="home-header">
         <img src={logoName} alt="App logo" className="Peppish-logo" />
-
         <p className="home-motto">{randomMotto}</p>
-
         <div className="notification-container">
           <NotificationPanel />
         </div>

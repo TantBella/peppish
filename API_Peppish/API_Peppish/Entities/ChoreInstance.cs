@@ -14,7 +14,7 @@ namespace API_Peppish.Entities
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid HouseholdId { get; set; }
     public Guid ChoreAssignmentId { get; set; }
-    public DateTime DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
     public ChoreStatus Status { get; set; } = ChoreStatus.available;
     public Guid? RewardLedgerId { get; set; }
     public DateTime? CompletedAt { get; set; }

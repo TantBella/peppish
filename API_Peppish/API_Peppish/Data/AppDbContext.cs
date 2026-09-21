@@ -220,40 +220,35 @@ namespace API_Peppish.Data
             modelBuilder.Entity<ChoreInstance>(entity =>
             {
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.HouseholdId)
                     .IsRequired();
-
                 entity.Property(e => e.ChoreAssignmentId)
                     .IsRequired();
-
-                entity.Property(e => e.DueDate)
-                    .IsRequired();
-
+                entity.Property(e => e.DueDate);
                 entity.Property(e => e.Status)
                     .IsRequired();
 
                 entity.Property(e => e.CreatedAt)
-                    .IsRequired();
+        .IsRequired();
 
                 entity.HasOne<Household>()
-                    .WithMany()
-                    .HasForeignKey(e => e.HouseholdId)
-                    .OnDelete(DeleteBehavior.Restrict);
+        .WithMany()
+        .HasForeignKey(e => e.HouseholdId)
+        .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne<ChoreAssignment>()
-                    .WithMany()
-                    .HasForeignKey(e => e.ChoreAssignmentId)
-                    .OnDelete(DeleteBehavior.Restrict);
+        .WithMany()
+        .HasForeignKey(e => e.ChoreAssignmentId)
+        .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasIndex(e => new
                 {
                     e.ChoreAssignmentId,
                     e.DueDate
                 })
-                .IsUnique()
-                .HasDatabaseName(
-                    "IX_ChoreInstance_AssignmentDate_Unique");
+    .IsUnique()
+    .HasDatabaseName(
+        "IX_ChoreInstance_AssignmentDate_Unique");
             });
 
             // RewardLedger
