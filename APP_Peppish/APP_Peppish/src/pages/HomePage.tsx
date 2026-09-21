@@ -36,7 +36,11 @@ export const HomePage = () => {
   const todaysChores = chores.filter((chore) => {
     const dueDate = new Date(chore.dueDate);
     dueDate.setHours(0, 0, 0, 0);
-    return dueDate.getTime() === today.getTime();
+
+    return (
+      dueDate.getTime() === today.getTime() &&
+      chore.assignedToUserId === user?.id
+    );
   });
   const dailyProgressPercent = getDailyProgressPercent(chores);
 
