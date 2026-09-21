@@ -1,10 +1,10 @@
+using API_Peppish.Data;
 using API_Peppish.DTOs;
 using API_Peppish.Entities;
 using API_Peppish.Services;
-using API_Peppish.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Controllers;
 
@@ -18,8 +18,22 @@ public class ChoreTemplatesController(
     [HttpPost]
     public async Task<ActionResult<ChoreTemplateDto>> CreateTemplate([FromBody] DTOs.CreateChoreTemplateRequestDto request)
     {
-        if (string.IsNullOrEmpty(request.Title))
+        if (string.IsNullOrWhiteSpace(request.Title))
             return BadRequest(new { error = "Title is required" });
+
+        if (request.RewardValue <= 0)
+            return BadRequest(new { error = "RewardValue is required" });
+
+        if (string.IsNullOrWhiteSpace(request.RewardType))
+            return BadRequest(new { error = "RewardType is required" });
+
+        if (!Enum.TryParse<RewardType>(
+                request.RewardType,
+                true,
+                out _))
+        {
+            return BadRequest(new { error = "Invalid RewardType" });
+        }
 
         var template = await service.CreateAsync(request);
 

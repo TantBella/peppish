@@ -8,25 +8,25 @@ namespace API_Peppish.Services;
 
 public interface IChoreTemplateService
 {
-  Task<ChoreTemplate> CreateAsync(
-      CreateChoreTemplateRequestDto request,
-      CancellationToken cancellationToken = default);
+    Task<ChoreTemplate> CreateAsync(
+        CreateChoreTemplateRequestDto request,
+        CancellationToken cancellationToken = default);
 
-  Task<List<ChoreTemplate>> GetAllAsync(
-      CancellationToken cancellationToken = default);
+    Task<List<ChoreTemplate>> GetAllAsync(
+        CancellationToken cancellationToken = default);
 
-  Task<ChoreTemplate?> GetByIdAsync(
-      Guid id,
-      CancellationToken cancellationToken = default);
+    Task<ChoreTemplate?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 
-  Task<ChoreTemplate?> UpdateAsync(
-      Guid id,
-      UpdateChoreTemplateRequestDto request,
-      CancellationToken cancellationToken = default);
+    Task<ChoreTemplate?> UpdateAsync(
+        Guid id,
+        UpdateChoreTemplateRequestDto request,
+        CancellationToken cancellationToken = default);
 
-  Task<bool> DeleteAsync(
-      Guid id,
-      CancellationToken cancellationToken = default);
+    Task<bool> DeleteAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 }
 
 public class ChoreTemplateService(
@@ -34,15 +34,15 @@ public class ChoreTemplateService(
     IUserContextService userContextService,
     AppDbContext dbContext) : IChoreTemplateService
 {
-  public async Task<ChoreTemplate> CreateAsync(
-      CreateChoreTemplateRequestDto request,
-      CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Användaren tillhör inget hushåll.");
+    public async Task<ChoreTemplate> CreateAsync(
+        CreateChoreTemplateRequestDto request,
+        CancellationToken cancellationToken = default)
+    {
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
-    var userId = userContextService.GetCurrentUserId();
+        var userId = userContextService.GetCurrentUserId();
 
         var template = new ChoreTemplate
         {
@@ -63,82 +63,82 @@ public class ChoreTemplateService(
         template,
         cancellationToken);
 
-    await repository.SaveChangesAsync(
-        cancellationToken);
+        await repository.SaveChangesAsync(
+            cancellationToken);
 
-    return template;
-  }
+        return template;
+    }
 
-  public async Task<List<ChoreTemplate>> GetAllAsync(
-      CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Anv�ndaren tillh�r inget hush�ll.");
+    public async Task<List<ChoreTemplate>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Anv�ndaren tillh�r inget hush�ll.");
 
-    var userId = userContextService.GetCurrentUserId();
-    var role = userContextService.GetCurrentUserRole();
+        var userId = userContextService.GetCurrentUserId();
+        var role = userContextService.GetCurrentUserRole();
 
-    return await repository.GetVisibleByUserAsync(
-        householdId,
-        userId,
-        role,
-        cancellationToken);
-  }
+        return await repository.GetVisibleByUserAsync(
+            householdId,
+            userId,
+            role,
+            cancellationToken);
+    }
 
-  public async Task<ChoreTemplate?> GetByIdAsync(
-      Guid id,
-      CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Anv�ndaren tillh�r inget hush�ll.");
+    public async Task<ChoreTemplate?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Anv�ndaren tillh�r inget hush�ll.");
 
-    return await repository.GetByIdAsync(
-        id,
-        householdId,
-        cancellationToken);
-  }
+        return await repository.GetByIdAsync(
+            id,
+            householdId,
+            cancellationToken);
+    }
 
-  public async Task<ChoreTemplate?> UpdateAsync(
-      Guid id,
-      UpdateChoreTemplateRequestDto request,
-            CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Användaren tillhör inget hushåll.");
+    public async Task<ChoreTemplate?> UpdateAsync(
+        Guid id,
+        UpdateChoreTemplateRequestDto request,
+              CancellationToken cancellationToken = default)
+    {
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
-    var template = await repository.GetByIdAsync(
-        id,
-        householdId,
-        cancellationToken);
+        var template = await repository.GetByIdAsync(
+            id,
+            householdId,
+            cancellationToken);
 
-    if (template == null)
-      return null;
+        if (template == null)
+            return null;
 
-    if (userContextService.GetCurrentUserRole() != "ADULT")
-      throw new UnauthorizedAccessException(
-          "Endast vuxna får ändra quests.");
+        if (userContextService.GetCurrentUserRole() != "ADULT")
+            throw new UnauthorizedAccessException(
+                "Endast vuxna får ändra quests.");
 
-    template.Title =
-        request.Title ?? template.Title;
+        template.Title =
+            request.Title ?? template.Title;
 
-    template.Description =
-        request.Description ?? template.Description;
+        template.Description =
+            request.Description ?? template.Description;
 
-    if (request.RewardValue.HasValue)
-      template.RewardValue = request.RewardValue.Value;
+        if (request.RewardValue.HasValue)
+            template.RewardValue = request.RewardValue.Value;
 
-    await repository.UpdateAsync(
-        template,
-        cancellationToken);
+        await repository.UpdateAsync(
+            template,
+            cancellationToken);
 
-    await repository.SaveChangesAsync(
-        cancellationToken);
+        await repository.SaveChangesAsync(
+            cancellationToken);
 
-    return template;
-  }
+        return template;
+    }
 
     public async Task<bool> DeleteAsync(
             Guid id,
