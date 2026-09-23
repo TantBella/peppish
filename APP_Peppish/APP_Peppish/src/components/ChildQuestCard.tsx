@@ -22,35 +22,43 @@ export const ChildQuestCard = ({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const todayChores = chores
-    .filter((chore) => {
-      const dueDate = new Date(chore.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-
-      return dueDate.getTime() === today.getTime();
-    })
-    .slice(0, 5);
-
-  const pendingApproval = chores.filter((chore) => {
+  const todayChores = chores.filter((chore) => {
     const dueDate = new Date(chore.dueDate);
     dueDate.setHours(0, 0, 0, 0);
 
-    return (
-      chore.uiStatus === "completed" && dueDate.getTime() < today.getTime()
-    );
+    return dueDate.getTime() === today.getTime();
   });
 
-  const todayCompleted = todayChores.filter(
+  const notStarted = todayChores.filter(
+    (chore) => chore.uiStatus === "assigned",
+  );
+
+  const pendingApproval = todayChores.filter(
     (chore) => chore.uiStatus === "completed",
   );
 
-  const hasPendingApproval =
-    todayCompleted.length > 0 || pendingApproval.length > 0;
+  const approved = todayChores.filter((chore) => chore.uiStatus === "approved");
+
+  // const hasPendingApproval = pendingApproval.length > 0;
+
+  // const pendingApproval = chores.filter(
+  //   (chore) => chore.uiStatus === "completed",
+  // );
+
+  // const todayCompleted = todayChores.filter(
+  //   (chore) => chore.uiStatus === "completed",
+  // );
+
+  // const hasPendingApproval =
+  //   todayCompleted.length > 0 || pendingApproval.length > 0;
+  const hasPendingApproval = pendingApproval.length > 0;
 
   return (
     <section className={`child-quest-card ${isExpanded ? "expanded" : ""}`}>
       <button type="button" className="child-quest-header" onClick={onToggle}>
-        <span className="child-name">{childName}</span>
+        <span className="child-name">
+          <h2>Dagens Quests för {childName}</h2>
+        </span>
 
         {hasPendingApproval && (
           <span
@@ -58,46 +66,55 @@ export const ChildQuestCard = ({
             aria-label="Quests väntar på godkännande"
           />
         )}
-
         <span className="child-quest-chevron">{isExpanded ? "▲" : "▼"}</span>
       </button>
 
       {isExpanded && (
         <div className="child-quest-content">
-          <h3>Idag</h3>
+          <section>
+            <h2 className="child-quest-card-headline">Inte påbörjade:</h2>
 
-          {todayChores.length === 0 ? (
-            <p className="empty-child-quests">Inga quests idag.</p>
-          ) : (
-            <div className="child-quest-list">
-              {todayChores.map((chore) => (
-                <div key={chore.id} className="child-quest-item">
-                  <ChoreCard
-                    chore={chore}
-                    isExpanded={expandedChoreId === chore.id}
-                    onToggle={() => onToggleChore(chore.id)}
-                    compact
-                  />
+            {notStarted.length === 0 ? (
+              <p className="empty-child-quests">Inga uppgifter att göra.</p>
+            ) : (
+              <div className="child-quest-list">
+                {notStarted.map((chore) => (
+                  <div key={chore.id} className="child-quest-item">
+                    <span className="quest-bullet">•</span>
 
-                  {expandedChoreId === chore.id && (
-                    <ChoreActionPanel
+                    <ChoreCard
                       chore={chore}
-                      allowAdminActions={false}
-                      allowPicking={false}
+                      isExpanded={expandedChoreId === chore.id}
+                      onToggle={() => onToggleChore(chore.id)}
+                      compact
                     />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
 
-          {pendingApproval.length > 0 && (
-            <section className="pending-approval-section">
-              <h3>Behöver godkännas</h3>
+                    {expandedChoreId === chore.id && (
+                      <ChoreActionPanel
+                        chore={chore}
+                        allowAdminActions={true}
+                        allowPicking={false}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
+          <section className="pending-approval-section">
+            <h2 className="child-quest-card-headline">
+              Väntar på godkännande:
+            </h2>
+
+            {pendingApproval.length === 0 ? (
+              <p className="empty-child-quests">Inget väntar på godkännande.</p>
+            ) : (
               <div className="child-quest-list">
                 {pendingApproval.map((chore) => (
                   <div key={chore.id} className="child-quest-item">
+                    <span className="quest-bullet">•</span>
+
                     <ChoreCard
                       chore={chore}
                       isExpanded={expandedChoreId === chore.id}
@@ -115,8 +132,39 @@ export const ChildQuestCard = ({
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+            )}
+          </section>
+
+          <section>
+            <h2 className="child-quest-card-headline">Klara och godkända:</h2>
+
+            {approved.length === 0 ? (
+              <p className="empty-child-quests">Inga klara quests ännu.</p>
+            ) : (
+              <div className="child-quest-list">
+                {approved.map((chore) => (
+                  <div key={chore.id} className="child-quest-item">
+                    <span className="quest-bullet">•</span>
+
+                    <ChoreCard
+                      chore={chore}
+                      isExpanded={expandedChoreId === chore.id}
+                      onToggle={() => onToggleChore(chore.id)}
+                      compact
+                    />
+
+                    {expandedChoreId === chore.id && (
+                      <ChoreActionPanel
+                        chore={chore}
+                        allowAdminActions={false}
+                        allowPicking={false}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       )}
     </section>

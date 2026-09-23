@@ -46,84 +46,6 @@
   font-weight: 500;
 }
 
-.child-quest-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.child-quest-card {
-  overflow: hidden;
-  background: var(--bg);
-  border: 1px solid var(--accent-3);
-  border-radius: 12px;
-}
-
-/* Child header */
-
-.child-quest-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 1rem;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  cursor: pointer;
-  text-align: left;
-}
-
-.child-name {
-  flex: 1;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.child-quest-chevron {
-  margin-left: 0.75rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-/* Approval indicator */
-
-.approval-indicator {
-  width: 8px;
-  height: 8px;
-  margin-left: 0.75rem;
-  border-radius: 50%;
-  background: var(--accent-5);
-}
-
-/* Expanded child content */
-
-.child-quest-content {
-  padding: 0 1rem 1rem;
-}
-
-.child-quest-content > h3 {
-  margin: 0.5rem 0 0.75rem;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.empty-child-quests {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-/* Individual quests */
-
-.child-quest-item {
-  margin-bottom: 0.75rem;
-}
-
-.child-quest-item:last-child {
-  margin-bottom: 0;
-}
-
 .pending-approval-section {
   margin-top: 1.5rem;
   padding-top: 1rem;
@@ -160,6 +82,7 @@
   border-radius: 12px;
 }
 
+
 .chore-expanded {
   padding: 0 1rem 1rem;
 }
@@ -172,13 +95,5 @@
 
   .chore-list-page > section {
     padding: 1.5rem;
-  }
-
-  .child-quest-header {
-    padding: 1rem 1.25rem;
-  }
-
-  .child-quest-content {
-    padding: 0 1.25rem 1.25rem;
   }
 }
