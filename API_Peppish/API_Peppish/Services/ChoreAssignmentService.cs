@@ -84,11 +84,12 @@ namespace API_Peppish.Services
             assignment.AssignedToUserId = request.AssignedToUserId;
             assignment.AssignedByUserId = userId;
             assignment.StartDate = request.StartDate.HasValue
-            ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
-            : assignment.StartDate ?? DateTime.UtcNow.Date;
+     ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+     : assignment.StartDate ?? DateTime.UtcNow.Date;
+
             assignment.DueDate = request.DueDate.HasValue
                 ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
-                : assignment.DueDate;
+                : assignment.DueDate ?? assignment.StartDate;
 
             if (isNewAssignment)
                 await repository.CreateAsync(assignment, cancellationToken);
@@ -135,43 +136,43 @@ namespace API_Peppish.Services
             return assignment;
         }
 
-       public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-    CancellationToken cancellationToken = default)
-{
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Användaren tillhör inget hushåll.");
-
-    var today = DateTime.UtcNow.Date;
-
-    var expiredAssignments = await dbContext.ChoreAssignments
-        .Where(a =>
-            a.HouseholdId == householdId &&
-            a.AssignedToUserId == null &&
-            a.DueDate.HasValue &&
-            a.DueDate.Value < today)
-        .ToListAsync(cancellationToken);
-
-    if (expiredAssignments.Count > 0)
-    {
-        foreach (var assignment in expiredAssignments)
+        public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
+        CancellationToken cancellationToken = default)
         {
-            var instances = await dbContext.ChoreInstances
-                .Where(i => i.ChoreAssignmentId == assignment.Id)
+            var householdId = userContextService.GetCurrentHouseholdId()
+                ?? throw new InvalidOperationException(
+                    "Användaren tillhör inget hushåll.");
+
+            var today = DateTime.UtcNow.Date;
+
+            var expiredAssignments = await dbContext.ChoreAssignments
+                .Where(a =>
+                    a.HouseholdId == householdId &&
+                    a.AssignedToUserId == null &&
+                    a.DueDate.HasValue &&
+                    a.DueDate.Value < today)
                 .ToListAsync(cancellationToken);
 
-            dbContext.ChoreInstances.RemoveRange(instances);
+            if (expiredAssignments.Count > 0)
+            {
+                foreach (var assignment in expiredAssignments)
+                {
+                    var instances = await dbContext.ChoreInstances
+                        .Where(i => i.ChoreAssignmentId == assignment.Id)
+                        .ToListAsync(cancellationToken);
+
+                    dbContext.ChoreInstances.RemoveRange(instances);
+                }
+
+                dbContext.ChoreAssignments.RemoveRange(expiredAssignments);
+
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            return await repository.GetAvailableAsync(
+                householdId,
+                cancellationToken);
         }
-
-        dbContext.ChoreAssignments.RemoveRange(expiredAssignments);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    return await repository.GetAvailableAsync(
-        householdId,
-        cancellationToken);
-}
 
         public async Task<ChoreAssignment> TakeFreeQuestAsync(
             Guid assignmentId,
@@ -199,22 +200,24 @@ namespace API_Peppish.Services
 
             assignment.AssignedToUserId = userId;
 
-            if (!assignment.StartDate.HasValue)
+            assignment.StartDate = DateTime.UtcNow.Date;
+
+            if (!assignment.DueDate.HasValue)
             {
-                assignment.StartDate = DateTime.UtcNow.Date;
+                assignment.DueDate = assignment.StartDate;
             }
 
             await repository.SaveChangesAsync(cancellationToken);
 
-           await dbContext.ChoreInstances
-    .Where(i =>
-        i.ChoreAssignmentId == assignment.Id &&
-        i.DueDate == null)
-    .ExecuteUpdateAsync(
-        setters => setters
-.SetProperty(i => i.DueDate, assignment.DueDate)
-            .SetProperty(i => i.Status, ChoreStatus.assigned),
-        cancellationToken);
+            await dbContext.ChoreInstances
+             .Where(i =>
+                 i.ChoreAssignmentId == assignment.Id &&
+                 i.DueDate == null)
+             .ExecuteUpdateAsync(
+                 setters => setters
+              .SetProperty(i => i.DueDate, assignment.DueDate)
+                     .SetProperty(i => i.Status, ChoreStatus.assigned),
+                 cancellationToken);
             return assignment;
         }
 
