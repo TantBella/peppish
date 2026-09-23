@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../hooks/useNotifications";
-import trashbin_icon from "../assets/icons/trashbin_icon.png";
+import check_icon from "../assets/icons/check_icon.png";
 
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -112,7 +112,7 @@ export const NotificationPanel: React.FC = () => {
                     </div>
                     <div className="notification-actions">
                       <button onClick={() => remove.mutate(n.id)}>
-                        <img src={trashbin_icon} alt="Delete" />
+                        <img src={check_icon} alt="Delete" />
                       </button>
                     </div>
                   </div>
