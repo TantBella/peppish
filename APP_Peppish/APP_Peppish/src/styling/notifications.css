@@ -38,7 +38,7 @@
 }
 
 .notification-item button:focus {
-  outline: 2px solid var(--accent-3);
+  outline: 3px solid var(--accent-3);
 }
 
 .notification-panel-header {
@@ -58,8 +58,8 @@
 .notification-item {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
-  border-bottom: 1px solid var(--border);
+  padding: 1rem;
+  margin: 0.5rem;
 }
 
 .notification-item.unread {
@@ -72,21 +72,21 @@
 
 .notification-time {
   margin-top: 1rem;
-}
-
-.notification-actions button {
-  margin-left: 8px;
+  text-align: left;
+  text-transform: capitalize;
 }
 
 .notification-actions {
+  width: 15%;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .notification-actions img {
   background: transparent;
   border: none;
-  max-width: 20px;
+  max-width: 15px;
 }
 
 .notification-actions button {
@@ -94,9 +94,9 @@
   border: none;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.029);
-  max-width: 40px;
-  padding: 0.5rem;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.029);
+  max-width: 25px;
+  padding: 0.2rem;
 }
 
 .notification-container {
@@ -109,7 +109,16 @@
   font-weight: 600;
   letter-spacing: 2px;
 }
+.notification-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1.5rem;
+}
 
 .notification-payload {
   text-align: left;
+  width: 85%;
+  flex-shrink: 0;
+  margin-top: 1rem;
 }
