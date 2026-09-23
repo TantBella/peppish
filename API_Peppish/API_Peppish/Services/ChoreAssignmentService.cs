@@ -93,21 +93,25 @@ namespace API_Peppish.Services
             if (isNewAssignment)
                 await repository.CreateAsync(assignment, cancellationToken);
 
-            await repository.SaveChangesAsync(
-                cancellationToken);
+           await repository.SaveChangesAsync(
+    cancellationToken);
 
-            if (assignment.AssignedToUserId != null)
-            {
-                await dbContext.ChoreInstances
-                    .Where(i =>
-                        i.ChoreAssignmentId == assignment.Id &&
-                        i.Status == ChoreStatus.available)
-                    .ExecuteUpdateAsync(
-                        setters => setters.SetProperty(
-                            i => i.Status,
-                            ChoreStatus.assigned),
-                        cancellationToken);
-            }
+if (assignment.AssignedToUserId != null)
+{
+    await dbContext.ChoreInstances
+        .Where(i =>
+            i.ChoreAssignmentId == assignment.Id &&
+            i.DueDate == null)
+        .ExecuteUpdateAsync(
+            setters => setters
+                .SetProperty(
+                    i => i.DueDate,
+                    assignment.StartDate)
+                .SetProperty(
+                    i => i.Status,
+                    ChoreStatus.assigned),
+            cancellationToken);
+}
 
             if (assignment.AssignedToUserId != null)
             {
@@ -189,15 +193,15 @@ namespace API_Peppish.Services
 
             await repository.SaveChangesAsync(cancellationToken);
 
-            await dbContext.ChoreInstances
-                .Where(i =>
-                    i.ChoreAssignmentId == assignment.Id &&
-                    i.Status == ChoreStatus.available)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(
-                        i => i.Status,
-                        ChoreStatus.assigned),
-                    cancellationToken);
+          await dbContext.ChoreInstances
+    .Where(i =>
+        i.ChoreAssignmentId == assignment.Id &&
+        i.DueDate == null)
+    .ExecuteUpdateAsync(
+        setters => setters.SetProperty(
+            i => i.DueDate,
+            assignment.StartDate),
+        cancellationToken);
 
             return assignment;
         }
