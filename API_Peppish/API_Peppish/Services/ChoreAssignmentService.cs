@@ -137,16 +137,43 @@ namespace API_Peppish.Services
             return assignment;
         }
 
-        public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException("Användaren tillhör inget hushåll.");
+       public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
+    CancellationToken cancellationToken = default)
+{
+    var householdId = userContextService.GetCurrentHouseholdId()
+        ?? throw new InvalidOperationException(
+            "Användaren tillhör inget hushåll.");
 
-            return await repository.GetAvailableAsync(
-                householdId,
-                cancellationToken);
+    var today = DateTime.UtcNow.Date;
+
+    var expiredAssignments = await dbContext.ChoreAssignments
+        .Where(a =>
+            a.HouseholdId == householdId &&
+            a.AssignedToUserId == null &&
+            a.DueDate.HasValue &&
+            a.DueDate.Value < today)
+        .ToListAsync(cancellationToken);
+
+    if (expiredAssignments.Count > 0)
+    {
+        foreach (var assignment in expiredAssignments)
+        {
+            var instances = await dbContext.ChoreInstances
+                .Where(i => i.ChoreAssignmentId == assignment.Id)
+                .ToListAsync(cancellationToken);
+
+            dbContext.ChoreInstances.RemoveRange(instances);
         }
+
+        dbContext.ChoreAssignments.RemoveRange(expiredAssignments);
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    return await repository.GetAvailableAsync(
+        householdId,
+        cancellationToken);
+}
 
         public async Task<ChoreAssignment> TakeFreeQuestAsync(
             Guid assignmentId,
