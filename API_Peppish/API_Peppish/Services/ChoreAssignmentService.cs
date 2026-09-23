@@ -116,15 +116,9 @@ namespace API_Peppish.Services
             {
                 try
                 {
-                    var payload =
-                        System.Text.Json.JsonSerializer.Serialize(
-                            new
-                            {
-                                assignmentId = assignment.Id,
-                                templateId = assignment.ChoreTemplateId,
-                                startDate = assignment.StartDate,
-                                dueDate = assignment.DueDate
-                            });
+                    var payload = template.RewardType == RewardType.Money
+                     ? $"Du har fått en ny quest: {template.Title}. Dags att kamma hem lite cash!"
+                     : $"Du har fått en ny quest: {template.Title}. Dags att håva in din XP!";
 
                     await notificationService.CreateNotificationAsync(
                         new CreateNotificationRequest
@@ -132,7 +126,7 @@ namespace API_Peppish.Services
                             UserId = assignment.AssignedToUserId,
                             Type = "chore_assigned",
                             Payload = payload,
-                            HouseholdId = assignment.HouseholdId
+                            HouseholdId = householdId
                         });
                 }
                 catch

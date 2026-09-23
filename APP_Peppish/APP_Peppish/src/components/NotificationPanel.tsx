@@ -97,7 +97,9 @@ export const NotificationPanel: React.FC = () => {
                                   ? "Quest slutförd"
                                   : n.type === "chore_approved"
                                     ? "Quest godkänd"
-                                    : n.type}
+                                    : n.type === "chore_assigned"
+                                      ? "Ny quest"
+                                      : n.type}
                       </div>
                     </div>
                     <div className="notification-payload">{n.payload}</div>
