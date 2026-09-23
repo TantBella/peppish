@@ -86,9 +86,14 @@ namespace API_Peppish.Services
                 cancellationToken);
 
             var requestingUser = await userManager.FindByIdAsync(userId);
-            var displayName = requestingUser?.DisplayName ?? "En användare";
 
-            // Skicka endast notisen till vuxna i hushållet.
+            if (requestingUser == null)
+            {
+                throw new InvalidOperationException("Användaren kunde inte hittas.");
+            }
+
+            var displayName = requestingUser.DisplayName;
+
             foreach (var householdUser in householdUsers)
             {
                 var roles = await userManager.GetRolesAsync(householdUser);

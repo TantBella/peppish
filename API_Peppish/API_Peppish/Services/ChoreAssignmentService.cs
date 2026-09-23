@@ -93,25 +93,24 @@ namespace API_Peppish.Services
             if (isNewAssignment)
                 await repository.CreateAsync(assignment, cancellationToken);
 
-           await repository.SaveChangesAsync(
-    cancellationToken);
+            await repository.SaveChangesAsync(cancellationToken);
 
-if (assignment.AssignedToUserId != null)
-{
-    await dbContext.ChoreInstances
-        .Where(i =>
-            i.ChoreAssignmentId == assignment.Id &&
-            i.DueDate == null)
-        .ExecuteUpdateAsync(
-            setters => setters
-                .SetProperty(
-                    i => i.DueDate,
-                    assignment.StartDate)
-                .SetProperty(
-                    i => i.Status,
-                    ChoreStatus.assigned),
-            cancellationToken);
-}
+            if (assignment.AssignedToUserId != null)
+            {
+                await dbContext.ChoreInstances
+                    .Where(i =>
+                        i.ChoreAssignmentId == assignment.Id &&
+                        i.DueDate == null)
+                    .ExecuteUpdateAsync(
+                        setters => setters
+                            .SetProperty(
+                                i => i.DueDate,
+                                assignment.StartDate)
+                            .SetProperty(
+                                i => i.Status,
+                                ChoreStatus.assigned),
+                        cancellationToken);
+            }
 
             if (assignment.AssignedToUserId != null)
             {
@@ -141,7 +140,6 @@ if (assignment.AssignedToUserId != null)
                     // Notiser ska inte göra att tilldelningen misslyckas.
                 }
             }
-
             return assignment;
         }
 
@@ -149,8 +147,7 @@ if (assignment.AssignedToUserId != null)
             CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                ?? throw new InvalidOperationException("Användaren tillhör inget hushåll.");
 
             return await repository.GetAvailableAsync(
                 householdId,
@@ -162,8 +159,7 @@ if (assignment.AssignedToUserId != null)
             CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                ?? throw new InvalidOperationException("Användaren tillhör inget hushåll.");
 
             var userId = userContextService.GetCurrentUserId();
 
@@ -174,14 +170,12 @@ if (assignment.AssignedToUserId != null)
 
             if (assignment == null)
             {
-                throw new InvalidOperationException(
-                    "Questen kunde inte hittas.");
+                throw new InvalidOperationException("Questen kunde inte hittas.");
             }
 
             if (assignment.AssignedToUserId != null)
             {
-                throw new InvalidOperationException(
-                    "Questen är redan tilldelad.");
+                throw new InvalidOperationException("Questen är redan tilldelad.");
             }
 
             assignment.AssignedToUserId = userId;
@@ -193,25 +187,22 @@ if (assignment.AssignedToUserId != null)
 
             await repository.SaveChangesAsync(cancellationToken);
 
-          await dbContext.ChoreInstances
-    .Where(i =>
-        i.ChoreAssignmentId == assignment.Id &&
-        i.DueDate == null)
-    .ExecuteUpdateAsync(
-        setters => setters.SetProperty(
-            i => i.DueDate,
-            assignment.StartDate),
-        cancellationToken);
-
+            await dbContext.ChoreInstances
+            .Where(i =>
+              i.ChoreAssignmentId == assignment.Id &&
+              i.DueDate == null)
+            .ExecuteUpdateAsync(
+              setters => setters.SetProperty(i => i.DueDate, assignment.StartDate),
+              cancellationToken);
             return assignment;
         }
+
         public async Task<List<ChoreAssignment>> GetUserAssignmentsAsync(
             string userId,
             CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
+                ?? throw new InvalidOperationException("Användaren tillhör inget hushåll.");
 
             return await repository.GetByUserAsync(
                 userId,

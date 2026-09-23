@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../hooks/useNotifications";
-import check_icon from "../assets/icons/check_icon.png";
 import trashbin_icon from "../assets/icons/trashbin_icon.png";
 
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const {
-    data: notifications = [],
-    isLoading,
-    markRead,
-    remove,
-  } = useNotifications();
+  const { data: notifications = [], isLoading, remove } = useNotifications();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
@@ -109,11 +103,6 @@ export const NotificationPanel: React.FC = () => {
                       })}
                     </div>
                     <div className="notification-actions">
-                      {/* {!n.isRead && (
-                        <button onClick={() => markRead.mutate(n.id)}>
-                          <img src={check_icon} alt="Mark as read" />
-                        </button>
-                      )} */}
                       <button onClick={() => remove.mutate(n.id)}>
                         <img src={trashbin_icon} alt="Delete" />
                       </button>
