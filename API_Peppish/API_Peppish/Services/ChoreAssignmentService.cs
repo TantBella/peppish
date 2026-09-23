@@ -126,7 +126,7 @@ namespace API_Peppish.Services
                             UserId = assignment.AssignedToUserId,
                             Type = "chore_assigned",
                             Payload = payload,
-                            HouseholdId = householdId
+                            HouseholdId = assignment.HouseholdId
                         });
                 }
                 catch

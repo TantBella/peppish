@@ -7,464 +7,464 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Services
 {
-    public interface IChoreInstanceService
-    {
-        Task<List<ChoreInstance>> GetByDateRangeAsync(
-            DateTime from,
-            DateTime to,
-            CancellationToken cancellationToken = default);
-
-        Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(
-            DateTime from,
-            DateTime to,
-            CancellationToken cancellationToken = default);
-
-        Task<ChoreInstance?> GetByIdAsync(
-            Guid id,
-            CancellationToken cancellationToken = default);
-
-        Task<ChoreInstance> CompleteAsync(
-            Guid id,
-            CancellationToken cancellationToken = default);
-
-        Task<ChoreInstance> ApproveAsync(
-            Guid id,
-            CancellationToken cancellationToken = default);
-    }
-
-    public class ChoreInstanceService(
-        IChoreInstanceRepository instanceRepository,
-        IRewardRepository rewardRepository,
-        IAvatarProgressRepository progressRepository,
-        IUserContextService userContextService,
-        UserManager<ApplicationUser> userManager,
-        AppDbContext dbContext,
-        ILogger<ChoreInstanceService> logger,
-        INotificationService notificationService) : IChoreInstanceService
-    {
-        public async Task<List<ChoreInstance>> GetByDateRangeAsync(
-            DateTime from,
-            DateTime to,
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
-
-            var userId = userContextService.GetCurrentUserId();
-            var role = userContextService.GetCurrentUserRole();
-
-            await GenerateMissingInstancesAsync(
-                from,
-                to,
-                householdId,
-                cancellationToken);
-
-            return await instanceRepository.GetByDateRangeAsync(
-                householdId,
-                userId,
-                role,
-                from,
-                to,
-                cancellationToken);
-        }
-
-        public async Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(
-            DateTime from,
-            DateTime to,
-            CancellationToken cancellationToken = default)
-        {
-            var instances = await GetByDateRangeAsync(
-                from,
-                to,
-                cancellationToken);
-
-            var dtos = new List<ChoreInstanceDto>();
-
-            foreach (var instance in instances)
-            {
-                var assignment = await dbContext.ChoreAssignments.FindAsync(
-                    new object[] { instance.ChoreAssignmentId },
-                    cancellationToken: cancellationToken);
-
-                if (assignment == null)
-                    continue;
-
-                var user = assignment.AssignedToUserId == null
-                    ? null
-                    : await userManager.FindByIdAsync(
-                        assignment.AssignedToUserId);
-
-                var template = await dbContext.ChoreTemplates.FindAsync(
-                    new object[] { assignment.ChoreTemplateId },
-                    cancellationToken: cancellationToken);
-
-                dtos.Add(new ChoreInstanceDto
-                {
-                    Id = instance.Id,
-                    ChoreAssignmentId = instance.ChoreAssignmentId,
-                    ChoreTemplateId = assignment.ChoreTemplateId,
-                    Title = template?.Title ?? string.Empty,
-                    DueDate = instance.DueDate,
-                    Status = instance.Status.ToString(),
-                    AssignedToUserId = assignment.AssignedToUserId,
-                    AssignedToUserName = user?.DisplayName ?? string.Empty,
-                    RewardValue = template?.RewardValue ?? 0,
-                    RewardType = template?.RewardType.ToString()
-                });
-            }
-
-            return dtos;
-        }
-
-        public async Task<ChoreInstance?> GetByIdAsync(
-            Guid id,
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
-
-            return await instanceRepository.GetByIdAsync(
-                id,
-                householdId,
-                cancellationToken);
-        }
-
-        public async Task<ChoreInstance> CompleteAsync(
-            Guid id,
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
-
-            var userId = userContextService.GetCurrentUserId();
-            var completedByUser = await userManager.FindByIdAsync(userId);
-
-            if (completedByUser == null)
-            {
-                throw new InvalidOperationException("Användaren kunde inte hittas.");
-            }
-
-            var completedByDisplayName = completedByUser.DisplayName;
-
-            var instance = await instanceRepository.GetByIdAsync(
-                id,
-                householdId,
-                cancellationToken)
-                ?? throw new InvalidOperationException(
-                    "Sysslan kunde inte hittas.");
-
-            var assignment = await dbContext.ChoreAssignments.FindAsync(
-                new object[] { instance.ChoreAssignmentId },
-                cancellationToken: cancellationToken)
-                ?? throw new InvalidOperationException(
-                    "Tilldelningen kunde inte hittas.");
-
-            if (assignment.AssignedToUserId != userId)
-                throw new UnauthorizedAccessException(
-                    "Den här questen är inte din.");
-
-            if (instance.Status != ChoreStatus.assigned)
-                throw new InvalidOperationException(
-                    $"Kan inte slutföra en syssla med denna status {instance.Status}.");
-
-            instance.Status = ChoreStatus.completed;
-            instance.CompletedAt = DateTime.UtcNow;
-
-            await instanceRepository.UpdateAsync(
-                instance,
-                cancellationToken);
-
-            logger.LogInformation(
-                "{choreId} är markerad som färdig av {userId}",
-                id,
-                userId);
-
-            try
-            {
-
-                await notificationService.CreateNotificationAsync(
-                new CreateNotificationRequest
-                {
-                    UserId = assignment.AssignedToUserId,
-                    Type = "chore_completed",
-                    Payload = "Din quest är klar och väntar på godkännande.",
-                    HouseholdId = householdId
-                });
-
-                var adults = (
-                    await userManager.GetUsersInRoleAsync("ADULT"))
-                    .Where(u => u.HouseholdId == householdId);
-
-                foreach (var adult in adults)
-                {
-                    await notificationService.CreateNotificationAsync(
-                     new CreateNotificationRequest
-                     {
-                         UserId = adult.Id,
-                         Type = "chore_needs_approval",
-                         Payload = $"{completedByDisplayName} väntar på att du ska godkänna en färdig quest.",
-                         HouseholdId = householdId
-                     },
-                     cancellationToken);
-                }
-            }
-            catch
-            {
-                // Notiser ska inte göra att sysslan misslyckas.
-            }
-
-            return instance;
-        }
-
-        public async Task<ChoreInstance> ApproveAsync(
-            Guid id,
-            CancellationToken cancellationToken = default)
-        {
-            var householdId = userContextService.GetCurrentHouseholdId()
-                ?? throw new InvalidOperationException(
-                    "Användaren tillhör inget hushåll.");
-
-            var userId = userContextService.GetCurrentUserId();
-            var role = userContextService.GetCurrentUserRole();
-
-            if (role != "ADULT")
-                throw new UnauthorizedAccessException(
-                    "Endast vuxna kan godkänna att en syssla är slutförd.");
-
-            var instance = await instanceRepository.GetByIdAsync(
-                id,
-                householdId,
-                cancellationToken)
-                ?? throw new InvalidOperationException(
-                    "Sysslan kunde inte hittas.");
-
-            if (instance.Status != ChoreStatus.completed)
-                throw new InvalidOperationException(
-                    $"Kan inte godkänna en syssla med denna status {instance.Status}. " +
-                    "Den måste klarmarkeras först.");
-
-            using var transaction =
-            await dbContext.Database.BeginTransactionAsync(cancellationToken);
-
-            try
-            {
-                instance.Status = ChoreStatus.approved;
-                instance.ApprovedAt = DateTime.UtcNow;
-                instance.ApprovedByUserId = userId;
-
-                await instanceRepository.UpdateAsync(
-                    instance,
-                    cancellationToken);
-
-                var assignment = await dbContext.ChoreAssignments.FindAsync(
-                    new object[] { instance.ChoreAssignmentId },
-                    cancellationToken: cancellationToken)
-                    ?? throw new InvalidOperationException(
-                        "Tilldelningen kunde inte hittas.");
-
-                var template = await dbContext.ChoreTemplates.FindAsync(
-                    new object[] { assignment.ChoreTemplateId },
-                    cancellationToken: cancellationToken)
-                    ?? throw new InvalidOperationException(
-                        "Questmallen kunde inte hittas.");
-
-                var reward = new RewardLedger
-                {
-                    HouseholdId = householdId,
-                    UserId = assignment.AssignedToUserId,
-                    ChoreId = instance.Id,
-                    Reason = $"Slutförd quest: {template.Title}",
-                    MoneyAmount =
-                        template.RewardType == RewardType.Money
-                            ? template.RewardValue
-                            : 0,
-                    XpAmount =
-                        template.RewardType == RewardType.Xp
-                            ? (int)template.RewardValue
-                            : 0
-                };
-
-                await rewardRepository.CreateAsync(
-                    reward,
-                    cancellationToken);
-
-                await rewardRepository.SaveChangesAsync(
-                    cancellationToken);
-
-                var progress =
-                    await progressRepository.GetByUserAsync(
-                        assignment.AssignedToUserId,
-                        householdId,
-                        cancellationToken)
-                    ?? new AvatarProgress
-                    {
-                        UserId = assignment.AssignedToUserId,
-                        HouseholdId = householdId
-                    };
-
-                if (template.RewardType == RewardType.Xp)
-                {
-                    progress.CurrentXp += reward.XpAmount;
-                }
-
-                progress.UpdatedAt = DateTime.UtcNow;
-                progress.CurrentLevel =
-                    1 + (progress.CurrentXp / 100);
-
-                await progressRepository.CreateOrUpdateAsync(
-                    progress,
-                    cancellationToken);
-
-                await progressRepository.SaveChangesAsync(
-                    cancellationToken);
-
-                await transaction.CommitAsync(
-                    cancellationToken);
-
-                logger.LogInformation(
-                    "Questen {choreId} blev godkänd och " +
-                    "{assignedUserId} har fått en belöning",
-                    id,
-                    assignment.AssignedToUserId);
-
-                try
-                {
-                    var payload = template.RewardType == RewardType.Money
-                    ? $"Questen har godkänts! Du fick {reward.MoneyAmount:0.##} kr."
-                    : $"Questen har godkänts! Du fick {reward.XpAmount} XP.";
-
-                    await notificationService.CreateNotificationAsync(
-                        new CreateNotificationRequest
-                        {
-                            UserId = assignment.AssignedToUserId,
-                            Type = "chore_approved",
-                            Payload = payload,
-                            HouseholdId = householdId
-                        });
-                }
-                catch
-                {
-                    // Notiser ska inte påverka godkännandet.
-                }
-            }
-
-            catch
-            {
-                await transaction.RollbackAsync(cancellationToken);
-                throw;
-            }
-
-            return instance;
-        }
-
-        private async Task GenerateMissingInstancesAsync(
-            DateTime from,
-            DateTime to,
-            Guid householdId,
-            CancellationToken cancellationToken)
-        {
-            var assignments = await dbContext.ChoreAssignments
-                .Where(a =>
-                    a.HouseholdId == householdId &&
-                    (a.StartDate == null || a.StartDate <= to) &&
-                    (a.DueDate == null || a.DueDate >= from))
-                .ToListAsync(cancellationToken);
-
-            foreach (var assignment in assignments)
-            {
-                var template =
-                    await dbContext.ChoreTemplates.FindAsync(
-                        new object[] { assignment.ChoreTemplateId },
-                        cancellationToken: cancellationToken);
-
-                if (template == null)
-                    continue;
-
-                if (!assignment.StartDate.HasValue && !assignment.DueDate.HasValue)
-                {
-                    var existing = await instanceRepository.GetByAssignmentAsync(
-                        assignment.Id,
-                        householdId,
-                        cancellationToken);
-
-                    if (!existing.Any())
-                    {
-                        var instance = new ChoreInstance
-                        {
-                            HouseholdId = householdId,
-                            ChoreAssignmentId = assignment.Id,
-                            DueDate = null,
-                            Status = assignment.AssignedToUserId == null
-                                ? ChoreStatus.available
-                                : ChoreStatus.assigned
-                        };
-
-                        await instanceRepository.CreateAsync(
-                            instance,
-                            cancellationToken);
-                    }
-
-                    continue;
-                }
-
-                var startDate =
-                 assignment.StartDate.HasValue &&
-                 assignment.StartDate.Value > from
-                  ? assignment.StartDate.Value
-                  : from;
-
-                var currentDate = startDate.Date;
-
-                while (currentDate <= to &&
-                    (!assignment.DueDate.HasValue ||
-                     currentDate <= assignment.DueDate.Value))
-                {
-                    if (assignment.DueDate.HasValue &&
-                        currentDate > assignment.DueDate.Value.Date)
-                    {
-                        break;
-                    }
-
-                    var existing = await instanceRepository
-                            .GetByAssignmentAndDateAsync(
-                                assignment.Id,
-                                currentDate,
-                                householdId,
-                                cancellationToken);
-
-                    if (existing == null)
-                    {
-                        var instance = new ChoreInstance
-                        {
-                            HouseholdId = householdId,
-                            ChoreAssignmentId = assignment.Id,
-                            DueDate = currentDate,
-                            Status = assignment.AssignedToUserId == null
-                                ? ChoreStatus.available
-                                : ChoreStatus.assigned
-                        };
-
-                        await instanceRepository.CreateAsync(
-                            instance,
-                            cancellationToken);
-                    }
-
-                    currentDate = template.Recurrence switch
-                    {
-                        RecurrenceType.Daily =>
-                            currentDate.AddDays(1),
-
-                        RecurrenceType.Weekly =>
-                            currentDate.AddDays(7),
-                        _ => to.AddDays(1)
-                    };
-                }
-            }
-
-            await instanceRepository.SaveChangesAsync(cancellationToken);
-        }
-    }
+	public interface IChoreInstanceService
+	{
+		Task<List<ChoreInstance>> GetByDateRangeAsync(
+			DateTime from,
+			DateTime to,
+			CancellationToken cancellationToken = default);
+
+		Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(
+			DateTime from,
+			DateTime to,
+			CancellationToken cancellationToken = default);
+
+		Task<ChoreInstance?> GetByIdAsync(
+			Guid id,
+			CancellationToken cancellationToken = default);
+
+		Task<ChoreInstance> CompleteAsync(
+			Guid id,
+			CancellationToken cancellationToken = default);
+
+		Task<ChoreInstance> ApproveAsync(
+			Guid id,
+			CancellationToken cancellationToken = default);
+	}
+
+	public class ChoreInstanceService(
+		  IChoreInstanceRepository instanceRepository,
+		  IRewardRepository rewardRepository,
+		  IAvatarProgressRepository progressRepository,
+		  IUserContextService userContextService,
+		  UserManager<ApplicationUser> userManager,
+		  AppDbContext dbContext,
+		  ILogger<ChoreInstanceService> logger,
+		  INotificationService notificationService) : IChoreInstanceService
+	{
+		public async Task<List<ChoreInstance>> GetByDateRangeAsync(
+				DateTime from,
+				DateTime to,
+				CancellationToken cancellationToken = default)
+		{
+			var householdId = userContextService.GetCurrentHouseholdId()
+				?? throw new InvalidOperationException(
+					"Användaren tillhör inget hushåll.");
+
+			var userId = userContextService.GetCurrentUserId();
+			var role = userContextService.GetCurrentUserRole();
+
+			await GenerateMissingInstancesAsync(
+				from,
+				to,
+				householdId,
+				cancellationToken);
+
+			return await instanceRepository.GetByDateRangeAsync(
+				householdId,
+				userId,
+				role,
+				from,
+				to,
+				cancellationToken);
+		}
+
+		public async Task<List<ChoreInstanceDto>> GetByDateRangeAsDto(
+				DateTime from,
+				DateTime to,
+				CancellationToken cancellationToken = default)
+		{
+			var instances = await GetByDateRangeAsync(
+				from,
+				to,
+				cancellationToken);
+
+			var dtos = new List<ChoreInstanceDto>();
+
+			foreach (var instance in instances)
+			{
+				var assignment = await dbContext.ChoreAssignments.FindAsync(
+					new object[] { instance.ChoreAssignmentId },
+					cancellationToken: cancellationToken);
+
+				if (assignment == null)
+					continue;
+
+				var user = assignment.AssignedToUserId == null
+					? null
+					: await userManager.FindByIdAsync(
+						assignment.AssignedToUserId);
+
+				var template = await dbContext.ChoreTemplates.FindAsync(
+					new object[] { assignment.ChoreTemplateId },
+					cancellationToken: cancellationToken);
+
+				dtos.Add(new ChoreInstanceDto
+				{
+					Id = instance.Id,
+					ChoreAssignmentId = instance.ChoreAssignmentId,
+					ChoreTemplateId = assignment.ChoreTemplateId,
+					Title = template?.Title ?? string.Empty,
+					DueDate = instance.DueDate,
+					Status = instance.Status.ToString(),
+					AssignedToUserId = assignment.AssignedToUserId,
+					AssignedToUserName = user?.DisplayName ?? string.Empty,
+					RewardValue = template?.RewardValue ?? 0,
+					RewardType = template?.RewardType.ToString()
+				});
+			}
+
+			return dtos;
+		}
+
+		public async Task<ChoreInstance?> GetByIdAsync(
+				Guid id,
+				CancellationToken cancellationToken = default)
+		{
+			var householdId = userContextService.GetCurrentHouseholdId()
+				?? throw new InvalidOperationException(
+					"Användaren tillhör inget hushåll.");
+
+			return await instanceRepository.GetByIdAsync(
+				id,
+				householdId,
+				cancellationToken);
+		}
+
+		public async Task<ChoreInstance> CompleteAsync(
+				Guid id,
+				CancellationToken cancellationToken = default)
+		{
+			var householdId = userContextService.GetCurrentHouseholdId()
+				?? throw new InvalidOperationException(
+					"Användaren tillhör inget hushåll.");
+
+			var userId = userContextService.GetCurrentUserId();
+			var completedByUser = await userManager.FindByIdAsync(userId);
+
+			if (completedByUser == null)
+			{
+				throw new InvalidOperationException("Användaren kunde inte hittas.");
+			}
+
+			var completedByDisplayName = completedByUser.DisplayName;
+
+			var instance = await instanceRepository.GetByIdAsync(
+				id,
+				householdId,
+				cancellationToken)
+				?? throw new InvalidOperationException(
+					"Sysslan kunde inte hittas.");
+
+			var assignment = await dbContext.ChoreAssignments.FindAsync(
+				new object[] { instance.ChoreAssignmentId },
+				cancellationToken: cancellationToken)
+				?? throw new InvalidOperationException(
+					"Tilldelningen kunde inte hittas.");
+
+			if (assignment.AssignedToUserId != userId)
+				throw new UnauthorizedAccessException(
+					"Den här questen är inte din.");
+
+			if (instance.Status != ChoreStatus.assigned)
+				throw new InvalidOperationException(
+					$"Kan inte slutföra en syssla med denna status {instance.Status}.");
+
+			instance.Status = ChoreStatus.completed;
+			instance.CompletedAt = DateTime.UtcNow;
+
+			await instanceRepository.UpdateAsync(
+				instance,
+				cancellationToken);
+
+			logger.LogInformation(
+				"{choreId} är markerad som färdig av {userId}",
+				id,
+				userId);
+
+			try
+			{
+
+				await notificationService.CreateNotificationAsync(
+				new CreateNotificationRequest
+				{
+					UserId = assignment.AssignedToUserId,
+					Type = "chore_completed",
+					Payload = "Din quest är klar och väntar på att bli godkänd.",
+					HouseholdId = householdId
+				});
+
+				var adults = (
+					await userManager.GetUsersInRoleAsync("ADULT"))
+					.Where(u => u.HouseholdId == householdId);
+
+				foreach (var adult in adults)
+				{
+					await notificationService.CreateNotificationAsync(
+					 new CreateNotificationRequest
+					 {
+						 UserId = adult.Id,
+						 Type = "chore_needs_approval",
+						 Payload = $"{completedByDisplayName} väntar på att du ska godkänna en färdig quest.",
+						 HouseholdId = householdId
+					 },
+					 cancellationToken);
+				}
+			}
+			catch
+			{
+				// Notiser ska inte göra att sysslan misslyckas.
+			}
+
+			return instance;
+		}
+
+		public async Task<ChoreInstance> ApproveAsync(
+			Guid id,
+			CancellationToken cancellationToken = default)
+		{
+			var householdId = userContextService.GetCurrentHouseholdId()
+				?? throw new InvalidOperationException(
+					"Användaren tillhör inget hushåll.");
+
+			var userId = userContextService.GetCurrentUserId();
+			var role = userContextService.GetCurrentUserRole();
+
+			if (role != "ADULT")
+				throw new UnauthorizedAccessException(
+					"Endast vuxna kan godkänna att en syssla är slutförd.");
+
+			var instance = await instanceRepository.GetByIdAsync(
+				id,
+				householdId,
+				cancellationToken)
+				?? throw new InvalidOperationException(
+					"Sysslan kunde inte hittas.");
+
+			if (instance.Status != ChoreStatus.completed)
+				throw new InvalidOperationException(
+					$"Kan inte godkänna en syssla med denna status {instance.Status}. " +
+					"Den måste klarmarkeras först.");
+
+			using var transaction =
+			await dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+			try
+			{
+				instance.Status = ChoreStatus.approved;
+				instance.ApprovedAt = DateTime.UtcNow;
+				instance.ApprovedByUserId = userId;
+
+				await instanceRepository.UpdateAsync(
+					instance,
+					cancellationToken);
+
+				var assignment = await dbContext.ChoreAssignments.FindAsync(
+					new object[] { instance.ChoreAssignmentId },
+					cancellationToken: cancellationToken)
+					?? throw new InvalidOperationException(
+						"Tilldelningen kunde inte hittas.");
+
+				var template = await dbContext.ChoreTemplates.FindAsync(
+					new object[] { assignment.ChoreTemplateId },
+					cancellationToken: cancellationToken)
+					?? throw new InvalidOperationException(
+						"Questmallen kunde inte hittas.");
+
+				var reward = new RewardLedger
+				{
+					HouseholdId = householdId,
+					UserId = assignment.AssignedToUserId,
+					ChoreId = instance.Id,
+					Reason = $"Slutförd quest: {template.Title}",
+					MoneyAmount =
+						template.RewardType == RewardType.Money
+							? template.RewardValue
+							: 0,
+					XpAmount =
+						template.RewardType == RewardType.Xp
+							? (int)template.RewardValue
+							: 0
+				};
+
+				await rewardRepository.CreateAsync(
+					reward,
+					cancellationToken);
+
+				await rewardRepository.SaveChangesAsync(
+					cancellationToken);
+
+				var progress =
+					await progressRepository.GetByUserAsync(
+						assignment.AssignedToUserId,
+						householdId,
+						cancellationToken)
+					?? new AvatarProgress
+					{
+						UserId = assignment.AssignedToUserId,
+						HouseholdId = householdId
+					};
+
+				if (template.RewardType == RewardType.Xp)
+				{
+					progress.CurrentXp += reward.XpAmount;
+				}
+
+				progress.UpdatedAt = DateTime.UtcNow;
+				progress.CurrentLevel =
+					1 + (progress.CurrentXp / 100);
+
+				await progressRepository.CreateOrUpdateAsync(
+					progress,
+					cancellationToken);
+
+				await progressRepository.SaveChangesAsync(
+					cancellationToken);
+
+				await transaction.CommitAsync(
+					cancellationToken);
+
+				logger.LogInformation(
+					"Questen {choreId} blev godkänd och " +
+					"{assignedUserId} har fått en belöning",
+					id,
+					assignment.AssignedToUserId);
+
+				try
+				{
+					var payload = template.RewardType == RewardType.Money
+					? $"Questen har godkänts! Du fick {reward.MoneyAmount:0.##} kr."
+					: $"Questen har godkänts! Du fick {reward.XpAmount} XP.";
+
+					await notificationService.CreateNotificationAsync(
+						new CreateNotificationRequest
+						{
+							UserId = assignment.AssignedToUserId,
+							Type = "chore_approved",
+							Payload = payload,
+							HouseholdId = householdId
+						});
+				}
+				catch
+				{
+					// Notiser ska inte påverka godkännandet.
+				}
+			}
+
+			catch
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				throw;
+			}
+
+			return instance;
+		}
+
+		private async Task GenerateMissingInstancesAsync(
+			DateTime from,
+			DateTime to,
+			Guid householdId,
+			CancellationToken cancellationToken)
+		{
+			var assignments = await dbContext.ChoreAssignments
+				.Where(a =>
+					a.HouseholdId == householdId &&
+					(a.StartDate == null || a.StartDate <= to) &&
+					(a.DueDate == null || a.DueDate >= from))
+				.ToListAsync(cancellationToken);
+
+			foreach (var assignment in assignments)
+			{
+				var template =
+					await dbContext.ChoreTemplates.FindAsync(
+						new object[] { assignment.ChoreTemplateId },
+						cancellationToken: cancellationToken);
+
+				if (template == null)
+					continue;
+
+				if (!assignment.StartDate.HasValue && !assignment.DueDate.HasValue)
+				{
+					var existing = await instanceRepository.GetByAssignmentAsync(
+						assignment.Id,
+						householdId,
+						cancellationToken);
+
+					if (!existing.Any())
+					{
+						var instance = new ChoreInstance
+						{
+							HouseholdId = householdId,
+							ChoreAssignmentId = assignment.Id,
+							DueDate = null,
+							Status = assignment.AssignedToUserId == null
+								? ChoreStatus.available
+								: ChoreStatus.assigned
+						};
+
+						await instanceRepository.CreateAsync(
+							instance,
+							cancellationToken);
+					}
+
+					continue;
+				}
+
+				var startDate =
+				 assignment.StartDate.HasValue &&
+				 assignment.StartDate.Value > from
+				  ? assignment.StartDate.Value
+				  : from;
+
+				var currentDate = startDate.Date;
+
+				while (currentDate <= to &&
+					(!assignment.DueDate.HasValue ||
+					 currentDate <= assignment.DueDate.Value))
+				{
+					if (assignment.DueDate.HasValue &&
+						currentDate > assignment.DueDate.Value.Date)
+					{
+						break;
+					}
+
+					var existing = await instanceRepository
+							.GetByAssignmentAndDateAsync(
+								assignment.Id,
+								currentDate,
+								householdId,
+								cancellationToken);
+
+					if (existing == null)
+					{
+						var instance = new ChoreInstance
+						{
+							HouseholdId = householdId,
+							ChoreAssignmentId = assignment.Id,
+							DueDate = currentDate,
+							Status = assignment.AssignedToUserId == null
+								? ChoreStatus.available
+								: ChoreStatus.assigned
+						};
+
+						await instanceRepository.CreateAsync(
+							instance,
+							cancellationToken);
+					}
+
+					currentDate = template.Recurrence switch
+					{
+						RecurrenceType.Daily =>
+							currentDate.AddDays(1),
+
+						RecurrenceType.Weekly =>
+							currentDate.AddDays(7),
+						_ => to.AddDays(1)
+					};
+				}
+			}
+
+			await instanceRepository.SaveChangesAsync(cancellationToken);
+		}
+	}
 }
