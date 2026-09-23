@@ -84,23 +84,21 @@ export const NotificationPanel: React.FC = () => {
                 >
                   <div className="notification-main">
                     <div className="notification-type">
-                      <div className="notification-type">
-                        {n.type === "HOUSEHOLD_JOIN_REJECTED"
-                          ? "Din förfrågan om att gå med i hushållet har nekats"
-                          : n.type === "HOUSEHOLD_JOIN_APPROVED"
-                            ? "Din förfrågan om att gå med i hushållet har godkänts"
-                            : n.type === "HOUSEHOLD_JOIN_REQUEST"
-                              ? "Ny förfrågan"
-                              : n.type === "chore_needs_approval"
-                                ? "Quest väntar på godkännande"
-                                : n.type === "chore_completed"
-                                  ? "Quest slutförd"
-                                  : n.type === "chore_approved"
-                                    ? "Quest godkänd"
-                                    : n.type === "chore_assigned"
-                                      ? "Ny quest"
-                                      : n.type}
-                      </div>
+                      {n.type === "HOUSEHOLD_JOIN_REJECTED"
+                        ? "Din förfrågan om att gå med i hushållet har nekats"
+                        : n.type === "HOUSEHOLD_JOIN_APPROVED"
+                          ? "Din förfrågan om att gå med i hushållet har godkänts"
+                          : n.type === "HOUSEHOLD_JOIN_REQUEST"
+                            ? "Ny förfrågan"
+                            : n.type === "chore_needs_approval"
+                              ? "Quest väntar på godkännande"
+                              : n.type === "chore_completed"
+                                ? "Quest slutförd"
+                                : n.type === "chore_approved"
+                                  ? "Quest godkänd"
+                                  : n.type === "chore_assigned"
+                                    ? "Ny quest"
+                                    : n.type}
                     </div>
                     <div className="notification-payload">{n.payload}</div>
                     <div className="notification-time">
