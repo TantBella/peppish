@@ -101,15 +101,13 @@ namespace API_Peppish.Services
                     .Where(i =>
                         i.ChoreAssignmentId == assignment.Id &&
                         i.DueDate == null)
-                    .ExecuteUpdateAsync(
-                        setters => setters
-                            .SetProperty(
-                                i => i.DueDate,
-                                assignment.StartDate)
-                            .SetProperty(
-                                i => i.Status,
-                                ChoreStatus.assigned),
-                        cancellationToken);
+                   .ExecuteUpdateAsync(
+        setters => setters
+.SetProperty(i => i.DueDate, assignment.DueDate)
+            .SetProperty(
+                i => i.Status,
+                ChoreStatus.assigned),
+        cancellationToken);
             }
 
             if (assignment.AssignedToUserId != null)
@@ -208,13 +206,15 @@ namespace API_Peppish.Services
 
             await repository.SaveChangesAsync(cancellationToken);
 
-            await dbContext.ChoreInstances
-            .Where(i =>
-              i.ChoreAssignmentId == assignment.Id &&
-              i.DueDate == null)
-            .ExecuteUpdateAsync(
-              setters => setters.SetProperty(i => i.DueDate, assignment.StartDate),
-              cancellationToken);
+           await dbContext.ChoreInstances
+    .Where(i =>
+        i.ChoreAssignmentId == assignment.Id &&
+        i.DueDate == null)
+    .ExecuteUpdateAsync(
+        setters => setters
+.SetProperty(i => i.DueDate, assignment.DueDate)
+            .SetProperty(i => i.Status, ChoreStatus.assigned),
+        cancellationToken);
             return assignment;
         }
 

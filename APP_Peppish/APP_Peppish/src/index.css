@@ -9,7 +9,7 @@
 @import "./styling/toast.css";
 @import "./styling/householdmanagement.css";
 @import "./styling/notifications.css";
-
+@import "./styling/childquestcard.css";
 * {
   margin: 0;
   padding: 0;

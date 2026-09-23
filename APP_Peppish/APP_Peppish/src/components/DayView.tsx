@@ -20,17 +20,21 @@ export const DayView = ({
 }: Props) => {
   const targetDate = selectedDate ?? new Date();
 
-  const filtered = chores.filter(
-    (c) =>
-      c.assignedToUserId === userId &&
-      new Date(c.dueDate).toDateString() === targetDate.toDateString(),
-  );
+  const filtered = chores
+    .filter(
+      (c) =>
+        c.assignedToUserId === userId &&
+        new Date(c.dueDate).toDateString() === targetDate.toDateString(),
+    )
+    .sort((a, b) => {
+      const statusOrder: Record<string, number> = {
+        assigned: 0,
+        completed: 1,
+        approved: 2,
+      };
 
-  // const todayChores = useMemo(() => {
-  //   return chores.filter(
-  //     (c) => new Date(c.createdAt).toDateString() === today
-  //   )
-  // }, [chores, today])
+      return (statusOrder[a.uiStatus] ?? 0) - (statusOrder[b.uiStatus] ?? 0);
+    });
 
   return (
     <>
