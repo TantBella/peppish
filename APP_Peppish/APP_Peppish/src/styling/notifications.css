@@ -104,3 +104,12 @@
   right: 16px;
   top: 16px;
 }
+
+.notification-type {
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.notification-payload {
+  text-align: left;
+}
