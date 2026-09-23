@@ -23,6 +23,7 @@ export const CreateChorePage = () => {
   const [recurrence, setRecurrence] = useState("None");
   const [assignedToUserId, setAssignedToUserId] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export const CreateChorePage = () => {
         choreTemplateId: template.id,
         assignedToUserId,
         startDate,
+        dueDate,
       });
     },
 
@@ -145,7 +147,7 @@ export const CreateChorePage = () => {
             </div>
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="recurrence">Återkommer</label>
             <select
               id="recurrence"
@@ -156,7 +158,7 @@ export const CreateChorePage = () => {
               <option value="Daily">Varje dag</option>
               <option value="Weekly">Varje vecka</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label htmlFor="assignedToUserId">Tilldela till</label>
@@ -182,6 +184,16 @@ export const CreateChorePage = () => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="dueDate">Måste göras innan: </label>
+            <input
+              id="dueDate"
+              type="date"
+              value={dueDate}
+              min={startDate || undefined}
+              onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
 

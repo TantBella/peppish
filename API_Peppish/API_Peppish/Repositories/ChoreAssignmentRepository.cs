@@ -56,13 +56,17 @@ public class ChoreAssignmentRepository(AppDbContext context) : IChoreAssignmentR
     public async Task<List<ChoreAssignment>> GetAvailableAsync(
     Guid householdId,
     CancellationToken cancellationToken = default)
-    {
-        return await context.ChoreAssignments
-            .Where(a =>
-                a.HouseholdId == householdId &&
-                a.AssignedToUserId == null)
-            .ToListAsync(cancellationToken);
-    }
+{
+    var today = DateTime.UtcNow.Date;
+
+    return await context.ChoreAssignments
+        .Where(a =>
+            a.HouseholdId == householdId &&
+            a.AssignedToUserId == null &&
+            (!a.StartDate.HasValue || a.StartDate.Value.Date <= today) &&
+            (!a.DueDate.HasValue || a.DueDate.Value.Date >= today))
+        .ToListAsync(cancellationToken);
+}
 
     public async Task<List<ChoreAssignment>> GetByTemplateAsync(Guid templateId, Guid householdId, CancellationToken cancellationToken = default)
     {
