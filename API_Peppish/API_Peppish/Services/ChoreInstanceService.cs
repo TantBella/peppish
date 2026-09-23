@@ -246,8 +246,7 @@ namespace API_Peppish.Services
                     "Den måste klarmarkeras först.");
 
             using var transaction =
-                await dbContext.Database.BeginTransactionAsync(
-                    cancellationToken);
+            await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
             try
             {
@@ -332,19 +331,9 @@ namespace API_Peppish.Services
 
                 try
                 {
-                    var payload =
-                        System.Text.Json.JsonSerializer.Serialize(
-                            new
-                            {
-                                instanceId = instance.Id,
-                                approvedBy = userId,
-                                approvedAt = instance.ApprovedAt,
-                                reward = new
-                                {
-                                    reward.MoneyAmount,
-                                    reward.XpAmount
-                                }
-                            });
+                    var payload = template.RewardType == RewardType.Money
+                    ? $"Questen har godkänts! Du fick {reward.MoneyAmount:0.##} kr."
+                    : $"Questen har godkänts! Du fick {reward.XpAmount} XP.";
 
                     await notificationService.CreateNotificationAsync(
                         new CreateNotificationRequest
@@ -360,11 +349,10 @@ namespace API_Peppish.Services
                     // Notiser ska inte påverka godkännandet.
                 }
             }
+
             catch
             {
-                await transaction.RollbackAsync(
-                    cancellationToken);
-
+                await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
 
@@ -422,10 +410,10 @@ namespace API_Peppish.Services
                 }
 
                 var startDate =
-                    assignment.StartDate.HasValue &&
-                    assignment.StartDate.Value > from
-                        ? assignment.StartDate.Value
-                        : from;
+                 assignment.StartDate.HasValue &&
+                 assignment.StartDate.Value > from
+                  ? assignment.StartDate.Value
+                  : from;
 
                 var currentDate = startDate.Date;
 
@@ -439,8 +427,7 @@ namespace API_Peppish.Services
                         break;
                     }
 
-                    var existing =
-                        await instanceRepository
+                    var existing = await instanceRepository
                             .GetByAssignmentAndDateAsync(
                                 assignment.Id,
                                 currentDate,
@@ -471,15 +458,12 @@ namespace API_Peppish.Services
 
                         RecurrenceType.Weekly =>
                             currentDate.AddDays(7),
-
-                        _ =>
-                            to.AddDays(1)
+                        _ => to.AddDays(1)
                     };
                 }
             }
 
-            await instanceRepository.SaveChangesAsync(
-                cancellationToken);
+            await instanceRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

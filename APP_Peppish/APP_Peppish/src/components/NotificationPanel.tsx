@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../hooks/useNotifications";
-import check_icon from "../assets/icons/check_icon.png";
 import trashbin_icon from "../assets/icons/trashbin_icon.png";
 
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const {
-    data: notifications = [],
-    isLoading,
-    markRead,
-    remove,
-  } = useNotifications();
+  const { data: notifications = [], isLoading, remove } = useNotifications();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
@@ -90,13 +84,15 @@ export const NotificationPanel: React.FC = () => {
                 >
                   <div className="notification-main">
                     <div className="notification-type">
-                      {n.type === "HOUSEHOLD_JOIN_REJECTED"
-                        ? "Din förfrågan om att gå med i hushållet har nekats"
-                        : n.type === "HOUSEHOLD_JOIN_APPROVED"
-                          ? "Din förfrågan om att gå med i hushållet har godkänts"
-                          : n.type === "HOUSEHOLD_JOIN_REQUEST"
-                            ? "Ny förfrågan: "
-                            : n.type}
+                      {n.type === "chore_approved"
+                        ? "Quest godkänd"
+                        : n.type === "HOUSEHOLD_JOIN_REJECTED"
+                          ? "Din förfrågan om att gå med i hushållet har nekats"
+                          : n.type === "HOUSEHOLD_JOIN_APPROVED"
+                            ? "Din förfrågan om att gå med i hushållet har godkänts"
+                            : n.type === "HOUSEHOLD_JOIN_REQUEST"
+                              ? "Ny förfrågan: "
+                              : n.type}
                     </div>
                     <div className="notification-payload">{n.payload}</div>
                     <div className="notification-time">
@@ -107,11 +103,6 @@ export const NotificationPanel: React.FC = () => {
                       })}
                     </div>
                     <div className="notification-actions">
-                      {!n.isRead && (
-                        <button onClick={() => markRead.mutate(n.id)}>
-                          <img src={check_icon} alt="Mark as read" />
-                        </button>
-                      )}
                       <button onClick={() => remove.mutate(n.id)}>
                         <img src={trashbin_icon} alt="Delete" />
                       </button>
