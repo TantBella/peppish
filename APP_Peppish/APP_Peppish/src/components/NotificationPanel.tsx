@@ -100,18 +100,20 @@ export const NotificationPanel: React.FC = () => {
                                     ? "Ny quest"
                                     : n.type}
                     </div>
-                    <div className="notification-payload">{n.payload}</div>
+                    <div className="notification-info">
+                      <div className="notification-payload">{n.payload}</div>
+                      <div className="notification-actions">
+                        <button onClick={() => remove.mutate(n.id)}>
+                          <img src={check_icon} alt="Delete" />
+                        </button>
+                      </div>
+                    </div>
                     <div className="notification-time">
                       {new Date(n.createdAt).toLocaleDateString("sv-SE", {
                         weekday: "long",
                         day: "numeric",
                         month: "long",
                       })}
-                    </div>
-                    <div className="notification-actions">
-                      <button onClick={() => remove.mutate(n.id)}>
-                        <img src={check_icon} alt="Delete" />
-                      </button>
                     </div>
                   </div>
                 </div>
