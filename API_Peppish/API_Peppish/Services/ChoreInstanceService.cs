@@ -331,20 +331,23 @@ namespace API_Peppish.Services
                     assignment.AssignedToUserId);
 
                 try
-                {
-                    var payload =
-                        System.Text.Json.JsonSerializer.Serialize(
-                            new
-                            {
-                                instanceId = instance.Id,
-                                approvedBy = userId,
-                                approvedAt = instance.ApprovedAt,
-                                reward = new
-                                {
-                                    reward.MoneyAmount,
-                                    reward.XpAmount
-                                }
-                            });
+        {
+                    // var payload =
+                    //     System.Text.Json.JsonSerializer.Serialize(
+                    //         new
+                    //         {
+                    //             instanceId = instance.Id,
+                    //             approvedBy = userId,
+                    //             approvedAt = instance.ApprovedAt,
+                    //             reward = new
+                    //             {
+                    //                 reward.MoneyAmount,
+                    //                 reward.XpAmount
+                    //             }
+                    //         });
+                    var payload = template.RewardType == RewardType.Money
+    ? $"Questen har godkänts! Du fick {reward.MoneyAmount:0.##} kr."
+    : $"Questen har godkänts! Du fick {reward.XpAmount} XP.";
 
                     await notificationService.CreateNotificationAsync(
                         new CreateNotificationRequest

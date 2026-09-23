@@ -90,13 +90,15 @@ export const NotificationPanel: React.FC = () => {
                 >
                   <div className="notification-main">
                     <div className="notification-type">
-                      {n.type === "HOUSEHOLD_JOIN_REJECTED"
-                        ? "Din förfrågan om att gå med i hushållet har nekats"
-                        : n.type === "HOUSEHOLD_JOIN_APPROVED"
-                          ? "Din förfrågan om att gå med i hushållet har godkänts"
-                          : n.type === "HOUSEHOLD_JOIN_REQUEST"
-                            ? "Ny förfrågan: "
-                            : n.type}
+                      {n.type === "chore_approved"
+                        ? "Quest godkänd"
+                        : n.type === "HOUSEHOLD_JOIN_REJECTED"
+                          ? "Din förfrågan om att gå med i hushållet har nekats"
+                          : n.type === "HOUSEHOLD_JOIN_APPROVED"
+                            ? "Din förfrågan om att gå med i hushållet har godkänts"
+                            : n.type === "HOUSEHOLD_JOIN_REQUEST"
+                              ? "Ny förfrågan: "
+                              : n.type}
                     </div>
                     <div className="notification-payload">{n.payload}</div>
                     <div className="notification-time">
@@ -107,11 +109,11 @@ export const NotificationPanel: React.FC = () => {
                       })}
                     </div>
                     <div className="notification-actions">
-                      {!n.isRead && (
+                      {/* {!n.isRead && (
                         <button onClick={() => markRead.mutate(n.id)}>
                           <img src={check_icon} alt="Mark as read" />
                         </button>
-                      )}
+                      )} */}
                       <button onClick={() => remove.mutate(n.id)}>
                         <img src={trashbin_icon} alt="Delete" />
                       </button>

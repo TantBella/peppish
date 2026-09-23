@@ -5,224 +5,287 @@ using Microsoft.AspNetCore.Identity;
 
 namespace API_Peppish.Services
 {
-  public interface IHouseholdJoinRequestService
-  {
-    Task CreateJoinRequestAsync(
-        string userId,
-        CreateHouseholdJoinRequestDto dto,
-        CancellationToken cancellationToken = default);
-
-    Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
-        CancellationToken cancellationToken = default);
-
-    Task ApproveJoinRequestAsync(
-        Guid requestId,
-        CancellationToken cancellationToken = default);
-
-    Task RejectJoinRequestAsync(
-        Guid requestId,
-        CancellationToken cancellationToken = default);
-  }
-
-  public class HouseholdJoinRequestService(
-      IHouseholdJoinRequestRepository joinRequestRepository,
-      IJoinCodeRepository joinCodeRepository,
-      IHouseholdRepository householdRepository,
-      UserManager<ApplicationUser> userManager,
-      IUserContextService userContextService,
-      INotificationService notificationService)
-          : IHouseholdJoinRequestService
-  {
-    public async Task CreateJoinRequestAsync(
-        string userId,
-        CreateHouseholdJoinRequestDto dto,
-        CancellationToken cancellationToken = default)
+    public interface IHouseholdJoinRequestService
     {
-      var joinCode = await joinCodeRepository.GetByCodeAsync(
-          dto.JoinCode,
-          cancellationToken);
+        Task CreateJoinRequestAsync(
+            string userId,
+            CreateHouseholdJoinRequestDto dto,
+            CancellationToken cancellationToken = default);
 
-      if (joinCode == null)
-      {
-        throw new InvalidOperationException("Ogiltig inbjudan.");
-      }
+        Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
+            CancellationToken cancellationToken = default);
 
-      if (joinCode.ExpiresAt <= DateTime.UtcNow)
-      {
-        throw new InvalidOperationException("Inbjudan har gått ut.");
-      }
+        Task ApproveJoinRequestAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default);
 
-      if (joinCode.IsUsed)
-      {
-        throw new InvalidOperationException("Inbjudan har redan använts.");
-      }
-
-      var existingRequest =
-          await joinRequestRepository.GetPendingRequestAsync(
-              userId,
-              joinCode.HouseholdId,
-              cancellationToken);
-
-      if (existingRequest != null)
-      {
-        throw new InvalidOperationException(
-            "Du har redan en väntande förfrågan till detta hushåll.");
-      }
-
-      var request = new HouseholdJoinRequest
-      {
-        UserId = userId,
-        HouseholdId = joinCode.HouseholdId,
-        JoinCodeId = joinCode.Id,
-        Status = JoinRequestStatus.Pending
-      };
-
-      await joinRequestRepository.AddAsync(request, cancellationToken);
-
-      var householdUsers = await householdRepository.GetUsersAsync(
-          joinCode.HouseholdId,
-          cancellationToken);
-
-      var requestingUser = await userManager.FindByIdAsync(userId);
-
-      var displayName = requestingUser?.DisplayName ?? "En användare";
-
-      foreach (var householdUser in householdUsers)
-      {
-        await notificationService.CreateNotificationAsync(
-            new CreateNotificationRequest
-            {
-              UserId = householdUser.Id,
-              HouseholdId = joinCode.HouseholdId,
-              Type = "HOUSEHOLD_JOIN_REQUEST",
-              Payload = $"{displayName} vill gå med i ditt hushåll."
-            },
-            cancellationToken);
-      }
-
-      await joinRequestRepository.SaveChangesAsync(cancellationToken);
+        Task RejectJoinRequestAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default);
     }
 
-    public async Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
-        CancellationToken cancellationToken = default)
+    public class HouseholdJoinRequestService(
+        IHouseholdJoinRequestRepository joinRequestRepository,
+        IJoinCodeRepository joinCodeRepository,
+        IHouseholdRepository householdRepository,
+        UserManager<ApplicationUser> userManager,
+        IUserContextService userContextService,
+        INotificationService notificationService)
+            : IHouseholdJoinRequestService
     {
-      var householdId = userContextService.GetCurrentHouseholdId()
-  ?? throw new InvalidOperationException(
-      "Användaren tillhör inget hushåll.");
-
-      var requests =
-          await joinRequestRepository.GetPendingRequestsByHouseholdAsync(
-              householdId,
-              cancellationToken);
-
-      var result = new List<HouseholdJoinRequestDto>();
-
-      foreach (var request in requests)
-      {
-        var roles = await userManager.GetRolesAsync(request.User);
-
-        result.Add(new HouseholdJoinRequestDto
+        public async Task CreateJoinRequestAsync(
+            string userId,
+            CreateHouseholdJoinRequestDto dto,
+            CancellationToken cancellationToken = default)
         {
-          Id = request.Id,
-          UserId = request.UserId,
-          DisplayName = request.User.DisplayName,
-          Email = request.User.Email ?? string.Empty,
-          Role = roles.FirstOrDefault() ?? "ADULT",
-          HouseholdId = request.HouseholdId,
-          CreatedAt = request.CreatedAt,
-          Status = request.Status.ToString()
-        });
-      }
+            var joinCode = await joinCodeRepository.GetByCodeAsync(
+                dto.JoinCode,
+                cancellationToken);
 
-      return result;
+            if (joinCode == null)
+            {
+                throw new InvalidOperationException("Ogiltig inbjudan.");
+            }
+
+            if (joinCode.ExpiresAt <= DateTime.UtcNow)
+            {
+                throw new InvalidOperationException("Inbjudan har gått ut.");
+            }
+
+            if (joinCode.IsUsed)
+            {
+                throw new InvalidOperationException("Inbjudan har redan använts.");
+            }
+
+            var existingRequest =
+                await joinRequestRepository.GetPendingRequestAsync(
+                    userId,
+                    joinCode.HouseholdId,
+                    cancellationToken);
+
+            if (existingRequest != null)
+            {
+                throw new InvalidOperationException(
+                    "Du har redan en väntande förfrågan till detta hushåll.");
+            }
+
+            var request = new HouseholdJoinRequest
+            {
+                UserId = userId,
+                HouseholdId = joinCode.HouseholdId,
+                JoinCodeId = joinCode.Id,
+                Status = JoinRequestStatus.Pending
+            };
+
+            await joinRequestRepository.AddAsync(
+                request,
+                cancellationToken);
+
+            var householdUsers = await householdRepository.GetUsersAsync(
+                joinCode.HouseholdId,
+                cancellationToken);
+
+            var requestingUser = await userManager.FindByIdAsync(userId);
+            var displayName = requestingUser?.DisplayName ?? "En användare";
+
+            // Skicka endast notisen till vuxna i hushållet.
+            foreach (var householdUser in householdUsers)
+            {
+                var roles = await userManager.GetRolesAsync(householdUser);
+
+                if (!roles.Contains("ADULT"))
+                {
+                    continue;
+                }
+
+                await notificationService.CreateNotificationAsync(
+                    new CreateNotificationRequest
+                    {
+                        UserId = householdUser.Id,
+                        HouseholdId = joinCode.HouseholdId,
+                        Type = "HOUSEHOLD_JOIN_REQUEST",
+                        Payload = $"{displayName} vill gå med i ditt hushåll."
+                    },
+                    cancellationToken);
+            }
+
+            await joinRequestRepository.SaveChangesAsync(
+                cancellationToken);
+        }
+
+        public async Task<List<HouseholdJoinRequestDto>> GetPendingRequestsAsync(
+            CancellationToken cancellationToken = default)
+        {
+            var householdId = userContextService.GetCurrentHouseholdId()
+                ?? throw new InvalidOperationException(
+                    "Användaren tillhör inget hushåll.");
+
+            var currentUserId = userContextService.GetCurrentUserId();
+
+            var currentUser = await userManager.FindByIdAsync(currentUserId);
+
+            if (currentUser == null)
+            {
+                throw new InvalidOperationException(
+                    "Användaren kunde inte hittas.");
+            }
+
+            var currentUserRoles = await userManager.GetRolesAsync(currentUser);
+
+            if (!currentUserRoles.Contains("ADULT"))
+            {
+                throw new UnauthorizedAccessException(
+                    "Endast vuxna kan se hushållsansökningar.");
+            }
+
+            var requests =
+                await joinRequestRepository.GetPendingRequestsByHouseholdAsync(
+                    householdId,
+                    cancellationToken);
+
+            var result = new List<HouseholdJoinRequestDto>();
+
+            foreach (var request in requests)
+            {
+                var roles = await userManager.GetRolesAsync(request.User);
+
+                result.Add(new HouseholdJoinRequestDto
+                {
+                    Id = request.Id,
+                    UserId = request.UserId,
+                    DisplayName = request.User.DisplayName,
+                    Email = request.User.Email ?? string.Empty,
+                    Role = roles.FirstOrDefault() ?? "ADULT",
+                    HouseholdId = request.HouseholdId,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status.ToString()
+                });
+            }
+
+            return result;
+        }
+
+        public async Task ApproveJoinRequestAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default)
+        {
+            var request = await joinRequestRepository.GetByIdAsync(
+                requestId,
+                cancellationToken);
+
+            if (request == null)
+            {
+                throw new InvalidOperationException(
+                    "Förfrågan kunde inte hittas.");
+            }
+
+            var householdId = userContextService.GetCurrentHouseholdId();
+
+            if (request.HouseholdId != householdId)
+            {
+                throw new UnauthorizedAccessException(
+                    "Du har inte behörighet att hantera denna förfrågan.");
+            }
+
+            var currentUserId = userContextService.GetCurrentUserId();
+
+            var currentUser = await userManager.FindByIdAsync(currentUserId);
+
+            if (currentUser == null)
+            {
+                throw new InvalidOperationException(
+                    "Användaren kunde inte hittas.");
+            }
+
+            var currentUserRoles = await userManager.GetRolesAsync(currentUser);
+
+            if (!currentUserRoles.Contains("ADULT"))
+            {
+                throw new UnauthorizedAccessException(
+                    "Endast vuxna kan godkänna hushållsansökningar.");
+            }
+
+            if (request.Status != JoinRequestStatus.Pending)
+            {
+                throw new InvalidOperationException(
+                    "Förfrågan har redan hanterats.");
+            }
+
+            var user = await userManager.FindByIdAsync(request.UserId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException(
+                    "Användaren kunde inte hittas.");
+            }
+
+            user.HouseholdId = request.HouseholdId;
+            request.Status = JoinRequestStatus.Approved;
+
+            await joinRequestRepository.SaveChangesAsync(
+                cancellationToken);
+        }
+
+        public async Task RejectJoinRequestAsync(
+            Guid requestId,
+            CancellationToken cancellationToken = default)
+        {
+            var request = await joinRequestRepository.GetByIdAsync(
+                requestId,
+                cancellationToken);
+
+            if (request == null)
+            {
+                throw new InvalidOperationException(
+                    "Förfrågan kunde inte hittas.");
+            }
+
+            var householdId = userContextService.GetCurrentHouseholdId();
+
+            if (request.HouseholdId != householdId)
+            {
+                throw new UnauthorizedAccessException(
+                    "Du har inte behörighet att hantera denna förfrågan.");
+            }
+
+            var currentUserId = userContextService.GetCurrentUserId();
+
+            var currentUser = await userManager.FindByIdAsync(currentUserId);
+
+            if (currentUser == null)
+            {
+                throw new InvalidOperationException(
+                    "Användaren kunde inte hittas.");
+            }
+
+            var currentUserRoles = await userManager.GetRolesAsync(currentUser);
+
+            if (!currentUserRoles.Contains("ADULT"))
+            {
+                throw new UnauthorizedAccessException(
+                    "Endast vuxna kan neka hushållsansökningar.");
+            }
+
+            if (request.Status != JoinRequestStatus.Pending)
+            {
+                throw new InvalidOperationException(
+                    "Förfrågan har redan hanterats.");
+            }
+
+            request.Status = JoinRequestStatus.Rejected;
+
+            await notificationService.CreateNotificationAsync(
+                new CreateNotificationRequest
+                {
+                    UserId = request.UserId,
+                    HouseholdId = null,
+                    Type = "HOUSEHOLD_JOIN_REJECTED",
+                    Payload = "Din förfrågan om att gå med i hushållet har nekats."
+                },
+                cancellationToken);
+
+            await joinRequestRepository.SaveChangesAsync(
+                cancellationToken);
+        }
     }
-
-    public async Task ApproveJoinRequestAsync(
-        Guid requestId,
-        CancellationToken cancellationToken = default)
-    {
-      var request = await joinRequestRepository.GetByIdAsync(
-          requestId,
-          cancellationToken);
-
-      if (request == null)
-      {
-        throw new InvalidOperationException(
-            "Förfrågan kunde inte hittas.");
-      }
-
-      var householdId = userContextService.GetCurrentHouseholdId();
-
-      if (request.HouseholdId != householdId)
-      {
-        throw new UnauthorizedAccessException(
-            "Du har inte behörighet att hantera denna förfrågan.");
-      }
-
-      if (request.Status != JoinRequestStatus.Pending)
-      {
-        throw new InvalidOperationException(
-            "Förfrågan har redan hanterats.");
-      }
-
-      var user = await userManager.FindByIdAsync(request.UserId);
-
-      if (user == null)
-      {
-        throw new InvalidOperationException(
-            "Användaren kunde inte hittas.");
-      }
-
-      user.HouseholdId = request.HouseholdId;
-
-      request.Status = JoinRequestStatus.Approved;
-
-      await joinRequestRepository.SaveChangesAsync(
-          cancellationToken);
-    }
-
-    public async Task RejectJoinRequestAsync(
-Guid requestId,
-CancellationToken cancellationToken = default)
-    {
-      var request = await joinRequestRepository.GetByIdAsync(
-          requestId,
-          cancellationToken);
-
-      if (request == null)
-      {
-        throw new InvalidOperationException(
-            "Förfrågan kunde inte hittas.");
-      }
-
-      var householdId = userContextService.GetCurrentHouseholdId();
-
-      if (request.HouseholdId != householdId)
-      {
-        throw new UnauthorizedAccessException(
-            "Du har inte behörighet att hantera denna förfrågan.");
-      }
-
-      if (request.Status != JoinRequestStatus.Pending)
-      {
-        throw new InvalidOperationException(
-            "Förfrågan har redan hanterats.");
-      }
-
-      request.Status = JoinRequestStatus.Rejected;
-
-      await notificationService.CreateNotificationAsync(
-          new CreateNotificationRequest
-          {
-            UserId = request.UserId,
-            HouseholdId = null,
-            Type = "HOUSEHOLD_JOIN_REJECTED",
-            Payload = "Din förfrågan om att gå med i hushållet har nekats."
-          },
-          cancellationToken);
-
-      await joinRequestRepository.SaveChangesAsync(
-          cancellationToken);
-    }
-  }
 }
