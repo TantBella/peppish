@@ -13,11 +13,11 @@ namespace API_Peppish.Services
             CancellationToken cancellationToken = default);
 
         Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-            CancellationToken cancellationToken = default);
+    CancellationToken cancellationToken = default);
 
         Task<ChoreAssignment> TakeFreeQuestAsync(
-            Guid assignmentId,
-            CancellationToken cancellationToken = default);
+Guid assignmentId,
+CancellationToken cancellationToken = default);
 
         Task<List<ChoreAssignment>> GetUserAssignmentsAsync(
             string userId,
@@ -84,8 +84,8 @@ namespace API_Peppish.Services
             assignment.AssignedToUserId = request.AssignedToUserId;
             assignment.AssignedByUserId = userId;
             assignment.StartDate = request.StartDate.HasValue
-            ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
-            : assignment.StartDate ?? DateTime.UtcNow.Date;
+                ? DateTime.SpecifyKind(request.StartDate.Value, DateTimeKind.Utc)
+                : assignment.StartDate;
             assignment.DueDate = request.DueDate.HasValue
                 ? DateTime.SpecifyKind(request.DueDate.Value, DateTimeKind.Utc)
                 : assignment.DueDate;
@@ -93,21 +93,25 @@ namespace API_Peppish.Services
             if (isNewAssignment)
                 await repository.CreateAsync(assignment, cancellationToken);
 
-            await repository.SaveChangesAsync(
-                cancellationToken);
+           await repository.SaveChangesAsync(
+    cancellationToken);
 
-            if (assignment.AssignedToUserId != null)
-            {
-                await dbContext.ChoreInstances
-                    .Where(i =>
-                        i.ChoreAssignmentId == assignment.Id &&
-                        i.Status == ChoreStatus.available)
-                    .ExecuteUpdateAsync(
-                        setters => setters.SetProperty(
-                            i => i.Status,
-                            ChoreStatus.assigned),
-                        cancellationToken);
-            }
+if (assignment.AssignedToUserId != null)
+{
+    await dbContext.ChoreInstances
+        .Where(i =>
+            i.ChoreAssignmentId == assignment.Id &&
+            i.DueDate == null)
+        .ExecuteUpdateAsync(
+            setters => setters
+                .SetProperty(
+                    i => i.DueDate,
+                    assignment.StartDate)
+                .SetProperty(
+                    i => i.Status,
+                    ChoreStatus.assigned),
+            cancellationToken);
+}
 
             if (assignment.AssignedToUserId != null)
             {
@@ -142,7 +146,7 @@ namespace API_Peppish.Services
         }
 
         public async Task<List<ChoreAssignment>> GetAvailableAssignmentsAsync(
-            CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default)
         {
             var householdId = userContextService.GetCurrentHouseholdId()
                 ?? throw new InvalidOperationException(
@@ -182,22 +186,17 @@ namespace API_Peppish.Services
 
             assignment.AssignedToUserId = userId;
 
-            if (!assignment.StartDate.HasValue)
-            {
-                assignment.StartDate = DateTime.UtcNow.Date;
-            }
-
             await repository.SaveChangesAsync(cancellationToken);
 
-            await dbContext.ChoreInstances
-                .Where(i =>
-                    i.ChoreAssignmentId == assignment.Id &&
-                    i.Status == ChoreStatus.available)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(
-                        i => i.Status,
-                        ChoreStatus.assigned),
-                    cancellationToken);
+          await dbContext.ChoreInstances
+    .Where(i =>
+        i.ChoreAssignmentId == assignment.Id &&
+        i.DueDate == null)
+    .ExecuteUpdateAsync(
+        setters => setters.SetProperty(
+            i => i.DueDate,
+            assignment.StartDate),
+        cancellationToken);
 
             return assignment;
         }
