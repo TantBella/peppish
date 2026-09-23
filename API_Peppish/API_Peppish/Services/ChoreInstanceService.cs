@@ -140,6 +140,14 @@ namespace API_Peppish.Services
                     "Användaren tillhör inget hushåll.");
 
             var userId = userContextService.GetCurrentUserId();
+            var completedByUser = await userManager.FindByIdAsync(userId);
+
+            if (completedByUser == null)
+            {
+                throw new InvalidOperationException("Användaren kunde inte hittas.");
+            }
+
+            var completedByDisplayName = completedByUser.DisplayName;
 
             var instance = await instanceRepository.GetByIdAsync(
                 id,
@@ -176,23 +184,15 @@ namespace API_Peppish.Services
 
             try
             {
-                var payload =
-                    System.Text.Json.JsonSerializer.Serialize(
-                        new
-                        {
-                            instanceId = instance.Id,
-                            completedBy = userId,
-                            completedAt = instance.CompletedAt
-                        });
 
                 await notificationService.CreateNotificationAsync(
-                    new CreateNotificationRequest
-                    {
-                        UserId = assignment.AssignedToUserId,
-                        Type = "chore_completed",
-                        Payload = payload,
-                        HouseholdId = householdId
-                    });
+                new CreateNotificationRequest
+                {
+                    UserId = assignment.AssignedToUserId,
+                    Type = "chore_completed",
+                    Payload = "Din quest är klar och väntar på godkännande.",
+                    HouseholdId = householdId
+                });
 
                 var adults = (
                     await userManager.GetUsersInRoleAsync("ADULT"))
@@ -201,13 +201,14 @@ namespace API_Peppish.Services
                 foreach (var adult in adults)
                 {
                     await notificationService.CreateNotificationAsync(
-                        new CreateNotificationRequest
-                        {
-                            UserId = adult.Id,
-                            Type = "chore_needs_approval",
-                            Payload = payload,
-                            HouseholdId = householdId
-                        });
+                     new CreateNotificationRequest
+                     {
+                         UserId = adult.Id,
+                         Type = "chore_needs_approval",
+                         Payload = $"{completedByDisplayName} väntar på att du ska godkänna en färdig quest.",
+                         HouseholdId = householdId
+                     },
+                     cancellationToken);
                 }
             }
             catch
