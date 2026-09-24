@@ -13,7 +13,7 @@ export const RewardComponent = () => {
     data: history = [],
     isLoading: historyLoading,
     error: historyError,
-  } = useRewardHistory(20);
+  } = useRewardHistory(5);
 
   const isLoading = balanceLoading || historyLoading;
   const error = balanceError || historyError;
@@ -34,23 +34,20 @@ export const RewardComponent = () => {
   return (
     <>
       <div className="rewards-container">
-        <h2>Belöningar </h2>
         {balance && (
           <div className="balance-section">
-            <div className="balance-cards">
-              <div className="balance-card money">
-                <div className="balance-label">Intjänat: </div>
-                <div className="balance-value">🤑 </div>{" "}
-                <div className="balance-value">
-                  <p>{moneyValue.toFixed(2)} kr</p>
-                </div>
+            <div className="balance-card money">
+              <div className="balance-label">Intjänade pengar: </div>
+              <div className="balance-value">🤑 </div>{" "}
+              <div className="balance-value">
+                <p>{moneyValue.toFixed(2)} kr</p>
               </div>
-              <div className="balance-card progress">
-                <div className="balance-label">Dina XP: </div>
-                <div className="balance-value">💎 </div>
-                <div className="balance-value">
-                  <p>{progress?.currentXp} XP</p>
-                </div>
+            </div>
+            <div className="balance-card progress">
+              <div className="balance-label">Intjänade XP: </div>
+              <div className="balance-value">💎 </div>
+              <div className="balance-value">
+                <p>{progress?.currentXp} XP</p>
               </div>
             </div>
           </div>
@@ -65,7 +62,7 @@ export const RewardComponent = () => {
             </p>
           ) : (
             <div className="rewards-list">
-              {history.map((reward) => {
+              {history.slice(0, 5).map((reward) => {
                 const rawMoney = Number((reward as any)?.moneyAmount ?? 0);
                 const rawXp = Number((reward as any)?.xpAmount ?? 0);
                 const normalizedType =

@@ -1,17 +1,16 @@
-
 /* Login/Register Pages */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   padding: 1rem;
 }
 
 .login-card {
-  background: white;
+  background: var(--bg);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   width: 100%;
   max-width: 400px;
@@ -20,7 +19,6 @@
 .login-card h1 {
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #333;
 }
 
 .form-group {
@@ -30,15 +28,13 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  /* font-weight: 500; */
-  color: #333;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 1rem;
   font-family: inherit;
@@ -47,8 +43,8 @@
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--accent-4);
+  box-shadow: 0 0 0 2px rgba(116, 181, 251, 0.127);
 }
 
 .form-group input:disabled,
@@ -66,7 +62,7 @@
 }
 
 .error-text {
- color: #dc3545;
+  color: #dc3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
@@ -83,14 +79,9 @@
 .btn-primary {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #447c68;
-  color: white;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
-  /* font-weight: 500; */
-  transition: background-color 0.2s;
+  margin: 1rem 0;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -98,7 +89,7 @@
 }
 
 .btn-primary:disabled {
-  background-color: #ccc;
+  background-color: var(--border);
   cursor: not-allowed;
 }
 
@@ -110,11 +101,10 @@
 }
 
 .login-footer a {
-  color: #00ff7b;
+  color: var(--accent-3);
   text-decoration: none;
 }
 
 .login-footer a:hover {
   text-decoration: underline;
 }
-

@@ -6,50 +6,60 @@ namespace API_Peppish.Services;
 
 public interface IRewardService
 {
-  Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default);
+    Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default);
 
-  Task<List<RewardDto>> GetUserRewardsAsync(string userId, CancellationToken cancellationToken = default);
+    Task<List<RewardDto>> GetUserRewardsAsync(
+       string userId,
+       int limit = 10,
+       CancellationToken cancellationToken = default);
 }
 
 public class RewardService(
     IRewardRepository repository,
     IUserContextService userContextService) : IRewardService
 {
-  public async Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Anv�ndaren tillh�r inget hush�ll.");
-
-    var balance = await repository.GetUserBalanceAsync(userId, householdId, cancellationToken);
-
-    return new UserBalanceResult
+    public async Task<UserBalanceResult> GetUserBalanceAsync(string userId, CancellationToken cancellationToken = default)
     {
-      MoneyBalance = balance.MoneyBalance,
-      TotalXp = balance.TotalXp
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
 
-    };
-  }
+        var balance = await repository.GetUserBalanceAsync(userId, householdId, cancellationToken);
 
-  public Task<UserBalanceResult> GetUserBalanceAsync(string userId, Guid householdId, CancellationToken cancellationToken = default)
-  {
-    throw new NotImplementedException();
-  }
+        return new UserBalanceResult
+        {
+            MoneyBalance = balance.MoneyBalance,
+            TotalXp = balance.TotalXp
 
-  public async Task<List<RewardDto>> GetUserRewardsAsync(string userId, CancellationToken cancellationToken = default)
-  {
-    var householdId = userContextService.GetCurrentHouseholdId()
-        ?? throw new InvalidOperationException(
-            "Anv�ndaren tillh�r inget hush�ll.");
+        };
+    }
 
-    var rewards = await repository.GetByUserAsync(userId, householdId, cancellationToken);
-
-    return rewards.Select(r => new RewardDto
+    public Task<UserBalanceResult> GetUserBalanceAsync(string userId, Guid householdId, CancellationToken cancellationToken = default)
     {
-      MoneyAmount = r.MoneyAmount,
-      XpAmount = r.XpAmount,
-      Reason = r.Reason,
-      CreatedAt = r.CreatedAt
-    }).ToList();
-  }
+        throw new NotImplementedException();
+    }
+
+    public async Task<List<RewardDto>> GetUserRewardsAsync(
+      string userId,
+      int limit = 5,
+      CancellationToken cancellationToken = default)
+    {
+        var householdId = userContextService.GetCurrentHouseholdId()
+            ?? throw new InvalidOperationException(
+                "Användaren tillhör inget hushåll.");
+
+        var rewards = await repository.GetByUserAsync(
+            userId,
+            householdId,
+            limit,
+            cancellationToken);
+
+        return rewards.Select(r => new RewardDto
+        {
+            MoneyAmount = r.MoneyAmount,
+            XpAmount = r.XpAmount,
+            Reason = r.Reason,
+            CreatedAt = r.CreatedAt
+        }).ToList();
+    }
 }

@@ -8,18 +8,20 @@
   font-size: 1.4rem;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  padding: 0.8rem;
 }
 
 .notification-badge {
   background: var(--accent-5);
   color: white;
-  font-size: 0.65rem;
+  font-size: 0.95rem;
   padding: 2px 6px;
   border-radius: 12px;
   position: absolute;
-  top: -6px;
-  right: -8px;
+  top: -2px;
+  right: -1px;
 }
 
 .notification-panel {
@@ -31,7 +33,7 @@
   overflow: auto;
   background: var(--bg);
   border: 1px solid var(--border);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(123, 222, 178, 0.15);
   border-radius: 6px;
   z-index: 40;
   outline: none;
@@ -79,14 +81,14 @@
 .notification-actions {
   width: 15%;
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   flex-shrink: 0;
 }
 
 .notification-actions img {
   background: transparent;
   border: none;
-  max-width: 15px;
+  max-width: 20px;
 }
 
 .notification-actions button {
@@ -94,9 +96,9 @@
   border: none;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.029);
-  max-width: 25px;
-  padding: 0.2rem;
+  box-shadow: 0 4px 4px rgba(78, 195, 99, 0.27);
+  border-radius: 50%;
+  padding: 0.3rem 0.3rem 0.2rem 0.3rem;
 }
 
 .notification-container {

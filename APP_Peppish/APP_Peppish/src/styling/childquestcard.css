@@ -75,7 +75,6 @@
   border-radius: 50%;
   background: var(--accent-4);
   height: 20px;
-  /* justify-self: end; */
   margin: 0;
   width: 20px;
 }
@@ -88,19 +87,18 @@
 
 .child-quest-content {
   padding: 0 1rem 1rem;
+  font-size: 0.9rem;
 }
 
 .child-quest-content > h3 {
   margin: 0.5rem 0 0.75rem;
   color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 500;
 }
 
 .empty-child-quests {
   margin: 0;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .child-quest-card-headline {

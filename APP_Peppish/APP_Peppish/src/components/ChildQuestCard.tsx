@@ -65,7 +65,7 @@ export const ChildQuestCard = ({
             <h2 className="child-quest-card-headline">Inte påbörjade:</h2>
 
             {notStarted.length === 0 ? (
-              <p className="empty-child-quests">Inga uppgifter att göra.</p>
+              <p className="empty-child-quests">Inga uppgifter idag .</p>
             ) : (
               <div className="child-quest-list">
                 {notStarted.map((chore) => (
@@ -98,7 +98,9 @@ export const ChildQuestCard = ({
             </h2>
 
             {pendingApproval.length === 0 ? (
-              <p className="empty-child-quests">Inget väntar på godkännande.</p>
+              <p className="empty-child-quests">
+                Inget väntar på godkännande just nu.
+              </p>
             ) : (
               <div className="child-quest-list">
                 {pendingApproval.map((chore) => (
@@ -135,7 +137,6 @@ export const ChildQuestCard = ({
                 {approved.map((chore) => (
                   <div key={chore.id} className="child-quest-item">
                     <span className="quest-bullet">•</span>
-
                     <ChoreCard
                       chore={chore}
                       isExpanded={expandedChoreId === chore.id}

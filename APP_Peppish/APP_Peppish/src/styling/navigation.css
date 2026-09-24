@@ -1,5 +1,6 @@
 /* Navbar-component-styling */
 .main-nav {
+  background-color: #fefefa;
   position: fixed;
   bottom: 0;
   left: 50%;
@@ -11,12 +12,12 @@
 }
 
 .nav-button {
-  background-color: #fefefa;
+  background-color: transparent;
   padding: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s;
   border: none;
   border-radius: 0;
+  box-shadow: none;
 }
 
 .nav-button > img {
