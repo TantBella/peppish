@@ -64,26 +64,7 @@ public class UsersController(
     return Ok(dtos);
   }
 
-  [HttpGet("{userId}/rewards")]
-  public async Task<ActionResult<List<RewardDto>>> GetUserRewards(string userId)
-  {
-    var rewards = await rewardService.GetUserRewardsAsync(userId);
-    return Ok(rewards);
-  }
 
-  [HttpGet("{userId}/balance")]
-  public async Task<ActionResult<BalanceDto>> GetUserBalance(string userId)
-  {
-    var result = await rewardService.GetUserBalanceAsync(userId);
-
-    return Ok(new BalanceDto
-    {
-      UserId = userId,
-      MoneyBalance = result.MoneyBalance,
-      TotalXp = result.TotalXp,
-      Level = result.Level
-    });
-  }
 
   [HttpGet("{userId}/progress")]
   public async Task<ActionResult<ProgressDto>> GetUserProgress(string userId)

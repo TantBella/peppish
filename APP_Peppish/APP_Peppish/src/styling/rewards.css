@@ -1,22 +1,19 @@
 /* Rewards Page */
 .rewards-container {
-  padding: 2rem;
+  padding: 0 2rem;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.history-section > h2,
-.rewards-container > h2 {
-  margin-bottom: 2rem;
+.history-section > h2 {
+  width: 100%;
+  margin: 0;
   text-align: center;
-  color: var(--text);
-  font-weight: 400;
+  margin-bottom: 1.5rem;
 }
 
 .balance-section {
   margin: 3rem 0.5rem;
-}
-
-.balance-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 1.5rem;
@@ -26,7 +23,7 @@
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
+  box-shadow: 0 1px 4px rgba(171, 8, 141, 0.135);
   border-top: 6px solid;
 }
 
@@ -39,15 +36,12 @@
 }
 
 .balance-label {
-  color: #667;
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
 .balance-value {
   font-size: 2.5rem;
-  /* font-weight: 400; */
-  color: #333;
 }
 
 .balance-value > p {
@@ -57,30 +51,30 @@
 .history-section {
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.181);
+  box-shadow: 0 1px 4px rgba(171, 8, 141, 0.135);
 }
 
 .no-rewards {
-  color: #999;
+  color: var(--muted);
   text-align: center;
   padding: 2rem 0;
 }
 
 .rewards-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 1rem;
 }
 
 .reward-item {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: first baseline;
+  gap: 0.5rem;
   padding: 1rem;
   border-radius: 4px;
   background-color: var(--surface);
   border-left: 4px solid;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .reward-item.reward-money {
@@ -92,7 +86,7 @@
 }
 
 .reward-icon {
-  font-size: 2.5rem;
+  font-size: 2rem;
   width: 50px;
   text-align: center;
 }
@@ -112,11 +106,10 @@
 .reward-value {
   font-size: 1.2rem;
   font-weight: 500;
-  color: #333;
 }
 
 .reward-date {
   font-size: 0.85rem;
-  color: #667;
+  color: var(--muted);
   margin-top: 0.25rem;
 }

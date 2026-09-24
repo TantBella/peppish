@@ -1,58 +1,68 @@
-using API_Peppish.Entities;
 using API_Peppish.Data;
+using API_Peppish.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Peppish.Repositories;
 
 public interface IRewardRepository
 {
-  Task<RewardLedger?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
-  Task<List<RewardLedger>> GetByUserAsync(string userId, Guid householdId, CancellationToken cancellationToken = default);
-  Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
+    Task<RewardLedger?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default);
+    Task<List<RewardLedger>> GetByUserAsync(
       string userId,
       Guid householdId,
+      int limit,
       CancellationToken cancellationToken = default);
-  Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default);
-  Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
+        string userId,
+        Guid householdId,
+        CancellationToken cancellationToken = default);
+    Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default);
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
 public class RewardRepository(AppDbContext context) : IRewardRepository
 {
-  public async Task<RewardLedger?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
-  {
-    return await context.RewardLedgers
-        .FirstOrDefaultAsync(r => r.Id == id && r.HouseholdId == householdId, cancellationToken);
-  }
+    public async Task<RewardLedger?> GetByIdAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
+    {
+        return await context.RewardLedgers
+            .FirstOrDefaultAsync(r => r.Id == id && r.HouseholdId == householdId, cancellationToken);
+    }
 
-  public async Task<List<RewardLedger>> GetByUserAsync(string userId, Guid householdId, CancellationToken cancellationToken = default)
-  {
-    return await context.RewardLedgers
-        .Where(r => r.UserId == userId && r.HouseholdId == householdId)
-        .ToListAsync(cancellationToken);
-  }
+    public async Task<List<RewardLedger>> GetByUserAsync(
+       string userId,
+       Guid householdId,
+       int limit,
+       CancellationToken cancellationToken = default)
+    {
+        return await context.RewardLedgers
+            .Where(r => r.UserId == userId && r.HouseholdId == householdId)
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+    }
 
-  public async Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
-      string userId,
-      Guid householdId,
-      CancellationToken cancellationToken = default)
-  {
-    var query = context.RewardLedgers
-        .Where(r => r.UserId == userId && r.HouseholdId == householdId);
+    public async Task<(decimal MoneyBalance, int TotalXp)> GetUserBalanceAsync(
+        string userId,
+        Guid householdId,
+        CancellationToken cancellationToken = default)
+    {
+        var query = context.RewardLedgers
+            .Where(r => r.UserId == userId && r.HouseholdId == householdId);
 
-    var money = await query.SumAsync(r => r.MoneyAmount, cancellationToken);
-    var xp = await query.SumAsync(r => r.XpAmount, cancellationToken);
+        var money = await query.SumAsync(r => r.MoneyAmount, cancellationToken);
+        var xp = await query.SumAsync(r => r.XpAmount, cancellationToken);
 
-    return (money, xp);
-  }
+        return (money, xp);
+    }
 
-  public async Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default)
-  {
-    await context.RewardLedgers.AddAsync(reward, cancellationToken);
-    return reward;
-  }
+    public async Task<RewardLedger> CreateAsync(RewardLedger reward, CancellationToken cancellationToken = default)
+    {
+        await context.RewardLedgers.AddAsync(reward, cancellationToken);
+        return reward;
+    }
 
-  public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-  {
-    await context.SaveChangesAsync(cancellationToken);
-  }
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }

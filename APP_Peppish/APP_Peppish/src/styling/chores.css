@@ -23,9 +23,8 @@
 }
 
 /* TABLET / DESKTOP */
-
 @media (min-width: 768px) {
-  .home-page {
+  /* .home-page {
     padding-bottom: 3rem;
   }
 
@@ -49,7 +48,7 @@
 
   .user-summary-text h1 {
     font-size: 1.5rem;
-  }
+  } */
 
   .avatar-placeholder {
     width: 90px;
@@ -61,11 +60,11 @@
     margin: 0 auto;
 
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 2rem;
   }
 
   .home-content {
-    margin: 0;
+    margin: 2rem;
   }
 
   /* Progress får större plats */

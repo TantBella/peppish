@@ -1,6 +1,6 @@
 .home-page {
   min-height: 100vh;
-  padding-bottom: 4rem;
+  padding: 1rem 2rem;
 }
 
 /* HEADER*/
@@ -20,12 +20,6 @@
   width: auto;
 }
 
-h1,
-h2 {
-  color: #333;
-  font-weight: 350;
-}
-
 .home-motto {
   margin-top: 0.5rem;
   color: var(--muted);
@@ -37,7 +31,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem 0.5rem;
+  margin: 1rem;
   padding: 1.5rem;
   border: 1px solid var(--accent-3);
   border-radius: 16px;
@@ -95,8 +89,7 @@ h2 {
 .user-summary-content p {
   max-width: 200px;
   color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  /* font-size: 0.85rem; */
   text-align: left;
 }
 
@@ -107,9 +100,11 @@ h2 {
   justify-content: center;
   flex-shrink: 0;
   background: linear-gradient(
-    50deg,
+    40deg,
+    var(--accent-3),
+    var(--accent-3),
     var(--accent-2),
-    var(--accent-5),
+    var(--accent-1),
     var(--accent-1)
   );
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111);
@@ -127,24 +122,20 @@ h2 {
   padding: 0.5rem;
 }
 
-.home-content-container {
-  padding-bottom: 4rem;
-}
-
 .user-info {
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 2rem;
 }
 
-/* .progress-bar {
+.progress-bar {
   width: 100%;
   height: 12px;
   background-color: var(--surface);
   border-radius: 10px;
   overflow: hidden;
   margin: 2rem;
-} */
+}
 
 .progress-bar-fill {
   height: 100%;
@@ -153,22 +144,22 @@ h2 {
   background: linear-gradient(
     90deg,
     color-mix(in srgb, var(--accent-5) 100%, transparent),
-    color-mix(in srgb, var(--accent-5) 60%, transparent)
+    color-mix(in srgb, var(--accent-5) 40%, transparent)
   );
 }
 .card-label {
   text-align: left;
-}
-.progress-card-footer {
-  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
 }
 
-.home-content-button {
-  background-color: transparent;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1.25rem;
+.card-label p {
+  margin: 1rem;
+  /* fixa detta */
+}
+
+.homepage-grid {
+  display: flex;
+  gap: 1rem;
+  text-align: center;
 }

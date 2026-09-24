@@ -33,8 +33,8 @@ body {
 
 :root {
   --bg: #fcfcfa;
-  --surface: #f2f2ffab;
-  --border: #cdede192;
+  --surface: #f0f0febe;
+  --border: #b9ddcf5a;
 
   --text: #2f3337;
   --muted: #6b7280;
@@ -44,6 +44,8 @@ body {
   --accent-3: #57d2a5; /* grön */
   --accent-4: #9bc7fc; /* blå  */
   --accent-5: #9d82ed; /* lila */
+  --accent-6: #f8d7da; /* ljusrosa */
+  --accent-7: #721c24; /* mörkt röd */
 }
 /* Loading States */
 .loading-container {
@@ -55,7 +57,7 @@ body {
 
 .spinner {
   font-size: 1.2rem;
-  color: #777;
+  color: var(--muted);
 }
 
 .logo-icon {
@@ -76,37 +78,59 @@ body {
 }
 
 .alert-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background-color: var(--accent-6);
+  color: var(--accent-7);
+  border: 1px solid var(--accent-1);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 350;
+  color: #333;
 }
 
 h1 {
   text-transform: capitalize;
 }
 
+h2 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 0.9rem;
+}
+
+p {
+  font-size: 8px;
+}
+
 /* buttons */
 button {
-  flex: 1;
-  margin: 1rem 0;
-  padding: 0.5rem 1rem;
+  background-color: #447c68;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   border: none;
-  border-radius: 30px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
+  border-radius: 10px;
+  color: white;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 500;
+  flex: 1;
+  letter-spacing: 1.5px;
+  margin: 1rem;
   max-width: 350px;
+  padding: 0.5rem 1rem;
   transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    transform 0.2s ease,
+    background-color 0.2s;
 }
 
 button:hover {
   transform: scale(1.08);
   border: 1px solid var(--border);
-  font-weight: 600;
 }
 
 button:disabled {

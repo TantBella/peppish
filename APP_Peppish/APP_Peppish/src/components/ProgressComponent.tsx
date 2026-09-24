@@ -46,27 +46,25 @@ export const ProgressComponent = () => {
 
   return (
     <div className="progress-container">
-      <div className="daily-section">
-        <div className="daily-card">
-          <h2>Dagens progress</h2>
-          <div className="daily-progress-label">
-            <span>Klarade quests:</span>
-            <span>{dailyProgressPercent}%</span>
-          </div>
+      <div className="daily-card">
+        <h2>Dagens progress</h2>
+        <div className="daily-progress-label">
+          <span>Klarade quests:</span>
+          <span>{dailyProgressPercent}%</span>
+        </div>
 
-          <div className="progress-bar-container">
-            {todaysChores.length === 0 ? (
-              <div className="progress-bar-empty" />
-            ) : (
-              todaysChores.map((chore) => (
-                <div
-                  key={chore.id}
-                  className={`progress-segment ${chore.uiStatus}`}
-                  aria-label={`${chore.title}: ${chore.uiStatus}`}
-                />
-              ))
-            )}
-          </div>
+        <div className="progress-bar-container">
+          {todaysChores.length === 0 ? (
+            <div className="progress-bar-empty" />
+          ) : (
+            todaysChores.map((chore) => (
+              <div
+                key={chore.id}
+                className={`progress-segment ${chore.uiStatus}`}
+                aria-label={`${chore.title}: ${chore.uiStatus}`}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
