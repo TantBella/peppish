@@ -71,6 +71,10 @@ export const ChoreListPage = () => {
   };
 
   const assignedChores = chores.filter((chore) => chore.assignedToUserId);
+  const ownChores = assignedChores.filter(
+    (chore) =>
+      chore.assignedToUserId?.toLowerCase() === user?.id?.toLowerCase(),
+  );
 
   return (
     <>
@@ -119,6 +123,18 @@ export const ChoreListPage = () => {
             </div>
           </section>
         )}
+
+        {user?.role === "ADULT" && ownChores.length > 0 && (
+          <ChildQuestCard
+            childName="dig"
+            chores={ownChores}
+            isExpanded={expandedChildId === user.id}
+            expandedChoreId={expandedChildChoreId}
+            onToggle={() => toggleChild(user.id)}
+            onToggleChore={toggleChildChore}
+          />
+        )}
+
         <AvailableQuestList householdMembers={householdMembers} />
       </div>
     </>

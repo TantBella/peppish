@@ -101,7 +101,7 @@ namespace API_Peppish.Services
                 await dbContext.ChoreInstances
                     .Where(i =>
                         i.ChoreAssignmentId == assignment.Id &&
-                        i.DueDate == null)
+                        i.Status == ChoreStatus.available)
                    .ExecuteUpdateAsync(
         setters => setters
 .SetProperty(i => i.DueDate, assignment.DueDate)
@@ -212,7 +212,7 @@ namespace API_Peppish.Services
             await dbContext.ChoreInstances
              .Where(i =>
                  i.ChoreAssignmentId == assignment.Id &&
-                 i.DueDate == null)
+                 i.Status == ChoreStatus.available)
              .ExecuteUpdateAsync(
                  setters => setters
               .SetProperty(i => i.DueDate, assignment.DueDate)
