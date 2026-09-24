@@ -81,7 +81,10 @@ export const ChoreActionPanel = ({
       if (context?.previous)
         queryClient.setQueryData(["chores"], context.previous);
       setError(
-        err instanceof Error ? err.message : "Questen kunde inte slutföras",
+        err instanceof Error
+          ? err.message
+          : (err as { message?: string })?.message ??
+            "Questen kunde inte slutföras",
       );
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
