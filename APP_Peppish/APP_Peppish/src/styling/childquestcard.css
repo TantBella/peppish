@@ -28,7 +28,7 @@
 
 .empty-child-quests {
   margin: 0.5rem 0 0;
-  color: #777;
+  color: var(--muted);
   font-weight: normal;
 }
 
@@ -46,35 +46,44 @@
 }
 
 .child-quest-header {
-  display: flex;
   align-items: center;
-  width: 100%;
-  padding: 1rem;
+  box-sizing: border-box;
   border: none;
-  background: transparent;
+  background-color: transparent;
+  box-shadow: none;
   color: var(--text);
   cursor: pointer;
-  text-align: left;
+  display: grid;
+  grid-template-columns: 85% 10% 5%;
+  margin: 0;
+  min-width: 100%;
+  padding: 1rem;
+  width: 100%;
+}
+
+.child-quest-header:hover {
+  border: none;
+  transform: none;
 }
 
 .child-name {
-  flex: 1;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.child-quest-chevron {
-  margin-left: 0.75rem;
-  color: var(--muted);
-  font-size: 0.75rem;
+  width: 100%;
+  text-align: left;
 }
 
 .approval-indicator {
-  width: 8px;
-  height: 8px;
-  margin-left: 0.75rem;
   border-radius: 50%;
-  background: var(--accent-5);
+  background: var(--accent-4);
+  height: 20px;
+  /* justify-self: end; */
+  margin: 0;
+  width: 20px;
+}
+
+.child-quest-chevron {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0;
 }
 
 .child-quest-content {
@@ -123,9 +132,9 @@
 }
 
 @media (min-width: 768px) {
-  .child-quest-header {
+  /* .child-quest-header {
     padding: 1rem 1.25rem;
-  }
+  } */
 
   .child-quest-content {
     padding: 0 1.25rem 1.25rem;

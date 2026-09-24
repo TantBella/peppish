@@ -3,7 +3,8 @@ import { ChoreCard } from "./ChoreCard";
 import { ChoreActionPanel } from "./ChoreActionPanel";
 
 interface ChildQuestCardProps {
-  childName: string;
+  childName?: string;
+  title?: string;
   chores: ChoreWithUIStatus[];
   isExpanded: boolean;
   expandedChoreId: string | null;
@@ -13,6 +14,7 @@ interface ChildQuestCardProps {
 
 export const ChildQuestCard = ({
   childName,
+  title,
   chores,
   isExpanded,
   expandedChoreId,
@@ -39,26 +41,15 @@ export const ChildQuestCard = ({
 
   const approved = todayChores.filter((chore) => chore.uiStatus === "approved");
 
-  // const hasPendingApproval = pendingApproval.length > 0;
-
-  // const pendingApproval = chores.filter(
-  //   (chore) => chore.uiStatus === "completed",
-  // );
-
-  // const todayCompleted = todayChores.filter(
-  //   (chore) => chore.uiStatus === "completed",
-  // );
-
-  // const hasPendingApproval =
-  //   todayCompleted.length > 0 || pendingApproval.length > 0;
   const hasPendingApproval = pendingApproval.length > 0;
 
   return (
     <section className={`child-quest-card ${isExpanded ? "expanded" : ""}`}>
       <button type="button" className="child-quest-header" onClick={onToggle}>
-        <span className="child-name">
-          <h2>Dagens Quests för {childName}</h2>
-        </span>
+        <div className="child-name">
+          <h2>{title ?? `Dagens Quests för ${childName}`}</h2>
+        </div>
+        <span className="child-quest-chevron">{isExpanded ? "▲" : "▼"}</span>
 
         {hasPendingApproval && (
           <span
@@ -66,7 +57,6 @@ export const ChildQuestCard = ({
             aria-label="Quests väntar på godkännande"
           />
         )}
-        <span className="child-quest-chevron">{isExpanded ? "▲" : "▼"}</span>
       </button>
 
       {isExpanded && (

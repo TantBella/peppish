@@ -4,7 +4,6 @@
   color: var(--text);
 }
 
-/* Page header */
 .chore-list-page .chore-list-header {
   display: flex;
   justify-content: center;
@@ -12,42 +11,39 @@
 }
 
 .chore-list-page .chore-list-header .btn-primary {
-  padding: 0.6rem 1.25rem;
-  border: none;
   border-radius: 30px;
   background: linear-gradient(135deg, var(--accent-3), var(--accent-5));
-  color: white;
-  font-weight: 500;
   letter-spacing: 1px;
   text-decoration: none;
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
+  text-align: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chore-list-page .chore-list-header .btn-primary:hover {
   transform: scale(1.05);
 }
 
-/* Main sections */
 .chore-list-page > section {
   margin-bottom: 1.5rem;
   padding: 1rem;
   background: var(--surface);
   border: 1px solid var(--accent-1);
   border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chore-list-page > section > h2 {
   margin: 0 0 1rem;
   color: var(--text);
-  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   font-weight: 500;
+  text-align: center;
 }
 
 .pending-approval-section {
-  margin-top: 1.5rem;
+  margin: 1rem 0;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
 }
@@ -64,9 +60,9 @@
 }
 
 .chore-list-page > section:last-child > p {
-  margin: -0.5rem 0 1rem;
+  margin: 1rem;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .chore-list {
@@ -80,8 +76,8 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
+  padding: 0.5rem 1rem;
 }
-
 
 .chore-expanded {
   padding: 0 1rem 1rem;
