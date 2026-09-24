@@ -45,7 +45,7 @@ export const HomePage = () => {
   const dailyProgressPercent = getDailyProgressPercent(chores, user?.id);
 
   return (
-    <div className="home-page">
+    <>
       <header className="home-header">
         <img src={logoName} alt="App logo" className="Peppish-logo" />
         <p className="home-motto">{randomMotto}</p>
@@ -54,7 +54,7 @@ export const HomePage = () => {
         </div>
       </header>
 
-      <div className="home-container">
+      <div className="home-page">
         <section className="home-content">
           <h1>Hej, {user?.name}!</h1>
           <div className="user-summary-content">
@@ -64,46 +64,48 @@ export const HomePage = () => {
             </div>
           </div>
         </section>
-      </div>
 
-      <div
-        className="home-content todays-quests-card"
-        role="button"
-        tabIndex={0}
-        onClick={() => navigate("/calendar")}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            navigate("/calendar");
-          }
-        }}
-        aria-label="Öppna dagens quests i kalendern"
-      >
-        <h2>Dagens quests</h2>
-        {choresLoading && <p>Laddar dagens quests...</p>}
-        {choresError && <p>Kunde inte ladda dagens quests.</p>}
-        {!choresLoading && !choresError && todaysChores.length === 0 && (
-          <p>Du har inga quests idag.</p>
-        )}
-        {!choresLoading && !choresError && todaysChores.length > 0 && (
-          <div className="home-quest-list">
-            {todaysChores.map((chore) => (
-              <div key={chore.id} className="home-quest-row">
-                <span>• {chore.title} </span>
-                <span>
-                  {choreStatusLabels[chore.status.toLowerCase()] ??
-                    chore.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+        <div
+          className="home-content todays-quests-card"
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate("/calendar")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              navigate("/calendar");
+            }
+          }}
+          aria-label="Öppna dagens quests i kalendern"
+        >
+          <h2>Dagens quests</h2>
+          {choresLoading && <p>Laddar dagens quests...</p>}
+          {choresError && <p>Kunde inte ladda dagens quests.</p>}
+          {!choresLoading && !choresError && todaysChores.length === 0 && (
+            <p>Du har inga quests idag.</p>
+          )}
+          {!choresLoading && !choresError && todaysChores.length > 0 && (
+            <div className="home-quest-list">
+              {todaysChores.map((chore) => (
+                <div key={chore.id} className="home-quest-row">
+                  <span>• {chore.title} </span>
+                  <span>
+                    {choreStatusLabels[chore.status.toLowerCase()] ??
+                      chore.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-      <div className="home-container home-content-container">
         <div className="home-content">
           <div className="card-label">
-            <p>Dagens framsteg: {dailyProgressPercent}% av dagens quests</p>
+            <p>Dagens framsteg: </p>
+            <span>
+              <p></p>
+            </span>
+            <p>{dailyProgressPercent}% av dagens quests</p>
           </div>
 
           {loading && <p>Laddar progress...</p>}
@@ -124,23 +126,61 @@ export const HomePage = () => {
           <h2>Din avatar</h2>
           <p>Här kan du se och anpassa din avatar.</p>
           <p>Din avatar kommer att utvecklas tillsammans med din level.</p>
-
           <Link to="/avatar">Anpassa din avatar</Link>
         </div>
-        {user?.role === "ADULT" && (
-          <div className="home-content">
-            <Link to="/chores/new">Skapa ny quest</Link>
-          </div>
-        )}
-        <div className="home-content">
-          <button
-            className="home-content-button"
-            onClick={() => navigate("/households")}
+
+        <div className="homepage-grid">
+          <div
+            className="home-content todays-quests-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate("/chores")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate("/chores");
+              }
+            }}
+            aria-label="Tillgängliga quests"
           >
-            Mitt hushåll
-          </button>
+            <h2>Lediga quests</h2>
+          </div>
+
+          {user?.role === "ADULT" && (
+            <div
+              className="home-content todays-quests-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate("/chores/new")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  navigate("/chores/new");
+                }
+              }}
+              aria-label="Skapa nya quests"
+            >
+              <h2>skapa quest</h2>
+            </div>
+          )}
+
+          <div
+            className="home-content todays-quests-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate("/households")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate("/households");
+              }
+            }}
+            aria-label="Se ditt hushåll"
+          >
+            <h2>Mitt hushåll</h2>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

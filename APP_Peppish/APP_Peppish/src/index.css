@@ -83,8 +83,29 @@ body {
   border: 1px solid var(--accent-1);
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 350;
+  color: #333;
+}
+
 h1 {
   text-transform: capitalize;
+}
+
+h2 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 0.9rem;
+}
+
+p {
+  font-size: 8px;
 }
 
 /* buttons */
