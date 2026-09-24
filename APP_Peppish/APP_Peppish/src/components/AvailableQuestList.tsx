@@ -59,7 +59,12 @@ export const AvailableQuestList = ({
   };
 
   if (availableChores.length === 0) {
-    return null;
+    return (
+      <section>
+        <h2>Lediga quests</h2>
+        <p>Tyvärr, det finns inga lediga uppdrag just nu.</p>
+      </section>
+    );
   }
 
   return (
