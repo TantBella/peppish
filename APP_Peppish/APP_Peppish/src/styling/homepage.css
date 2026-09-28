@@ -7,7 +7,7 @@
 .home-header {
   padding: 2rem;
   font-size: 1.1rem;
-  width: 100vw;
+  width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
   text-align: center;
   background-color: #fff;
@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem;
+  margin: 1.5rem;
   padding: 1.5rem;
   border: 1px solid var(--accent-3);
   border-radius: 16px;
@@ -89,7 +89,6 @@
 .user-summary-content p {
   max-width: 200px;
   color: var(--muted);
-  /* font-size: 0.85rem; */
   text-align: left;
 }
 
@@ -113,7 +112,6 @@
   padding: 2rem;
 }
 
-/* Home Page */
 .user-info > p {
   margin-top: 1rem;
 }
@@ -147,19 +145,49 @@
     color-mix(in srgb, var(--accent-5) 40%, transparent)
   );
 }
-.card-label {
-  text-align: left;
+.progress-card-label {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
-.card-label p {
+.avatar-content > p {
+  text-align: left;
   margin: 1rem;
-  /* fixa detta */
 }
 
 .homepage-grid {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1rem;
   text-align: center;
+}
+
+.homepage-grid-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem;
+  padding: 2rem 1rem;
+  border: 1px solid var(--accent-3);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
+  background-color: #fff;
+  min-height: 2.5rem;
+}
+
+.homepage-grid-card:hover {
+  cursor: pointer;
+  border-color: var(--accent-5);
+}
+
+@media (max-width: 800px) {
+  .homepage-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .homepage-grid {
+    grid-template-columns: 1fr;
+  }
 }

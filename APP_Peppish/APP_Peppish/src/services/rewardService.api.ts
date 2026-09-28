@@ -42,16 +42,13 @@ export const normalizeBalanceResponse = (
 };
 
 export const rewardServiceApi = {
-  getUserBalance: async (userId: string): Promise<UserBalance> => {
-    const res = await apiClient.get(`/users/${userId}/balance`);
+  getUserBalance: async (): Promise<UserBalance> => {
+    const res = await apiClient.get("/rewards/balance");
     return normalizeBalanceResponse(res.data as Partial<UserBalance>);
   },
 
-  getRewardHistory: async (
-    userId: string,
-    limit?: number,
-  ): Promise<Reward[]> => {
-    const res = await apiClient.get(`/users/${userId}/rewards`, {
+  getRewardHistory: async (limit?: number): Promise<Reward[]> => {
+    const res = await apiClient.get("/rewards", {
       params: { limit },
     });
 
@@ -66,7 +63,6 @@ export const rewardServiceApi = {
       return {
         ...reward,
         id: reward.id ?? `${reward.createdAt ?? "reward"}-${index}`,
-        userId: reward.userId ?? userId,
         choreId: reward.choreId ?? "",
         type,
         value,
@@ -76,18 +72,4 @@ export const rewardServiceApi = {
       };
     });
   },
-
-  // addReward: async (
-  //   userId: string,
-  //   choreId: string,
-  //   type: "money" | "progress",
-  //   value: number,
-  // ): Promise<Reward> => {
-  //   const res = await apiClient.post(`/users/${userId}/rewards`, {
-  //     choreId,
-  //     type,
-  //     value,
-  //   });
-  //   return res.data as Reward;
-  // },
 };

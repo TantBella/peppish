@@ -100,14 +100,15 @@ export const HomePage = () => {
         </div>
 
         <div className="home-content">
-          <div className="card-label">
-            <p>Dagens framsteg: </p>
-            <span>
-              <p></p>
-            </span>
-            <p>{dailyProgressPercent}% av dagens quests</p>
-          </div>
+          <div className="home-quest-list">
+            <div className="progress-card-label home-quest-row">
+              <p>Dagens framsteg: </p>
 
+              <p></p>
+
+              <p>{dailyProgressPercent}% av dagens quests</p>
+            </div>
+          </div>
           {loading && <p>Laddar progress...</p>}
           {error && <p>Kunde inte ladda progress.</p>}
           {progress && (
@@ -122,16 +123,18 @@ export const HomePage = () => {
           )}
         </div>
 
-        <div className="home-content">
+        <div className="home-content avatar-content">
           <h2>Din avatar</h2>
-          <p>Här kan du se och anpassa din avatar.</p>
-          <p>Din avatar kommer att utvecklas tillsammans med din level.</p>
+          <p>
+            Här kan du se och anpassa din avatar. Du kan använda din XP för att
+            ändra utseende och köpa nya outfits och tillbehör till din avatar.
+          </p>
           <Link to="/avatar">Anpassa din avatar</Link>
         </div>
 
-        <div className="homepage-grid">
+        <div className="homepage-grid ">
           <div
-            className="home-content todays-quests-card"
+            className="homepage-grid-card"
             role="button"
             tabIndex={0}
             onClick={() => navigate("/chores")}
@@ -148,7 +151,7 @@ export const HomePage = () => {
 
           {user?.role === "ADULT" && (
             <div
-              className="home-content todays-quests-card"
+              className="homepage-grid-card"
               role="button"
               tabIndex={0}
               onClick={() => navigate("/chores/new")}
@@ -165,7 +168,7 @@ export const HomePage = () => {
           )}
 
           <div
-            className="home-content todays-quests-card"
+            className="homepage-grid-card"
             role="button"
             tabIndex={0}
             onClick={() => navigate("/households")}
