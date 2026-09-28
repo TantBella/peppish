@@ -1,37 +1,12 @@
 .home-page {
   min-height: 100vh;
-  padding: 1rem 2rem;
-}
-
-/* HEADER*/
-.home-header {
-  padding: 2rem;
-  font-size: 1.1rem;
-  width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.191);
-  text-align: center;
-  background-color: #fff;
-  position: relative;
-}
-
-.Peppish-logo {
-  text-align: center;
-  height: 150px;
-  width: auto;
-}
-
-.home-motto {
-  margin-top: 0.5rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-style: italic;
 }
 
 .home-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1.5rem;
+  margin: 1.5rem 1rem;
   padding: 1.5rem;
   border: 1px solid var(--accent-3);
   border-radius: 16px;

@@ -1,7 +1,8 @@
 // import { useMemo } from "react"
 import { ChoreWithUIStatus } from "../hooks/useChores";
-import { ChoreCardWrapper } from "./ChoreCardWrapper";
+// import { ChoreCardWrapper } from "./ChoreCardWrapper";
 import { ChoreActionPanel } from "./ChoreActionPanel";
+import { ChoreCard } from "./ChoreCard";
 
 type Props = {
   chores: ChoreWithUIStatus[];
@@ -15,8 +16,8 @@ export const DayView = ({
   chores,
   userId,
   selectedDate,
-  expandedChoreId,
-  setExpandedChoreId,
+  // expandedChoreId,
+  // setExpandedChoreId,
 }: Props) => {
   const targetDate = selectedDate ?? new Date();
 
@@ -50,19 +51,21 @@ export const DayView = ({
         ) : (
           filtered.map((chore) => (
             <div key={chore.id} className="day-view-chore">
-              <ChoreCardWrapper
-                chore={chore}
-                userId={userId}
-                expandedChoreId={expandedChoreId}
-                setExpandedChoreId={setExpandedChoreId}
-                inlineActions={false}
-                compact={true}
-              />
-              <ChoreActionPanel
-                chore={chore}
-                allowAdminActions={false}
-                allowPicking={false}
-              />
+              <div className="day-chore-card">
+                <ChoreCard
+                  chore={chore}
+                  currentUserId={userId}
+                  isExpanded={false}
+                  onToggle={() => {}}
+                  compact={true}
+                />
+
+                <ChoreActionPanel
+                  chore={chore}
+                  allowAdminActions={false}
+                  allowPicking={false}
+                />
+              </div>
             </div>
           ))
         )}
