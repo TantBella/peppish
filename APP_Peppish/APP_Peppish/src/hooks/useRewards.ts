@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { useAuth } from "../context/AuthContext";
+
 import { rewardService } from "../services/rewardService";
 
 export const useUserBalance = () => {
@@ -10,10 +12,10 @@ export const useUserBalance = () => {
     enabled: !!user?.id && !!rewardService,
     queryFn: async () => {
       if (!user?.id) {
-        throw new Error("No logged-in user found");
+        throw new Error("Hittade inte någon inloggad användare");
       }
 
-      return rewardService?.getUserBalance(user.id);
+      return rewardService?.getUserBalance();
     },
   });
 };
@@ -26,10 +28,10 @@ export const useRewardHistory = (limit?: number) => {
     enabled: !!user?.id && !!rewardService,
     queryFn: async () => {
       if (!user?.id) {
-        throw new Error("No logged-in user found");
+        throw new Error("Hittade inte någon inloggad användare");
       }
 
-      return rewardService?.getRewardHistory(user.id, limit);
+      return rewardService?.getRewardHistory(limit);
     },
   });
 };

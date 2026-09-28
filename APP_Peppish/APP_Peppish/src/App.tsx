@@ -29,11 +29,10 @@ const queryClient = new QueryClient();
 function MainLayout() {
   return (
     <>
-      <Navbar />
-
       <main>
         <Outlet />
       </main>
+      <Navbar />
     </>
   );
 }

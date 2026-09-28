@@ -87,6 +87,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .household-member-info strong {
@@ -96,7 +97,9 @@
 
 .household-member-info span {
   color: var(--muted);
-  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .household-member-role {
