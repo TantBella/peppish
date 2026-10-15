@@ -129,7 +129,7 @@ namespace API_Peppish.Services
               id,
               householdId,
               cancellationToken);
-        }
+        }      
 
         public async Task<ChoreInstance> CompleteAsync(
         Guid id,
