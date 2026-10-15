@@ -83,8 +83,8 @@ export const ChoreActionPanel = ({
       setError(
         err instanceof Error
           ? err.message
-          : (err as { message?: string })?.message ??
-            "Questen kunde inte slutföras",
+          : ((err as { message?: string })?.message ??
+              "Questen kunde inte slutföras"),
       );
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
@@ -192,11 +192,13 @@ export const ChoreActionPanel = ({
               aria-label="Markera questen som klar"
             />
             <span>
-              {completeMutation.isPending
-                ? "Skickar för godkännande..."
-                : chore.uiStatus === "assigned"
-                  ? "Markera som klar"
-                  : "Quest markerad som klar"}
+              {chore.uiStatus === "assigned" &&
+                !completeMutation.isPending &&
+                "Markera som klar"}
+
+              {completeMutation.isPending && "Väntar på godkännande..."}
+
+              {chore.uiStatus === "approved" && "Godkänd och slutförd"}
             </span>
           </label>
         )}
@@ -209,12 +211,9 @@ export const ChoreActionPanel = ({
             {approveMutation.isPending ? "Godkänner..." : "Godkänn"}
           </button>
         )}
-        {chore.uiStatus === "approved" && (
-          <div className="status-complete">✓ Godkänd och slutförd</div>
-        )}
-        {!canComplete && !canApprove && chore.uiStatus === "completed" && (
+        {/* {!canComplete && !canApprove && chore.uiStatus === "completed" && (
           <div className="status-info">Väntar på godkännande</div>
-        )}
+        )} */}
         {canAssign && (
           <div className="assign-section">
             <button

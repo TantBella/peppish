@@ -10,6 +10,7 @@ interface ChildQuestCardProps {
   expandedChoreId: string | null;
   onToggle: () => void;
   onToggleChore: (id: string) => void;
+  isOwnQuests?: boolean;
 }
 
 export const ChildQuestCard = ({
@@ -20,6 +21,7 @@ export const ChildQuestCard = ({
   expandedChoreId,
   onToggle,
   onToggleChore,
+  isOwnQuests = false,
 }: ChildQuestCardProps) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -92,40 +94,42 @@ export const ChildQuestCard = ({
             )}
           </section>
 
-          <section className="pending-approval-section">
-            <h2 className="child-quest-card-headline">
-              Väntar på godkännande:
-            </h2>
+          {!isOwnQuests && (
+            <section className="pending-approval-section">
+              <h2 className="child-quest-card-headline">
+                Väntar på godkännande:
+              </h2>
 
-            {pendingApproval.length === 0 ? (
-              <p className="empty-child-quests">
-                Inget väntar på godkännande just nu.
-              </p>
-            ) : (
-              <div className="child-quest-list">
-                {pendingApproval.map((chore) => (
-                  <div key={chore.id} className="child-quest-item">
-                    <span className="quest-bullet">•</span>
+              {pendingApproval.length === 0 ? (
+                <p className="empty-child-quests">
+                  Inget väntar på godkännande just nu.
+                </p>
+              ) : (
+                <div className="child-quest-list">
+                  {pendingApproval.map((chore) => (
+                    <div key={chore.id} className="child-quest-item">
+                      <span className="quest-bullet">•</span>
 
-                    <ChoreCard
-                      chore={chore}
-                      isExpanded={expandedChoreId === chore.id}
-                      onToggle={() => onToggleChore(chore.id)}
-                      compact
-                    />
-
-                    {expandedChoreId === chore.id && (
-                      <ChoreActionPanel
+                      <ChoreCard
                         chore={chore}
-                        allowAdminActions={false}
-                        allowPicking={false}
+                        isExpanded={expandedChoreId === chore.id}
+                        onToggle={() => onToggleChore(chore.id)}
+                        compact
                       />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+
+                      {expandedChoreId === chore.id && (
+                        <ChoreActionPanel
+                          chore={chore}
+                          allowAdminActions={false}
+                          allowPicking={false}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           <section>
             <h2 className="child-quest-card-headline">Klara och godkända:</h2>

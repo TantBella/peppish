@@ -128,6 +128,7 @@ export const ChoreListPage = () => {
             <ChildQuestCard
               title="Dina egna quests"
               chores={ownChores}
+              isOwnQuests={true}
               isExpanded={expandedChildId === user.id}
               expandedChoreId={expandedChildChoreId}
               onToggle={() => toggleChild(user.id)}

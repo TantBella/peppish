@@ -1,6 +1,4 @@
-// import { useMemo } from "react"
 import { ChoreWithUIStatus } from "../hooks/useChores";
-// import { ChoreCardWrapper } from "./ChoreCardWrapper";
 import { ChoreActionPanel } from "./ChoreActionPanel";
 import { ChoreCard } from "./ChoreCard";
 
@@ -16,8 +14,6 @@ export const DayView = ({
   chores,
   userId,
   selectedDate,
-  // expandedChoreId,
-  // setExpandedChoreId,
 }: Props) => {
   const targetDate = selectedDate ?? new Date();
 
