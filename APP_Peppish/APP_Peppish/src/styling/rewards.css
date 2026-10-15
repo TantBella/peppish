@@ -21,7 +21,7 @@
 
 .balance-card {
   border-radius: 8px;
-  padding: 2rem;
+  padding: 2rem 1rem;
   text-align: center;
   box-shadow: 0 1px 4px rgba(171, 8, 141, 0.135);
   border-top: 6px solid;
