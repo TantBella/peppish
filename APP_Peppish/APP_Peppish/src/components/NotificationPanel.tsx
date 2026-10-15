@@ -5,10 +5,16 @@ import check_icon from "../assets/icons/check_icon.png";
 export const NotificationPanel: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { data: notifications = [], isLoading, remove } = useNotifications();
+  const recentNotifications = notifications.filter((notification) => {
+    const createdAt = new Date(notification.createdAt).getTime();
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+    return createdAt >= oneWeekAgo;
+  });
   const panelRef = useRef<HTMLDivElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const unreadCount = recentNotifications.filter((n) => !n.isRead).length;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -73,11 +79,11 @@ export const NotificationPanel: React.FC = () => {
           </div>
           <div className="notification-list">
             {isLoading && <div className="notification-empty">Laddar...</div>}
-            {!isLoading && notifications.length === 0 && (
+            {!isLoading && recentNotifications.length === 0 && (
               <div className="notification-empty">Inga notiser just nu</div>
             )}
             {!isLoading &&
-              notifications.map((n) => (
+              recentNotifications.map((n) => (
                 <div
                   key={n.id}
                   className={`notification-item ${n.isRead ? "read" : "unread"}`}

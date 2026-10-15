@@ -91,11 +91,10 @@ export const CalendarPage = () => {
           <WeekCalendarGrid
             weekDates={weekDates}
             choresByDay={choresByWeekDay}
-            expandedChoreId={expandedChoreId}
-            setExpandedChoreId={setExpandedChoreId}
             setSelectedDate={setSelectedDate}
             weekOffset={weekOffset}
             setWeekOffset={setWeekOffset}
+            setViewMode={setViewMode}
           />
         )}
 
