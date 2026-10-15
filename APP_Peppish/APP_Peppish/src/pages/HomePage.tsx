@@ -60,7 +60,7 @@ export const HomePage = () => {
           <div className="user-summary-content">
             <p>Dags att samla lite XP!</p>
             <div className="avatar-placeholder">
-              <p>Avatar</p>
+              <p>Avatar-placeholder</p>
             </div>
           </div>
         </section>
@@ -106,7 +106,9 @@ export const HomePage = () => {
 
               <p></p>
 
-              <p>{dailyProgressPercent}% av dagens quests</p>
+              <p className="align-right">
+                {dailyProgressPercent}% av dagens quests
+              </p>
             </div>
           </div>
           {loading && <p>Laddar progress...</p>}

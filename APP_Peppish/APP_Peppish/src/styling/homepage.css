@@ -15,6 +15,15 @@
   min-height: 2.5rem;
 }
 
+.home-content h1 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.align-right {
+  text-align: right;
+}
+
 .todays-quests-card {
   cursor: pointer;
 }
@@ -32,6 +41,7 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  font-size: 0.8rem;
 }
 
 .home-quest-row {
@@ -74,11 +84,13 @@
   justify-content: center;
   flex-shrink: 0;
   background: linear-gradient(
-    40deg,
+    30deg,
     var(--accent-3),
     var(--accent-3),
+    var(--accent-5),
     var(--accent-2),
     var(--accent-1),
+    var(--accent-4),
     var(--accent-1)
   );
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111);
