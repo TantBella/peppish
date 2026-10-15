@@ -1,6 +1,6 @@
 /* Calendar-component styling */
 .calendar-list-container {
-  padding: 1rem 2rem;
+  padding: 1rem;
   margin: 0 auto;
   color: var(--text);
 }
@@ -155,7 +155,7 @@
 }
 
 .week-day-header {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--muted);
   display: flex;
@@ -165,7 +165,7 @@
 .week-chore {
   border-radius: 10px;
   padding: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   white-space: nowrap;
 }
 
