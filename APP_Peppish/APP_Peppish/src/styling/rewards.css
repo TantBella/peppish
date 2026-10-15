@@ -13,7 +13,7 @@
 }
 
 .balance-section {
-  margin: 2rem 0.5rem;
+  margin: 2rem 0rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 1.5rem;
@@ -42,7 +42,6 @@
 
 .balance-value {
   font-size: 2.5rem;
-
 }
 
 .balance-value > p {
