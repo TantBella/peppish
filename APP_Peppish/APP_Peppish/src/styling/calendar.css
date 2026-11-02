@@ -156,11 +156,16 @@
   border-radius: 10px;
   padding: 0.5rem;
   font-size: 0.8rem;
-  white-space: nowrap;
 }
 
 .week-day.today {
   border: 1px solid var(--accent-3);
+}
+
+.chore-card {
+  background: var(--surface);
+  padding: 1rem 0.5rem 1rem 0.75rem;
+  margin: 0.75rem 0;
 }
 
 /*MONTH VIEW */
