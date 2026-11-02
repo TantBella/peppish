@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useChores } from "../hooks/useChores";
-
-import logoImg from "../assets/logo_img.png";
 import { WeekCalendarGrid } from "../components/WeekCalenderGrid";
 import { CalendarTabs } from "../components/CalendarTabs";
 import { DayView } from "../components/DayView";
@@ -12,9 +10,8 @@ import { ChoreActionPanel } from "../components/ChoreActionPanel";
 import { ChoreCard } from "../components/ChoreCard";
 import Loading from "../components/Loading";
 import { useQueryClient } from "@tanstack/react-query";
-
+import HeaderComponent from "../components/HeaderComponent";
 import { useChoreCalendar, ViewMode } from "../hooks/useChoreCalendar";
-import { NotificationPanel } from "../components/NotificationPanel";
 
 export const CalendarPage = () => {
   const { user } = useAuth();
@@ -55,29 +52,16 @@ export const CalendarPage = () => {
 
   const expandedChore = chores.find((c) => c.id === expandedChoreId) || null;
 
-  const getViewTitle = () => {
-    switch (viewMode) {
-      case "week":
-        return "Veckans quests";
-      case "month":
-        return "Månadens quests";
-      case "day":
-      default:
-        return "Dagens quests";
-    }
-  };
+  const headerTitle =
+    viewMode === "week"
+      ? "Veckans quests"
+      : viewMode === "month"
+        ? "Månadens quests"
+        : "Dagens quests";
 
   return (
     <>
-      <header className="header">
-        <h1 className="logo-icon">
-          <img src={logoImg} alt="App logo" />
-          {getViewTitle()}
-        </h1>
-        <div style={{ position: "absolute", right: 16, top: 16 }}>
-          <NotificationPanel />
-        </div>
-      </header>
+      <HeaderComponent title={headerTitle} />
       <div className="calendar-list-container">
         <CalendarTabs
           viewMode={viewMode}
