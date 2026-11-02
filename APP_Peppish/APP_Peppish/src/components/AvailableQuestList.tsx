@@ -73,6 +73,7 @@ export const AvailableQuestList = ({
       <p>Välj en och tjäna extra XP eller pengar 🤗</p>
       <div className="chore-list">
         {availableChores.map((chore) => (
+          <div className="chore-list-item">
           <div key={chore.id} className="chore-item">
             <ChoreCard
               chore={chore}
@@ -93,6 +94,7 @@ export const AvailableQuestList = ({
                 />
               </div>
             )}
+            </div>
           </div>
         ))}
       </div>

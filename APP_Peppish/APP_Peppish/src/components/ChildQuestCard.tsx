@@ -69,7 +69,7 @@ export const ChildQuestCard = ({
             <h2 className="child-quest-card-headline">Inte påbörjade:</h2>
 
             {notStarted.length === 0 ? (
-              <p className="empty-child-quests">Inga uppgifter idag .</p>
+              <p className="empty-child-quests">Inget att göra just nu 🤙</p>
             ) : (
               <div className="child-quest-list">
                 {notStarted.map((chore) => (
@@ -118,14 +118,6 @@ export const ChildQuestCard = ({
                         onToggle={() => onToggleChore(chore.id)}
                         compact
                       />
-
-                      {expandedChoreId === chore.id && (
-                        <ChoreActionPanel
-                          chore={chore}
-                          allowAdminActions={false}
-                          allowPicking={false}
-                        />
-                      )}
                     </div>
                   ))}
                 </div>
@@ -149,14 +141,6 @@ export const ChildQuestCard = ({
                       onToggle={() => onToggleChore(chore.id)}
                       compact
                     />
-
-                    {expandedChoreId === chore.id && (
-                      <ChoreActionPanel
-                        chore={chore}
-                        allowAdminActions={false}
-                        allowPicking={false}
-                      />
-                    )}
                   </div>
                 ))}
               </div>

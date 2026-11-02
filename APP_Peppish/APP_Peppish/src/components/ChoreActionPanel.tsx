@@ -9,6 +9,7 @@ import {
 import { ChoreWithUIStatus } from "../hooks/useChores";
 import { useAuth } from "../context/AuthContext";
 import { HouseholdMember } from "../services/householdService.api";
+import checkIcon from "../assets/icons/check_icon.png";
 
 interface ChoreActionPanelProps {
   chore: ChoreWithUIStatus;
@@ -61,63 +62,93 @@ export const ChoreActionPanel = ({
     mutationFn: () => choreInstanceApi.complete(chore.id),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["chores"] });
-      const previous = queryClient.getQueryData<any[]>(["chores"]);
-      queryClient.setQueryData(["chores"], (old: any[] | undefined) =>
-        old
-          ? old.map((c) =>
-              c.id === chore.id ? { ...c, status: "completed" } : c,
-            )
-          : old,
+
+      const previous = queryClient.getQueriesData({
+        queryKey: ["chores"],
+      });
+
+      queryClient.setQueriesData(
+        { queryKey: ["chores"] },
+        (old: ChoreWithUIStatus[] | undefined) =>
+          old?.map((c) =>
+            c.id === chore.id
+              ? {
+                  ...c,
+                  status: "completed",
+                  uiStatus: "completed",
+                }
+              : c,
+          ),
       );
+
       return { previous };
     },
-    onSuccess: (updated) => {
+
+    onSuccess: () => {
       setError(null);
-      queryClient.setQueryData(["chore", chore.id], updated);
-      queryClient.invalidateQueries({ queryKey: ["chores"] });
       onSuccess?.();
     },
-    onError: (err, _vars, context: any) => {
-      if (context?.previous)
-        queryClient.setQueryData(["chores"], context.previous);
+
+    onError: (err, _vars, context) => {
+      context?.previous?.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
       setError(
-        err instanceof Error
-          ? err.message
-          : ((err as { message?: string })?.message ??
-              "Questen kunde inte slutföras"),
+        err instanceof Error ? err.message : "Questen kunde inte slutföras",
       );
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["chores"] });
+    },
   });
 
   const approveMutation = useMutation({
     mutationFn: () => choreInstanceApi.approve(chore.id),
+
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["chores"] });
-      const previous = queryClient.getQueryData<any[]>(["chores"]);
-      queryClient.setQueryData(["chores"], (old: any[] | undefined) =>
-        old
-          ? old.map((c) =>
-              c.id === chore.id ? { ...c, status: "approved" } : c,
-            )
-          : old,
+
+      const previous = queryClient.getQueriesData({
+        queryKey: ["chores"],
+      });
+
+      queryClient.setQueriesData(
+        { queryKey: ["chores"] },
+        (old: ChoreWithUIStatus[] | undefined) =>
+          old?.map((c) =>
+            c.id === chore.id
+              ? {
+                  ...c,
+                  status: "approved",
+                  uiStatus: "approved",
+                }
+              : c,
+          ),
       );
+
       return { previous };
     },
-    onSuccess: (updated) => {
+
+    onSuccess: () => {
       setError(null);
-      queryClient.setQueryData(["chore", chore.id], updated);
-      queryClient.invalidateQueries({ queryKey: ["chores"] });
       onSuccess?.();
     },
-    onError: (err, _vars, context: any) => {
-      if (context?.previous)
-        queryClient.setQueryData(["chores"], context.previous);
+
+    onError: (err, _vars, context) => {
+      context?.previous?.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
       setError(
         err instanceof Error ? err.message : "Questen kunde inte godkännas",
       );
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["chores"] }),
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["chores"] });
+    },
   });
 
   const assignMutation = useMutation({
@@ -178,14 +209,12 @@ export const ChoreActionPanel = ({
     <div className="chore-action-panel">
       {error && <div className="error-message alert alert-error">{error}</div>}
       <div className="action-buttons">
-        {showCompletionCheckbox && (
+        {showCompletionCheckbox && chore.uiStatus !== "approved" && (
           <label className="complete-toggle">
             <input
               type="checkbox"
               checked={
-                completeMutation.isPending ||
-                chore.uiStatus === "completed" ||
-                chore.uiStatus === "approved"
+                completeMutation.isPending || chore.uiStatus === "completed"
               }
               onChange={() => completeMutation.mutate()}
               disabled={!canComplete || completeMutation.isPending}
@@ -195,12 +224,20 @@ export const ChoreActionPanel = ({
               {chore.uiStatus === "assigned" &&
                 !completeMutation.isPending &&
                 "Markera som klar"}
-
-              {completeMutation.isPending && "Väntar på godkännande..."}
-
-              {chore.uiStatus === "approved" && "Godkänd och slutförd"}
+              {!canComplete &&
+                !canApprove &&
+                chore.uiStatus === "completed" &&
+                "Väntar på godkännande..."}
             </span>
           </label>
+        )}
+
+        {chore.uiStatus === "approved" && (
+          <div className="status-info">
+            {" "}
+            <img src={checkIcon} alt="green checkmark icon" className="checkmark-icon" />
+            Godkänd och slutförd
+          </div>
         )}
         {canApprove && (
           <button
@@ -211,9 +248,7 @@ export const ChoreActionPanel = ({
             {approveMutation.isPending ? "Godkänner..." : "Godkänn"}
           </button>
         )}
-        {/* {!canComplete && !canApprove && chore.uiStatus === "completed" && (
-          <div className="status-info">Väntar på godkännande</div>
-        )} */}
+
         {canAssign && (
           <div className="assign-section">
             <button
