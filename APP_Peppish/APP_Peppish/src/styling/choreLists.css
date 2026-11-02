@@ -4,6 +4,10 @@
   color: var(--text);
 }
 
+.chore-list-page h3 {
+  font-weight: 500;
+}
+
 .chore-list-page .chore-list-header {
   display: flex;
   justify-content: center;
