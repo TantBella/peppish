@@ -50,22 +50,26 @@ export const WeekCalendarGrid = ({
               <div>{date.getDate()}</div>
             </div>
 
-            <div className="week-chore">
+            <div
+              className="week-chore"
+              key={day}
+              onClick={() => {
+                setSelectedDate(date);
+                setViewMode("day");
+              }}
+            >
               {dayChores.length === 0 ? (
                 <div className="empty-day">
-                  <p className="empty-dayp">Inga quests denna dag</p>
+                  <p className="empty-dayp">Inga quests denna dag.</p>
                   <p className="empty-dayp">
-                    Passa på att hämta från frivillig listan
+                    Passa på att hämta från frivillig listan.
                   </p>
                 </div>
               ) : (
                 dayChores.slice(0, 3).map((chore) => (
                   <div
                     key={chore.id}
-                    className={`chore-card status-${chore.status?.toLowerCase()}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
+                    className={`week-chore-card status-${chore.status?.toLowerCase()}`}
                   >
                     {chore.title}
                   </div>

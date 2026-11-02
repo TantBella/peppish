@@ -87,6 +87,16 @@ export const CalendarPage = () => {
           setSelectedDate={setSelectedDate}
         />
 
+        {viewMode === "day" && (
+          <DayView
+            chores={choresBySelectedDate(activeDate)}
+            userId={user?.id}
+            selectedDate={activeDate}
+            expandedChoreId={expandedChoreId}
+            setExpandedChoreId={setExpandedChoreId}
+          />
+        )}
+
         {viewMode === "week" && (
           <WeekCalendarGrid
             weekDates={weekDates}
@@ -95,16 +105,6 @@ export const CalendarPage = () => {
             weekOffset={weekOffset}
             setWeekOffset={setWeekOffset}
             setViewMode={setViewMode}
-          />
-        )}
-
-        {viewMode === "day" && (
-          <DayView
-            chores={choresBySelectedDate(activeDate)}
-            userId={user?.id}
-            selectedDate={activeDate}
-            expandedChoreId={expandedChoreId}
-            setExpandedChoreId={setExpandedChoreId}
           />
         )}
 

@@ -118,6 +118,14 @@ export const ChildQuestCard = ({
                         onToggle={() => onToggleChore(chore.id)}
                         compact
                       />
+
+                      {!isChild && expandedChoreId === chore.id && (
+                        <ChoreActionPanel
+                          chore={chore}
+                          allowAdminActions={true}
+                          allowPicking={false}
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
