@@ -11,6 +11,7 @@ interface ChildQuestCardProps {
   onToggle: () => void;
   onToggleChore: (id: string) => void;
   isOwnQuests?: boolean;
+  isChild?: boolean;
 }
 
 export const ChildQuestCard = ({
@@ -22,6 +23,7 @@ export const ChildQuestCard = ({
   onToggle,
   onToggleChore,
   isOwnQuests = false,
+  isChild = false,
 }: ChildQuestCardProps) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -94,7 +96,7 @@ export const ChildQuestCard = ({
             )}
           </section>
 
-          {!isOwnQuests && (
+          {(!isOwnQuests || isChild) && (
             <section className="pending-approval-section">
               <h2 className="child-quest-card-headline">
                 Väntar på godkännande:

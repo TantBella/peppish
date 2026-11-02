@@ -123,8 +123,9 @@ export const ChoreListPage = () => {
             </div>
           </section>
         )}
-        <section>
-          {user?.role === "ADULT" && ownChores.length > 0 && (
+
+        {user?.role === "ADULT" && ownChores.length > 0 && (
+          <section>
             <ChildQuestCard
               title="Dina egna quests"
               chores={ownChores}
@@ -134,9 +135,22 @@ export const ChoreListPage = () => {
               onToggle={() => toggleChild(user.id)}
               onToggleChore={toggleChildChore}
             />
-          )}
-        </section>
-
+          </section>
+        )}
+        {user?.role === "CHILD" && ownChores.length > 0 && (
+          <section>
+            <ChildQuestCard
+              title="Dina egna quests"
+              chores={ownChores}
+              isOwnQuests={true}
+              isChild={true}
+              isExpanded={expandedChildId === user.id}
+              expandedChoreId={expandedChildChoreId}
+              onToggle={() => toggleChild(user.id)}
+              onToggleChore={toggleChildChore}
+            />
+          </section>
+        )}
         <AvailableQuestList householdMembers={householdMembers} />
       </div>
     </>
