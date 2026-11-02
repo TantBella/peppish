@@ -42,6 +42,19 @@ export const HomePage = () => {
       chore.assignedToUserId === user?.id
     );
   });
+
+  const sortedTodaysChores = [...todaysChores].sort((a, b) => {
+    const statusOrder: Record<string, number> = {
+      assigned: 1,
+      completed: 2,
+      approved: 3,
+    };
+
+    return (
+      (statusOrder[a.status.toLowerCase()] ?? 99) -
+      (statusOrder[b.status.toLowerCase()] ?? 99)
+    );
+  });
   const dailyProgressPercent = getDailyProgressPercent(chores, user?.id);
 
   return (
@@ -86,7 +99,7 @@ export const HomePage = () => {
           )}
           {!choresLoading && !choresError && todaysChores.length > 0 && (
             <div className="home-quest-list">
-              {todaysChores.map((chore) => (
+              {sortedTodaysChores.map((chore) => (
                 <div key={chore.id} className="home-quest-row">
                   <span>• {chore.title} </span>
                   <span>
