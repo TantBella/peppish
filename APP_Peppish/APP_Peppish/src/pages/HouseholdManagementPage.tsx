@@ -5,10 +5,9 @@ import {
   householdServiceApi,
   HouseholdMember,
 } from "../services/householdService.api";
-import logoImg from "../assets/logo_img.png";
 import { useToast } from "../context/ToastContext";
 import Loading from "../components/Loading";
-import NotificationPanel from "../components/NotificationPanel";
+import HeaderComponent from "../components/HeaderComponent";
 
 interface JoinRequest {
   id: string;
@@ -121,15 +120,7 @@ export const HouseholdManagementPage = () => {
 
   return (
     <>
-      <header className="header">
-        <h1 className="logo-icon">
-          <img src={logoImg} alt="App logo" />
-          {householdName || "Hushåll"}
-        </h1>
-        <div style={{ position: "absolute", right: 16, top: 16 }}>
-          <NotificationPanel />
-        </div>
-      </header>
+      <HeaderComponent title={householdName || "Hushåll"} />
 
       <div className="household-page-container">
         {user.role === "ADULT" && (

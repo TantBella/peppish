@@ -6,11 +6,10 @@ import {
   householdServiceApi,
   HouseholdMember,
 } from "../services/householdService.api";
-import { NotificationPanel } from "../components/NotificationPanel";
 import ChoreSkeleton from "../components/ChoreSkeleton";
 import { ChildQuestCard } from "../components/ChildQuestCard";
 import { AvailableQuestList } from "../components/AvailableQuestList";
-import logoImg from "../assets/logo_img.png";
+import HeaderComponent from "../components/HeaderComponent";
 
 export const ChoreListPage = () => {
   const { data: chores = [], isLoading, error } = useChores();
@@ -78,16 +77,7 @@ export const ChoreListPage = () => {
 
   return (
     <>
-      <header className="header">
-        <h1 className="logo-icon">
-          <img src={logoImg} alt="App logo" />
-          Quests
-        </h1>
-
-        <div style={{ position: "absolute", right: 16, top: 16 }}>
-          <NotificationPanel />
-        </div>
-      </header>
+      <HeaderComponent title="Quests" />
 
       <div className="chore-list-page">
         {user?.role === "ADULT" && (
