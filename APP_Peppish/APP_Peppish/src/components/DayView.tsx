@@ -10,11 +10,7 @@ type Props = {
   setExpandedChoreId: (id: string | null) => void;
 };
 
-export const DayView = ({
-  chores,
-  userId,
-  selectedDate,
-}: Props) => {
+export const DayView = ({ chores, userId, selectedDate }: Props) => {
   const targetDate = selectedDate ?? new Date();
 
   const filtered = chores
@@ -47,7 +43,7 @@ export const DayView = ({
         ) : (
           filtered.map((chore) => (
             <div key={chore.id} className="day-view-chore">
-              <div className="day-chore-card">
+              <div className="day-chore-card chore-list">
                 <ChoreCard
                   chore={chore}
                   currentUserId={userId}

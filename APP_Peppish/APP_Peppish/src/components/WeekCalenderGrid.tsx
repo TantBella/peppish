@@ -51,7 +51,7 @@ export const WeekCalendarGrid = ({
             </div>
 
             <div
-              className="week-chore"
+              className="week-chore "
               key={day}
               onClick={() => {
                 setSelectedDate(date);
