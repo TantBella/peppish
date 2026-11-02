@@ -18,24 +18,10 @@
   gap: 0.75rem;
 }
 
-.child-quest-item {
-  font-weight: normal;
-}
-
-.child-quest-item * {
-  font-weight: normal;
-}
-
 .empty-child-quests {
   margin: 0.5rem 0 0;
   color: var(--muted);
   font-weight: normal;
-}
-
-.child-quest-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .child-quest-card {

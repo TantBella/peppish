@@ -92,7 +92,7 @@ export const ChoreListPage = () => {
       <div className="chore-list-page">
         {user?.role === "ADULT" && (
           <div className="chore-list-header">
-            <Link to="/chores/new" className="btn-primary btn-small">
+            <Link to="/chores/new" className="create-chore-button">
               Skapa quest
             </Link>
           </div>

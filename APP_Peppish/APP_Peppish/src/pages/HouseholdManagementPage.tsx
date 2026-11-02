@@ -134,7 +134,7 @@ export const HouseholdManagementPage = () => {
       <div className="household-page-container">
         {user.role === "ADULT" && (
           <section id="invite-member">
-            <h2>Bjud in en medlem till ditt hushåll:</h2>
+            <h2>Bjud in en medlem till ditt hushåll: </h2>
             <button
               type="button"
               onClick={createJoinCode}

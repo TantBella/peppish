@@ -69,7 +69,7 @@ export const WeekCalendarGrid = ({
                 dayChores.slice(0, 3).map((chore) => (
                   <div
                     key={chore.id}
-                    className={`chore-card status-${chore.status?.toLowerCase()}`}
+                    className={`week-chore-card status-${chore.status?.toLowerCase()}`}
                   >
                     {chore.title}
                   </div>
