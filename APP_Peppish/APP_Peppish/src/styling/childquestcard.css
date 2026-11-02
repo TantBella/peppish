@@ -100,8 +100,8 @@
 }
 
 .quest-bullet {
-  flex-shrink: 0;
-  line-height: 1.5;
+  font-size: 1.2rem;
+  color: var(--accent-4);
 }
 
 .child-quest-card-content {

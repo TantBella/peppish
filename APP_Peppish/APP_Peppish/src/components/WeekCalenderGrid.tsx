@@ -71,6 +71,7 @@ export const WeekCalendarGrid = ({
                     key={chore.id}
                     className={`week-chore-card status-${chore.status?.toLowerCase()}`}
                   >
+                    <span className="week-quest-bullet">•</span>
                     {chore.title}
                   </div>
                 ))

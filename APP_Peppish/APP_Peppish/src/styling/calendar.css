@@ -154,7 +154,7 @@
 
 .week-chore {
   border-radius: 10px;
-  padding: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
   font-size: 0.8rem;
 }
 
@@ -163,8 +163,13 @@
 }
 
 .week-chore-card {
-  padding: 1rem 0.5rem;
-  margin: 0.25rem 0;
+  padding: 0.5rem;
+}
+
+.week-quest-bullet {
+  color: var(--accent-4);
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
 }
 
 /*MONTH VIEW */
