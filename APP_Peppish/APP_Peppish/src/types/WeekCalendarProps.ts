@@ -7,9 +7,6 @@ export type WeekCalendarProps = {
   weekDates: WeekDates;
   choresByDay: Record<string, ChoreWithUIStatus[]>;
 
-  // expandedChoreId: string | null;
-  // setExpandedChoreId: (id: string | null) => void;
-
   setSelectedDate: (date: Date) => void;
 
   weekOffset: number;

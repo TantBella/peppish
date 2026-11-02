@@ -28,7 +28,9 @@ export const ChoreCard = ({
     >
       <div className="chore-header">
         <h3>{chore.title}</h3>
-        <span className="status-badge">{statusLabels[chore.uiStatus]}</span>
+        {chore.uiStatus !== "approved" && (
+          <span className="status-badge">{statusLabels[chore.uiStatus]}</span>
+        )}
       </div>
 
       {!compact && (
