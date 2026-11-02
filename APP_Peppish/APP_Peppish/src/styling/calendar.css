@@ -172,6 +172,12 @@
   font-size: 1.2rem;
 }
 
+.weekview-chore-reward {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
 /*MONTH VIEW */
 .month-title {
   margin: 2rem;
