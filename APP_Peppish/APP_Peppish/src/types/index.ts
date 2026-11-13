@@ -8,6 +8,12 @@ export interface User {
   email?: string;
   role: Role;
   householdId?: string;
+
+  hairstyle: string;
+  skinColor: string;
+  eyeColor: string;
+  eyebrowColor: string;
+  hairColor: string;
 }
 
 export interface Chore {

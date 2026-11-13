@@ -34,9 +34,64 @@ public class UsersController(
       Name = user.DisplayName,
       Email = user.Email ?? string.Empty,
       Role = roles.FirstOrDefault() ?? "ADULT",
-      HouseholdId = user.HouseholdId
+      HouseholdId = user.HouseholdId,
+      Hairstyle = user.Hairstyle,
+      SkinColor = user.SkinColor,
+      EyeColor = user.EyeColor,
+      EyebrowColor = user.EyebrowColor,
+      HairColor = user.HairColor
     });
   }
+
+
+[HttpPut("me/avatar")]
+public async Task<ActionResult<UserDto>> UpdateAvatar(
+    [FromBody] UpdateAvatarDto dto)
+{
+    var userId = userContextService.GetCurrentUserId();
+    var user = await userManager.FindByIdAsync(userId);
+
+    if (user == null)
+        return NotFound(new { error = "Användare hittas ej" });
+
+    var allowedHairstyles = new[]
+    {
+        "short",
+        "medium-bangs",
+        "medium-soft-bangs"
+    };
+
+    if (!allowedHairstyles.Contains(dto.Hairstyle))
+        return BadRequest(new { error = "Ogiltig frisyr" });
+
+    user.Hairstyle = dto.Hairstyle;
+    user.SkinColor = dto.SkinColor;
+    user.EyeColor = dto.EyeColor;
+    user.EyebrowColor = dto.EyebrowColor;
+    user.HairColor = dto.HairColor;
+
+    var result = await userManager.UpdateAsync(user);
+
+    if (!result.Succeeded)
+        return BadRequest(result.Errors);
+
+    var roles = await userManager.GetRolesAsync(user);
+
+    return Ok(new UserDto
+    {
+        Id = user.Id,
+        Name = user.DisplayName,
+        Email = user.Email ?? string.Empty,
+        Role = roles.FirstOrDefault() ?? "ADULT",
+        HouseholdId = user.HouseholdId,
+        Hairstyle = user.Hairstyle,
+        SkinColor = user.SkinColor,
+        EyeColor = user.EyeColor,
+        EyebrowColor = user.EyebrowColor,
+        HairColor = user.HairColor
+    });
+}
+
 
   [HttpGet("{userId}/assignments")]
   public async Task<ActionResult<List<ChoreAssignmentDto>>> GetUserAssignments(string userId)
