@@ -88,10 +88,6 @@ const AvatarComponent = ({
   eyeColor = "",
   eyebrowColor = "",
   hairColor = "",
-  // skinColor = "#65C9FF",
-  // eyeColor = "#5B3828",
-  // eyebrowColor = "#433A30",
-  // hairColor = "#593E22",
 }: AvatarComponentProps) => {
   const hairBackSvg =
     hairstyle === "short"
