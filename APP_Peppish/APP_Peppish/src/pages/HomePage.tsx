@@ -7,6 +7,7 @@ import NotificationPanel from "../components/NotificationPanel";
 import { useProgress } from "../hooks/useProgress";
 import { useChores } from "../hooks/useChores";
 import { getDailyProgressPercent } from "../utils/dailyProgress";
+import Avatar from "../components/AvatarComponent";
 
 const choreStatusLabels: Record<string, string> = {
   available: "Tillgänglig",
@@ -73,7 +74,7 @@ export const HomePage = () => {
           <div className="user-summary-content">
             <p>Dags att samla lite XP!</p>
             <div className="avatar-placeholder">
-              <p>Avatar-placeholder</p>
+              <Avatar />
             </div>
           </div>
         </section>

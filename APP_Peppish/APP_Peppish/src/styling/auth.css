@@ -3,14 +3,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 80vh; */
   padding: 1rem;
 }
 
 .login-card {
-  background: var(--bg);
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: none;
   padding: 2rem;
   width: 100%;
   max-width: 400px;
@@ -107,4 +105,16 @@
 
 .login-footer a:hover {
   text-decoration: underline;
+}
+
+@media screen and (min-width: 600px) {
+  .login-container {
+    height: 80vh;
+  }
+
+  .login-card {
+    background: var(--bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
 }
