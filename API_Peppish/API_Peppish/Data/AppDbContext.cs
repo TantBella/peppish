@@ -26,23 +26,23 @@ namespace API_Peppish.Data
         {
             base.OnModelCreating(modelBuilder);
 
-modelBuilder.Entity<ApplicationUser>(entity =>
-{
-    entity.Property(e => e.Hairstyle)
-        .HasDefaultValue("short");
+// modelBuilder.Entity<ApplicationUser>(entity =>
+// {
+//     entity.Property(e => e.Hairstyle)
+//         .HasDefaultValue("short");
 
-    entity.Property(e => e.SkinColor)
-        .HasDefaultValue("#FFDBB4");
+//     entity.Property(e => e.SkinColor)
+//         .HasDefaultValue("#FFDBB4");
 
-    entity.Property(e => e.EyeColor)
-        .HasDefaultValue("#5B3828");
+//     entity.Property(e => e.EyeColor)
+//         .HasDefaultValue("#5B3828");
 
-    entity.Property(e => e.EyebrowColor)
-        .HasDefaultValue("#433A30");
+//     entity.Property(e => e.EyebrowColor)
+//         .HasDefaultValue("#433A30");
 
-    entity.Property(e => e.HairColor)
-        .HasDefaultValue("#624A2F");
-});
+//     entity.Property(e => e.HairColor)
+//         .HasDefaultValue("#624A2F");
+// });
 
       modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole

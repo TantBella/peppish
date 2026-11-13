@@ -82,10 +82,14 @@ interface AvatarComponentProps {
 
 const AvatarComponent = ({
   hairstyle = "short",
-  skinColor = "#65C9FF",
-  eyeColor = "#5B3828",
-  eyebrowColor = "#433A30",
-  hairColor = "#624A2F",
+  skinColor = "",
+  eyeColor = "",
+  eyebrowColor = "",
+  hairColor = "",
+  // skinColor = "#65C9FF",
+  // eyeColor = "#5B3828",
+  // eyebrowColor = "#433A30",
+  // hairColor = "#624A2F",
 }: AvatarComponentProps) => {
   const hairBackSvg =
     hairstyle === "short" ? shortHairBackSvg : mediumHairBackSvg;

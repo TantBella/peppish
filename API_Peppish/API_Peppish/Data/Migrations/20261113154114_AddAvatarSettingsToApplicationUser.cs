@@ -14,36 +14,31 @@ namespace API_Peppish.Data.Migrations
                 name: "EyeColor",
                 table: "AspNetUsers",
                 type: "text",
-                nullable: false,
-                defaultValue: "#5B3828");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "EyebrowColor",
                 table: "AspNetUsers",
                 type: "text",
-                nullable: false,
-                defaultValue: "#433A30");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "HairColor",
                 table: "AspNetUsers",
                 type: "text",
-                nullable: false,
-                defaultValue: "#624A2F");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "Hairstyle",
                 table: "AspNetUsers",
                 type: "text",
-                nullable: false,
-                defaultValue: "short");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "SkinColor",
                 table: "AspNetUsers",
                 type: "text",
-                nullable: false,
-                defaultValue: "#FFDBB4");
+                nullable: true);
         }
 
         /// <inheritdoc />

@@ -49,28 +49,16 @@ namespace API_Peppish.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("EyeColor")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("#5B3828");
+                        .HasColumnType("text");
 
                     b.Property<string>("EyebrowColor")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("#433A30");
+                        .HasColumnType("text");
 
                     b.Property<string>("HairColor")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("#624A2F");
+                        .HasColumnType("text");
 
                     b.Property<string>("Hairstyle")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("short");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("HouseholdId")
                         .HasColumnType("uuid");
@@ -102,10 +90,7 @@ namespace API_Peppish.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SkinColor")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("#FFDBB4");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
