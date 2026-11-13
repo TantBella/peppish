@@ -17,10 +17,10 @@ export const AvatarPage = () => {
   const { user, updateUser } = useAuth();
 
   const [hairstyle, setHairstyle] = useState<Hairstyle>("short");
-  const [skinColor, setSkinColor] = useState("#FFDBB4");
-  const [eyeColor, setEyeColor] = useState("#5B3828");
-  const [eyebrowColor, setEyebrowColor] = useState("#433A30");
-  const [hairColor, setHairColor] = useState("#624A2F");
+  const [skinColor, setSkinColor] = useState("");
+  const [eyeColor, setEyeColor] = useState("");
+  const [eyebrowColor, setEyebrowColor] = useState("");
+  const [hairColor, setHairColor] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
