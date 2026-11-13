@@ -11,7 +11,7 @@ import { userServiceApi } from "../services/userService.api";
 
 import "../styling/avatar.css";
 
-type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs";
+type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs" | "long-wavy";
 
 export const AvatarPage = () => {
   const { user, updateUser } = useAuth();
@@ -87,6 +87,7 @@ export const AvatarPage = () => {
               <option value="medium-soft-bangs">
                 Mellanlångt hår med mjuk lugg
               </option>
+              <option value="long-wavy">Långt vågigt hår</option>
             </select>
           </div>
 
