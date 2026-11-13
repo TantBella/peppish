@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logoName from "../assets/logo.png";
 
 interface FormErrors {
   email?: string;
@@ -62,63 +63,72 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1>Logga in</h1>
+    <>
+      <header className="home-header">
+        <img src={logoName} alt="App logo" className="Peppish-logo" />
+      </header>
+      <div className="login-container">
+        <div className="login-card">
+          <h1>Logga in</h1>
 
-        {errors.submit && (
-          <div className="error-message alert alert-error">{errors.submit}</div>
-        )}
+          {errors.submit && (
+            <div className="error-message alert alert-error">
+              {errors.submit}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (errors.email) setErrors({ ...errors, email: undefined });
-              }}
-              disabled={isLoading}
-              className={errors.email ? "input-error" : ""}
-              placeholder="din@email.com"
-            />
-            {errors.email && <span className="error-text">{errors.email}</span>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors({ ...errors, email: undefined });
+                }}
+                disabled={isLoading}
+                className={errors.email ? "input-error" : ""}
+                placeholder="din@email.com"
+              />
+              {errors.email && (
+                <span className="error-text">{errors.email}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Lösenord</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errors.password)
+                    setErrors({ ...errors, password: undefined });
+                }}
+                disabled={isLoading}
+                className={errors.password ? "input-error" : ""}
+                placeholder="••••••••"
+              />
+              {errors.password && (
+                <span className="error-text">{errors.password}</span>
+              )}
+            </div>
+
+            <button type="submit" disabled={isLoading} className="btn-primary">
+              {isLoading ? "Loggar in..." : "Logga in"}
+            </button>
+          </form>
+
+          <div className="login-footer">
+            <p>
+              Har du inget konto? <Link to="/register">Registera här</Link>
+            </p>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Lösenord</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                if (errors.password)
-                  setErrors({ ...errors, password: undefined });
-              }}
-              disabled={isLoading}
-              className={errors.password ? "input-error" : ""}
-              placeholder="••••••••"
-            />
-            {errors.password && (
-              <span className="error-text">{errors.password}</span>
-            )}
-          </div>
-
-          <button type="submit" disabled={isLoading} className="btn-primary">
-            {isLoading ? "Loggar in..." : "Logga in"}
-          </button>
-        </form>
-
-        <div className="login-footer">
-          <p>
-            Har du inget konto? <Link to="/register">Registera här</Link>
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 };

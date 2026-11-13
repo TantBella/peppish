@@ -83,19 +83,26 @@
   justify-content: center;
   flex-shrink: 0;
   background: linear-gradient(
-    30deg,
+    10deg,
     var(--accent-3),
     var(--accent-3),
-    var(--accent-5),
     var(--accent-2),
     var(--accent-1),
+    var(--accent-5),
     var(--accent-4),
-    var(--accent-1)
+    var(--accent-4)
   );
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111);
-  border-radius: 50%;
+  border-radius: 10%;
   color: var(--muted);
-  padding: 2rem;
+  max-width: 8rem;
+}
+
+.avatar-placeholder img {
+  width: 100%;
+  height: auto;
+  border-radius: 10%;
+  padding-bottom: 0;
 }
 
 .user-info > p {

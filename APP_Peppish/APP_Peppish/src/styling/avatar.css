@@ -1,0 +1,28 @@
+.avatar-page {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem 1rem 3rem;
+  text-align: center;
+}
+
+.avatar-page p {
+  color: var(--muted);
+  max-width: 28rem;
+}
+
+.avatar-preview {
+  background: radial-gradient(circle at 50% 42%, #ffffff 0, #f3fbf7 72%);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  box-shadow: 0 8px 24px rgba(47, 51, 55, 0.08);
+  padding: 1rem;
+  width: min(78vw, 20rem);
+}
+
+.avatar-preview svg {
+  display: block;
+  height: auto;
+  width: 100%;
+}

@@ -18,7 +18,7 @@ import { CreateChorePage } from "./pages/CreateChorePage";
 import { EditChorePage } from "./pages/EditChorePage";
 import { CalendarPage } from "./pages/CalendarPage";
 // import { RewardsPage } from './pages/RewardsPage'
-// import { ProgressPage } from './pages/ProgressPage'
+import { AvatarPage } from "./pages/AvatarPage";
 import { RewardsAndProgressPage } from "./pages/RewardsAndProgressPage";
 import { HouseholdManagementPage } from "./pages/HouseholdManagementPage";
 import { ToastProvider } from "./context/ToastContext";
@@ -64,6 +64,7 @@ function App() {
                 <Route path="/chores/:id/edit" element={<EditChorePage />} />
                 <Route path="/rewards" element={<RewardsAndProgressPage />} />
                 <Route path="/progress" element={<RewardsAndProgressPage />} />
+                <Route path="/avatar" element={<AvatarPage />} />
                 <Route
                   path="/households"
                   element={<HouseholdManagementPage />}
