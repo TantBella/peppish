@@ -1,19 +1,21 @@
 import basebodySvg from "../assets/avatars/base/basebody.svg?raw";
 
-import cheeks from "../assets/avatars/face/cheeks.svg";
 import eyebrowsSvg from "../assets/avatars/face/eyebrows.svg?raw";
 import eyesSvg from "../assets/avatars/face/eyes.svg?raw";
 import freckles from "../assets/avatars/face/freckles.svg";
-import mouth from "../assets/avatars/face/mouth.svg";
-import nose from "../assets/avatars/face/nose.svg";
+import cheeksSvg from "../assets/avatars/face/cheeks.svg?raw";
+import mouthSvg from "../assets/avatars/face/mouth.svg?raw";
+import noseSvg from "../assets/avatars/face/nose.svg?raw";
 
 import shortHairBackSvg from "../assets/avatars/hair/shorthair_back.svg?raw";
 import shortHairFrontSvg from "../assets/avatars/hair/shorthair_front.svg?raw";
 import mediumHairBackSvg from "../assets/avatars/hair/mediumlonghair_back.svg?raw";
 import mediumHairFrontSvg from "../assets/avatars/hair/mediumlong_Bangs_front.svg?raw";
 import mediumSoftBangsFrontSvg from "../assets/avatars/hair/mediumlonghair_Softbangs_front.svg?raw";
+import longHairBackSvg from "../assets/avatars/hair/longhair_back.svg?raw";
+import longHairWavyFrontSvg from "../assets/avatars/hair/longhair_wavy_front.svg?raw";
 
-type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs";
+type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs" | "long-wavy";
 
 const layerStyle = {
   position: "absolute" as const,
@@ -86,23 +88,26 @@ const AvatarComponent = ({
   eyeColor = "",
   eyebrowColor = "",
   hairColor = "",
-  // skinColor = "#65C9FF",
-  // eyeColor = "#5B3828",
-  // eyebrowColor = "#433A30",
-  // hairColor = "#624A2F",
 }: AvatarComponentProps) => {
   const hairBackSvg =
-    hairstyle === "short" ? shortHairBackSvg : mediumHairBackSvg;
+    hairstyle === "short"
+      ? shortHairBackSvg
+      : hairstyle === "long-wavy"
+        ? longHairBackSvg
+        : mediumHairBackSvg;
 
   const hairFrontSvg =
     hairstyle === "short"
       ? shortHairFrontSvg
       : hairstyle === "medium-bangs"
         ? mediumHairFrontSvg
-        : mediumSoftBangsFrontSvg;
+        : hairstyle === "medium-soft-bangs"
+          ? mediumSoftBangsFrontSvg
+          : longHairWavyFrontSvg;
 
-  const coloredHairBack = hairBackSvg.replace(/#FB2D2D/g, hairColor);
-  const coloredHairFront = hairFrontSvg.replace(/#FB2D2D/g, hairColor);
+  // lägg till för slingor
+  const coloredHairBack = hairBackSvg.replace(/#CEA171/g, hairColor);
+  const coloredHairFront = hairFrontSvg.replace(/#CEA171/g, hairColor);
 
   const coloredEyes = eyesSvg.replace(/#DB2AEB/g, eyeColor);
 
@@ -129,9 +134,11 @@ const AvatarComponent = ({
       />
 
       {/* man ska kunna välja färg på kind och om man vill ha fräknar */}
-      <img src={cheeks} alt="" style={layerStyle} />
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: cheeksSvg }} />
+
       <img src={freckles} alt="" style={layerStyle} />
-      <img src={nose} alt="" style={layerStyle} />
+
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: noseSvg }} />
 
       <div
         style={layerStyle}
@@ -143,7 +150,7 @@ const AvatarComponent = ({
         dangerouslySetInnerHTML={{ __html: coloredEyebrows }}
       />
 
-      <img src={mouth} alt="" style={layerStyle} />
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: mouthSvg }} />
 
       <div
         style={layerStyle}

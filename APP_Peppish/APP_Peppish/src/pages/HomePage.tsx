@@ -74,7 +74,19 @@ export const HomePage = () => {
           <div className="user-summary-content">
             <p>Dags att samla lite XP!</p>
             <div className="avatar-placeholder">
-              <Avatar />
+              <Avatar
+                hairstyle={
+                  user?.hairstyle as
+                    | "short"
+                    | "medium-bangs"
+                    | "medium-soft-bangs"
+                    | "long-wavy"
+                }
+                skinColor={user?.skinColor}
+                eyeColor={user?.eyeColor}
+                eyebrowColor={user?.eyebrowColor}
+                hairColor={user?.hairColor}
+              />
             </div>
           </div>
         </section>
