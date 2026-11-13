@@ -6,21 +6,62 @@ import Avatar, {
   hairColors,
 } from "../components/AvatarComponent";
 
+import { useAuth } from "../context/AuthContext";
+import { userServiceApi } from "../services/userService.api";
+
 import "../styling/avatar.css";
 
 type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs";
 
 export const AvatarPage = () => {
+  const { user, updateUser } = useAuth();
+
   const [hairstyle, setHairstyle] = useState<Hairstyle>("short");
-  const [skinColor, setSkinColor] = useState("#5e3ab4");
-  const [eyeColor, setEyeColor] = useState("#ba2d5c");
-  const [eyebrowColor, setEyebrowColor] = useState("#e8f800");
-  const [hairColor, setHairColor] = useState("#bd28b1");
+  const [skinColor, setSkinColor] = useState("");
+  const [eyeColor, setEyeColor] = useState("");
+  const [eyebrowColor, setEyebrowColor] = useState("");
+  const [hairColor, setHairColor] = useState("");
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+
+    setHairstyle(user.hairstyle as Hairstyle);
+    setSkinColor(user.skinColor);
+    setEyeColor(user.eyeColor);
+    setEyebrowColor(user.eyebrowColor);
+    setHairColor(user.hairColor);
+  }, [user]);
+
+  const handleSave = async () => {
+    if (!user) return;
+
+    setIsSaving(true);
+    setMessage("");
+
+    try {
+      const updatedUser = await userServiceApi.updateAvatar({
+        hairstyle,
+        skinColor,
+        eyeColor,
+        eyebrowColor,
+        hairColor,
+      });
+
+      updateUser(updatedUser);
+      setMessage("Din avatar har sparats!");
+    } catch {
+      setMessage("Det gick inte att spara din avatar. Försök igen.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <section className="avatar-page">
-      <h1>Skapa din avatar</h1>
-      <p>Välj hur din avatar ska se ut!</p>
+      <h2>Ändra avatarens utseende:</h2>
 
       <div className="avatar-editor">
         <div className="avatar-preview">
@@ -116,6 +157,16 @@ export const AvatarPage = () => {
               ))}
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || !user}
+          >
+            {isSaving ? "Sparar..." : "Spara avatar"}
+          </button>
+
+          {message && <p>{message}</p>}
         </div>
       </div>
     </section>

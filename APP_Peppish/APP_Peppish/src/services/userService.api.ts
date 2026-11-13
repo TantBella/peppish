@@ -6,6 +6,7 @@ export const userServiceApi = {
     const res = await apiClient.get("/users/me");
     return res.data as User;
   },
+
   getAssignments: async (userId: string) => {
     const res = await apiClient.get(`/users/${userId}/assignments`);
     return res.data;
@@ -25,5 +26,15 @@ export const userServiceApi = {
   getNotifications: async (userId: string) => {
     const res = await apiClient.get(`/users/${userId}/notifications`);
     return res.data;
+  },
+  updateAvatar: async (settings: {
+    hairstyle: string;
+    skinColor: string;
+    eyeColor: string;
+    eyebrowColor: string;
+    hairColor: string;
+  }): Promise<User> => {
+    const res = await apiClient.put("/users/me/avatar", settings);
+    return res.data as User;
   },
 };

@@ -48,6 +48,18 @@ namespace API_Peppish.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("EyeColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EyebrowColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HairColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hairstyle")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("HouseholdId")
                         .HasColumnType("uuid");
 
@@ -75,6 +87,9 @@ namespace API_Peppish.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SkinColor")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
