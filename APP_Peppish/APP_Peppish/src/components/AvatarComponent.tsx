@@ -30,6 +30,11 @@ const layerStyle = {
   height: "100%",
 };
 
+const scaleSvg = (svg: string) =>
+  svg
+    .replace(/width="[^"]*"/, 'width="100%"')
+    .replace(/height="[^"]*"/, 'height="100%"');
+
 export const skinColors = [
   "#433A30",
   "#624A2F",
@@ -51,21 +56,22 @@ export const eyeColors = [
 
 export const eyebrowColors = [
   "#333333",
-  "#433A30",
-  "#624A2F",
-  "#A2755B",
+  "#31281d",
+  "#6f4a1c",
+  "#875624",
   "#b16722",
   "#D6A15C",
-  "#f0dbbe",
+  "#faebab",
   "#fffb7a",
 ];
 
 export const hairColors = [
+  "#dadada",
+  "#6d6c6a",
   "#333333",
   "#2B1B14",
-  "#624A2F",
-  "#A2755B",
-  "#CEA171",
+  "#523c24",
+  "#844b12",
   "#D6A15C",
   "#e6dfa8",
   "#ece118",
@@ -128,42 +134,46 @@ const AvatarComponent = ({
     <div
       style={{
         position: "relative",
-        width: "224px",
+        width: "100%",
+        height: "100%",
+        maxWidth: "100%",
+        maxHeight: "100%",
         aspectRatio: "224 / 376",
+        overflow: "hidden",
       }}
     >
       <div
         style={layerStyle}
-        dangerouslySetInnerHTML={{ __html: coloredHairBack }}
+        dangerouslySetInnerHTML={{ __html: scaleSvg(coloredHairBack) }}
       />
 
       <div
         style={layerStyle}
-        dangerouslySetInnerHTML={{ __html: coloredBasebody }}
+        dangerouslySetInnerHTML={{ __html: scaleSvg(coloredBasebody) }}
       />
 
       {/* man ska kunna välja färg på kind och om man vill ha fräknar */}
-      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: cheeksSvg }} />
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: scaleSvg(cheeksSvg) }} />
 
       <img src={freckles} alt="" style={layerStyle} />
 
-      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: noseSvg }} />
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: scaleSvg(noseSvg) }} />
 
       <div
         style={layerStyle}
-        dangerouslySetInnerHTML={{ __html: coloredEyes }}
+        dangerouslySetInnerHTML={{ __html: scaleSvg(coloredEyes) }}
       />
 
       <div
         style={layerStyle}
-        dangerouslySetInnerHTML={{ __html: coloredEyebrows }}
+        dangerouslySetInnerHTML={{ __html: scaleSvg(coloredEyebrows) }}
       />
 
-      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: mouthSvg }} />
+      <div style={layerStyle} dangerouslySetInnerHTML={{ __html: scaleSvg(mouthSvg) }} />
 
       <div
         style={layerStyle}
-        dangerouslySetInnerHTML={{ __html: coloredHairFront }}
+        dangerouslySetInnerHTML={{ __html: scaleSvg(coloredHairFront) }}
       />
     </div>
   );

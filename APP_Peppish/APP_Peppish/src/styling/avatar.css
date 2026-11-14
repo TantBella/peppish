@@ -13,11 +13,11 @@
 }
 
 .avatar-preview {
-  background: radial-gradient(circle at 50% 42%, #ffffff 0, #f3fbf7 72%);
-  border: 1px solid var(--border);
-  border-radius: 2rem;
-  box-shadow: 0 8px 24px rgba(47, 51, 55, 0.08);
-  padding: 1rem;
+  /* background: radial-gradient(circle at 50% 42%, #ffffff 0, #f3fbf7 72%); */
+  /* border: 1px solid var(--border); */
+  /* border-radius: 2rem; */
+  /* box-shadow: 0 8px 24px rgba(47, 51, 55, 0.08); */
+  /* padding: 1rem; */
   width: min(78vw, 20rem);
 }
 
@@ -54,15 +54,30 @@
 .avatar-options {
   flex: 1;
   min-width: 250px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
 
+.avatar-column {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  grid-column: 1 / -1;
+}
 .avatar-option {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+.avatar-hairstyle-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 .avatar-option label {
@@ -76,6 +91,9 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font: inherit;
+}
+.avatar-column button {
+  align-self: center;
 }
 
 .color-options {
@@ -107,4 +125,86 @@
   .avatar-preview {
     width: 190px;
   }
+}
+
+/* Färgväljare */
+
+.color-option {
+  align-items: center;
+  text-align: center;
+}
+
+.color-option label {
+  text-align: center;
+}
+
+.color-dropdown {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.color-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.color-swatch-preview {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.color-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 8px;
+
+  width: 64px;
+  max-height: 180px;
+  overflow-y: auto;
+
+  padding: 10px 0;
+
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.color-swatch {
+  display: block;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.color-swatch.selected {
+  border: 3px solid #333;
+  outline: 2px solid white;
 }

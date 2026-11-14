@@ -18,6 +18,76 @@ type Hairstyle =
   | "medium-soft-bangs"
   | "long-wavy";
 
+interface ColorDropdownProps {
+  label: string;
+  value: string;
+  colors: string[];
+  onChange: (color: string) => void;
+}
+
+interface ColorDropdownProps {
+  label: string;
+  value: string;
+  colors: string[];
+  onChange: (color: string) => void;
+}
+
+interface ColorDropdownProps {
+  label: string;
+  value: string;
+  colors: string[];
+  onChange: (color: string) => void;
+}
+
+const ColorDropdown = ({
+  label,
+  value,
+  colors,
+  onChange,
+}: ColorDropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="avatar-option color-option">
+      <label>{label}</label>
+
+      <div className="color-dropdown">
+        <button
+          type="button"
+          className="color-dropdown-trigger"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-label={`Välj ${label.toLowerCase()}`}
+        >
+          <span
+            className="color-swatch-preview"
+            style={{ backgroundColor: value || "#eeeeee" }}
+          />
+        </button>
+
+        {isOpen && (
+          <div className="color-dropdown-menu">
+            {colors.map((color, index) => (
+              <button
+                key={color}
+                type="button"
+                className={`color-swatch ${value === color ? "selected" : ""}`}
+                style={{ backgroundColor: color }}
+                onClick={() => {
+                  onChange(color);
+                  setIsOpen(false);
+                }}
+                aria-label={`Färg ${index + 1}`}
+                aria-pressed={value === color}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const AvatarPage = () => {
   const { user, updateUser } = useAuth();
 
@@ -66,7 +136,7 @@ export const AvatarPage = () => {
 
   return (
     <section className="avatar-page">
-      <h2>Ändra avatarens utseende:</h2>
+      <h2>Ändra din avatars utseende:</h2>
 
       <div className="avatar-editor">
         <div className="avatar-preview">
@@ -80,100 +150,65 @@ export const AvatarPage = () => {
         </div>
 
         <div className="avatar-options">
-          <div className="avatar-option">
-            <label htmlFor="hairstyle">Frisyr</label>
-            <select
-              id="hairstyle"
-              value={hairstyle}
-              onChange={(e) => setHairstyle(e.target.value as Hairstyle)}
-            >
-              <option value="beanie">Mössa & mellanlångt hår</option>{" "}
-              <option value="short">Kort hår</option>
-              <option value="medium-bangs">Mellanlångt hår med lugg</option>
-              <option value="medium-soft-bangs">
-                Mellanlångt hår med mjuk lugg
-              </option>
-              <option value="long-wavy">Långt vågigt hår</option>
-            </select>
-          </div>
+          <ColorDropdown
+            label="Hudfärg"
+            value={skinColor}
+            colors={skinColors}
+            onChange={setSkinColor}
+          />
 
-          <div className="avatar-option">
-            <label>Hudfärg</label>
-            <div className="color-options">
-              {skinColors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`color-button ${skinColor === color ? "selected" : ""}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setSkinColor(color)}
-                  aria-label={`Välj hudfärg ${color}`}
-                  aria-pressed={skinColor === color}
-                />
-              ))}
+          <ColorDropdown
+            label="Ögonfärg"
+            value={eyeColor}
+            colors={eyeColors}
+            onChange={setEyeColor}
+          />
+
+          <ColorDropdown
+            label="Ögonbrynsfärg"
+            value={eyebrowColor}
+            colors={eyebrowColors}
+            onChange={setEyebrowColor}
+          />
+
+          <ColorDropdown
+            label="Hårfärg"
+            value={hairColor}
+            colors={hairColors}
+            onChange={setHairColor}
+          />
+
+          <div className="avatar-column">
+            <div className="avatar-option">
+              <div className="avatar-hairstyle-option">
+                <label htmlFor="hairstyle">Frisyr</label>
+
+                <select
+                  id="hairstyle"
+                  value={hairstyle}
+                  onChange={(e) => setHairstyle(e.target.value as Hairstyle)}
+                >
+                  <option value="beanie">Mössa & mellanlångt hår</option>
+                  <option value="short">Kort hår</option>
+                  <option value="medium-bangs">Mellanlångt hår med lugg</option>
+                  <option value="medium-soft-bangs">
+                    Mellanlångt hår med mjuk lugg
+                  </option>
+                  <option value="long-wavy">Långt vågigt hår</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={isSaving || !user}
+              >
+                {isSaving ? "Sparar..." : "Spara avatar"}
+              </button>
+
+              {message && <p>{message}</p>}
             </div>
           </div>
-
-          <div className="avatar-option">
-            <label>Ögonfärg</label>
-            <div className="color-options">
-              {eyeColors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`color-button ${eyeColor === color ? "selected" : ""}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setEyeColor(color)}
-                  aria-label={`Välj ögonfärg ${color}`}
-                  aria-pressed={eyeColor === color}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="avatar-option">
-            <label>Ögonbrynsfärg</label>
-            <div className="color-options">
-              {eyebrowColors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`color-button ${eyebrowColor === color ? "selected" : ""}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setEyebrowColor(color)}
-                  aria-label={`Välj ögonbrynsfärg ${color}`}
-                  aria-pressed={eyebrowColor === color}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="avatar-option">
-            <label>Hårfärg</label>
-            <div className="color-options">
-              {hairColors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`color-button ${hairColor === color ? "selected" : ""}`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setHairColor(color)}
-                  aria-label={`Välj hårfärg ${color}`}
-                  aria-pressed={hairColor === color}
-                />
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving || !user}
-          >
-            {isSaving ? "Sparar..." : "Spara avatar"}
-          </button>
-
-          {message && <p>{message}</p>}
         </div>
       </div>
     </section>
