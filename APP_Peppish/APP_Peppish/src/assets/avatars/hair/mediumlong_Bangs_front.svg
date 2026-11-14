@@ -1,11 +1,45 @@
 <svg width="224" height="376" viewBox="0 0 224 376" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16 99C16 60.3401 47.3401 29 86 29H131C169.66 29 201 60.3401 201 99V99H16V99Z" fill="#CEA171"/>
-<line x1="197" y1="99.5" x2="20" y2="99.5" stroke="#845518"/>
-<line x1="185.5" y1="193" x2="185.5" y2="162" stroke="#845518"/>
-<line x1="196.5" y1="193" x2="196.5" y2="170" stroke="#845518"/>
-<line x1="175.5" y1="193" x2="175.5" y2="170" stroke="#845518"/>
-<line x1="163.5" y1="193" x2="163.5" y2="183" stroke="#845518"/>
-<path d="M36.5 193V162" stroke="#845518"/>
-<line x1="20.5" y1="193" x2="20.5" y2="170" stroke="#845518"/>
-<line x1="53.5" y1="193" x2="53.5" y2="183" stroke="#845518"/>
+<g filter="url(#filter0_d_1_1214)">
+<path d="M38 98.5C38 58.4594 70.4594 26 110.5 26V26C150.541 26 183 58.4594 183 98.5V104H38V98.5Z" fill="#CEA171"/>
+</g>
+<line x1="183" y1="104.5" x2="38" y2="104.5" stroke="#C59B6E"/>
+<line x1="164.5" y1="195" x2="164.5" y2="165" stroke="#C59B6E"/>
+<line x1="171.5" y1="195" x2="171.5" y2="173" stroke="#C59B6E"/>
+<line x1="156.5" y1="195" x2="156.5" y2="173" stroke="#C59B6E"/>
+<line x1="140.5" y1="192" x2="140.5" y2="182" stroke="#C59B6E"/>
+<path d="M178 195V165" stroke="#C59B6E"/>
+<line x1="42.5" y1="195" x2="42.5" y2="173" stroke="#C59B6E"/>
+<line x1="148.5" y1="193" x2="148.5" y2="183" stroke="#C59B6E"/>
+<line x1="63.5" y1="193" x2="63.5" y2="169" stroke="#C59B6E"/>
+<line x1="55.5" y1="195" x2="55.5" y2="175" stroke="#C59B6E"/>
+<line x1="71.5" y1="193" x2="71.5" y2="175" stroke="#C59B6E"/>
+<path d="M50 195L50 169" stroke="#C59B6E"/>
+<line x1="79.5" y1="191" x2="79.5" y2="184" stroke="#C59B6E"/>
+<line x1="115.766" y1="104" x2="115.766" y2="86" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="132.739" y1="104" x2="132.739" y2="86" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="86.9122" y1="104" x2="86.9122" y2="86" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="46.177" y1="104" x2="46.177" y2="86" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="64.8473" y1="104" x2="64.8473" y2="93" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="100.491" y1="104" x2="100.491" y2="96" stroke-width="0.5" stroke="#C59B6E"/>
+<line x1="169.231" y1="104" x2="169.231" y2="86" stroke-width="0.5" stroke="#C59B6E"/>
+<path d="M160.759 103.917L160.995 104L161.047 94.5221L160.812 94.4384L160.576 94.3546L160.523 103.833L160.759 103.917Z" fill="#C59B6E"/>
+<path d="M181.127 103.917L181.362 104L181.415 94.5221L181.18 94.4384L180.944 94.3546L180.891 103.833L181.127 103.917Z" fill="#C59B6E"/>
+<path d="M124.267 103.917L124.503 104L124.556 94.5221L124.32 94.4384L124.084 94.3546L124.032 103.833L124.267 103.917Z" fill="#C59B6E"/>
+<path d="M77.5915 103.917L77.827 104L77.8799 94.5221L77.6443 94.4384L77.4088 94.3546L77.3559 103.833L77.5915 103.917Z" fill="#C59B6E"/>
+<path d="M53.8293 103.917L54.0649 104L54.1178 94.5221L53.8822 94.4384L53.6466 94.3546L53.5937 103.833L53.8293 103.917Z" fill="#C59B6E"/>
+<path d="M148.476 104.197L148.212 104.249L148.212 95.5211L148.476 95.469L148.74 95.4169L148.74 104.145L148.476 104.197Z" fill="#C59B6E"/>
+<rect x="159" y="105" width="24" height="60" fill="#CEA171"/>
+<rect x="38" y="105" width="25" height="64" fill="#CEA171"/>
+<defs>
+<filter id="filter0_d_1_1214" x="34" y="26" width="153" height="86" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1214"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1214" result="shape"/>
+</filter>
+</defs>
 </svg>

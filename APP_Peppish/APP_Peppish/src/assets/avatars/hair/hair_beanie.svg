@@ -1,0 +1,17 @@
+<svg width="224" height="376" viewBox="0 0 224 376" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="159" y="99" width="24" height="66" fill="#CEA171"/>
+<rect x="38" y="97" width="25" height="72" fill="#CEA171"/>
+<path d="M38 98.5C38 58.4594 70.4594 26 110.5 26V26C150.541 26 183 58.4594 183 98.5V104H38V98.5Z" fill="black"/>
+<line x1="164.5" y1="195" x2="164.5" y2="165" stroke="#C59B6E"/>
+<line x1="171.5" y1="195" x2="171.5" y2="173" stroke="#C59B6E"/>
+<line x1="156.5" y1="195" x2="156.5" y2="173" stroke="#C59B6E"/>
+<line x1="140.5" y1="192" x2="140.5" y2="182" stroke="#C59B6E"/>
+<path d="M178 195V165" stroke="#C59B6E"/>
+<line x1="42.5" y1="195" x2="42.5" y2="173" stroke="#C59B6E"/>
+<line x1="148.5" y1="193" x2="148.5" y2="183" stroke="#C59B6E"/>
+<line x1="63.5" y1="193" x2="63.5" y2="169" stroke="#C59B6E"/>
+<line x1="55.5" y1="195" x2="55.5" y2="175" stroke="#C59B6E"/>
+<line x1="71.5" y1="193" x2="71.5" y2="175" stroke="#C59B6E"/>
+<path d="M50 195L50 169" stroke="#C59B6E"/>
+<line x1="79.5" y1="191" x2="79.5" y2="184" stroke="#C59B6E"/>
+</svg>

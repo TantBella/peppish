@@ -7,6 +7,7 @@ import cheeksSvg from "../assets/avatars/face/cheeks.svg?raw";
 import mouthSvg from "../assets/avatars/face/mouth.svg?raw";
 import noseSvg from "../assets/avatars/face/nose.svg?raw";
 
+import beanieHairSvg from "../assets/avatars/hair/hair_beanie.svg?raw";
 import shortHairBackSvg from "../assets/avatars/hair/shorthair_back.svg?raw";
 import shortHairFrontSvg from "../assets/avatars/hair/shorthair_front.svg?raw";
 import mediumHairBackSvg from "../assets/avatars/hair/mediumlonghair_back.svg?raw";
@@ -15,7 +16,12 @@ import mediumSoftBangsFrontSvg from "../assets/avatars/hair/mediumlonghair_Softb
 import longHairBackSvg from "../assets/avatars/hair/longhair_back.svg?raw";
 import longHairWavyFrontSvg from "../assets/avatars/hair/longhair_wavy_front.svg?raw";
 
-type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs" | "long-wavy";
+type Hairstyle =
+  | "beanie"
+  | "short"
+  | "medium-bangs"
+  | "medium-soft-bangs"
+  | "long-wavy";
 
 const layerStyle = {
   position: "absolute" as const,
@@ -28,7 +34,7 @@ export const skinColors = [
   "#433A30",
   "#624A2F",
   "#A2755B",
-  "#CEA171",
+  "#DCAA74",
   "#FFDBB4",
   "#F4E4D2",
 ];
@@ -59,6 +65,7 @@ export const hairColors = [
   "#2B1B14",
   "#624A2F",
   "#A2755B",
+  "#CEA171",
   "#D6A15C",
   "#e6dfa8",
   "#ece118",
@@ -97,13 +104,15 @@ const AvatarComponent = ({
         : mediumHairBackSvg;
 
   const hairFrontSvg =
-    hairstyle === "short"
-      ? shortHairFrontSvg
-      : hairstyle === "medium-bangs"
-        ? mediumHairFrontSvg
-        : hairstyle === "medium-soft-bangs"
-          ? mediumSoftBangsFrontSvg
-          : longHairWavyFrontSvg;
+    hairstyle === "beanie"
+      ? beanieHairSvg
+      : hairstyle === "short"
+        ? shortHairFrontSvg
+        : hairstyle === "medium-bangs"
+          ? mediumHairFrontSvg
+          : hairstyle === "medium-soft-bangs"
+            ? mediumSoftBangsFrontSvg
+            : longHairWavyFrontSvg;
 
   // lägg till för slingor
   const coloredHairBack = hairBackSvg.replace(/#CEA171/g, hairColor);
@@ -111,7 +120,7 @@ const AvatarComponent = ({
 
   const coloredEyes = eyesSvg.replace(/#DB2AEB/g, eyeColor);
 
-  const coloredEyebrows = eyebrowsSvg.replace(/#B12222/g, eyebrowColor);
+  const coloredEyebrows = eyebrowsSvg.replace(/#544D4D/g, eyebrowColor);
 
   const coloredBasebody = basebodySvg.replace(/#65C9FF/g, skinColor);
 

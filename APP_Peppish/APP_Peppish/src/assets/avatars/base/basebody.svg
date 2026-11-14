@@ -1,28 +1,28 @@
 <svg width="224" height="376" viewBox="0 0 224 376" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="114.074" y="286.053" width="29.4592" height="40.9469" fill="#803074"/>
-<rect x="76.7588" y="286.053" width="29.4592" height="40.9469" fill="#803074"/>
+<rect x="114.074" y="286.053" width="29.4592" height="40.9469" fill="#304980"/>
+<rect x="76.7588" y="286.053" width="29.4592" height="40.9469" fill="#304980"/>
 <path d="M70 334.657C70 326.523 76.5947 319.928 84.7296 319.928H94.5493C102.684 319.928 109.279 326.523 109.279 334.657V337.603H70V334.657Z" fill="#423F3F"/>
 <path d="M109.279 330.73C109.279 322.595 115.874 316 124.009 316H133.828C141.963 316 148.558 322.595 148.558 330.73V333.676H109.279V330.73Z" fill="#423F3F"/>
-<path d="M52 208C52 199.716 58.7157 193 67 193H145C153.284 193 160 199.716 160 208V286H52V208Z" fill="#A7F03A"/>
-<path d="M52 205H77V286H52V205Z" fill="#A7F03A"/>
+<path d="M52 208C52 199.716 58.7157 193 67 193H145C153.284 193 160 199.716 160 208V286H52V208Z" fill="#F5F8EF"/>
+<path d="M52 205H77V286H52V205Z" fill="#F5F8EF"/>
 <mask id="stroke0_1_2005" fill="white">
 <path d="M52 205H77V286H52V205Z"/>
 </mask>
 <path d="M77 205H76V286H77H78V205H77Z" fill="black" mask="url(#stroke0_1_2005)"/>
-<path d="M136 208H160V276H136V208Z" fill="#A7F03A"/>
+<path d="M136 208H160V276H136V208Z" fill="#F5F8EF"/>
 <mask id="stroke1_1_2005" fill="white">
 <path d="M136 208H160V276H136V208Z"/>
 </mask>
 <path d="M136 276H137V208H136H135V276H136Z" fill="black" mask="url(#stroke1_1_2005)"/>
 <path d="M128.803 277.215C128.803 272.334 132.76 268.378 137.641 268.378H159.245C164.125 268.378 168.082 272.334 168.082 277.215V277.215C168.082 282.096 164.125 286.053 159.245 286.053H137.641C132.76 286.053 128.803 282.096 128.803 277.215V277.215Z" fill="#65C9FF"/>
-<ellipse cx="110.5" cy="108.5" rx="86.5" ry="79.5" fill="#65C9FF"/>
+<ellipse cx="109.5" cy="108.5" rx="69.5" ry="79.5" fill="#65C9FF"/>
 <path d="M90 180H129V193.27C129 201.405 122.405 208 114.27 208H104.73C96.5947 208 90 201.405 90 193.27V180Z" fill="#65C9FF"/>
 <path d="M77.2126 292.825C74.4047 296.818 68.8919 297.778 64.8995 294.97L47.2289 282.542C43.2365 279.734 42.2763 274.221 45.0843 270.229V270.229C47.8922 266.236 53.4049 265.276 57.3973 268.084L75.068 280.512C79.0604 283.32 80.0206 288.833 77.2126 292.825V292.825Z" fill="#65C9FF"/>
 <g filter="url(#filter0_d_1_2005)">
-<path d="M81 182.938C103.519 189.88 116.805 190.066 142.001 182" stroke="#65C9FF"/>
+<path d="M79 179.938C101.519 186.88 114.805 187.066 140.001 179" stroke="#65C9FF"/>
 </g>
 <defs>
-<filter id="filter0_d_1_2005" x="76.8527" y="180.524" width="69.3008" height="15.077" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_1_2005" x="74.8527" y="177.524" width="69.3008" height="15.077" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="3"/>

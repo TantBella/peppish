@@ -56,6 +56,7 @@ public async Task<ActionResult<UserDto>> UpdateAvatar(
 
     var allowedHairstyles = new[]
     {
+      "beanie",
         "short",
         "medium-bangs",
         "medium-soft-bangs"

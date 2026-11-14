@@ -11,12 +11,17 @@ import { userServiceApi } from "../services/userService.api";
 
 import "../styling/avatar.css";
 
-type Hairstyle = "short" | "medium-bangs" | "medium-soft-bangs" | "long-wavy";
+type Hairstyle =
+  | "beanie"
+  | "short"
+  | "medium-bangs"
+  | "medium-soft-bangs"
+  | "long-wavy";
 
 export const AvatarPage = () => {
   const { user, updateUser } = useAuth();
 
-  const [hairstyle, setHairstyle] = useState<Hairstyle>("short");
+  const [hairstyle, setHairstyle] = useState<Hairstyle>("beanie");
   const [skinColor, setSkinColor] = useState("");
   const [eyeColor, setEyeColor] = useState("");
   const [eyebrowColor, setEyebrowColor] = useState("");
@@ -82,6 +87,7 @@ export const AvatarPage = () => {
               value={hairstyle}
               onChange={(e) => setHairstyle(e.target.value as Hairstyle)}
             >
+              <option value="beanie">Mössa & mellanlångt hår</option>{" "}
               <option value="short">Kort hår</option>
               <option value="medium-bangs">Mellanlångt hår med lugg</option>
               <option value="medium-soft-bangs">
