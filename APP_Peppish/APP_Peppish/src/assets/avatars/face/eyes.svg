@@ -1,10 +1,10 @@
 <svg width="224" height="376" viewBox="0 0 224 376" fill="none" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="127.5" cy="137.5" rx="14.5" ry="11.5" fill="white"/>
-<ellipse cx="126.5" cy="138.5" rx="8.5" ry="7.5" fill="#DB2AEB"/>
-<ellipse cx="126.5" cy="139" rx="4.5" ry="4" fill="#210202"/>
-<ellipse cx="129.5" cy="136.5" rx="0.5" ry="1.5" fill="white"/>
-<ellipse cx="95.5" cy="137.5" rx="14.5" ry="11.5" fill="white"/>
-<ellipse cx="94.5" cy="138.5" rx="8.5" ry="7.5" fill="#DB2AEB"/>
-<ellipse cx="94.5" cy="139" rx="4.5" ry="4" fill="#210202"/>
-<ellipse cx="97.5" cy="136.5" rx="0.5" ry="1.5" fill="white"/>
+<ellipse cx="133.295" cy="140" rx="16.7213" ry="9" fill="white"/>
+<ellipse cx="133.295" cy="140" rx="11.8033" ry="9" fill="#DB2AEB"/>
+<ellipse cx="133.295" cy="141" rx="5.90164" ry="6" fill="#210202"/>
+<ellipse cx="130.344" cy="137.5" rx="0.983607" ry="2.5" fill="white"/>
+<ellipse cx="90.8525" cy="140" rx="16.7213" ry="9" fill="white"/>
+<ellipse cx="90.8525" cy="140" rx="11.8033" ry="9" fill="#DB2AEB"/>
+<ellipse cx="90.8525" cy="141" rx="5.90164" ry="6" fill="#210202"/>
+<ellipse cx="93.8033" cy="137.5" rx="0.983607" ry="2.5" fill="white"/>
 </svg>
