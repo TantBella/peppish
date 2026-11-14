@@ -76,13 +76,15 @@
   text-align: left;
 }
 
-/* Avatar */
 .avatar-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: linear-gradient(
+  width: 8rem;
+  height: 10rem;
+  overflow: hidden;
+  /* background: linear-gradient(
     10deg,
     var(--accent-3),
     var(--accent-3),
@@ -91,18 +93,18 @@
     var(--accent-5),
     var(--accent-4),
     var(--accent-4)
-  );
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111);
-  border-radius: 10%;
+  ); */
+  /* box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.111); */
+  /* border-radius: 10%; */
   color: var(--muted);
-  max-width: 8rem;
 }
 
-.avatar-placeholder img {
-  width: 100%;
-  height: auto;
-  border-radius: 10%;
-  padding-bottom: 0;
+.avatar-placeholder > div {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 224 / 376;
+  flex-shrink: 1;
 }
 
 .user-info > p {
